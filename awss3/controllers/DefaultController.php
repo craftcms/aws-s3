@@ -8,7 +8,7 @@ use craft\plugins\awss3\Volume;
 use yii\web\Response;
 
 /**
- * Rackspace controller provides functionality to load container data for Rackspace.
+ * This controller provides functionality to load data from AWS.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since  3.0

@@ -16,6 +16,9 @@ use yii\web\Response;
 
 class DefaultController extends BaseController
 {
+    /**
+     * @var string
+     */
     public $defaultAction = 'load-bucket-data';
 
     /**

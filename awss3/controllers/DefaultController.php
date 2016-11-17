@@ -1,0 +1,41 @@
+<?php
+
+namespace craft\plugins\awss3\controllers;
+
+use Craft;
+use craft\app\web\Controller as BaseController;
+use craft\plugins\awss3\Volume;
+use yii\web\Response;
+
+/**
+ * Rackspace controller provides functionality to load container data for Rackspace.
+ *
+ * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
+ * @since  3.0
+ */
+
+class DefaultController extends BaseController
+{
+    public $defaultAction = 'load-bucket-data';
+
+    /**
+     * Load bucket data for specified credentials.
+     *
+     * @return Response
+     */
+    public function actionLoadBucketData()
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        $request = Craft::$app->getRequest();
+        $keyId = $request->getRequiredBodyParam('keyId');
+        $secret = $request->getRequiredBodyParam('secret');
+
+        try {
+            return $this->asJson(Volume::loadBucketList($keyId, $secret));
+        } catch (\Exception $e) {
+            return $this->asErrorJson($e->getMessage());
+        }
+    }
+}

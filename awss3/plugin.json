@@ -1,0 +1,9 @@
+{
+    "name": "AWS S3 Volume",
+    "version": "1.0.0",
+    "schemaVersion": "1.0.0",
+    "developer": "Pixel & Tonic",
+    "developerUrl": "http://craftcms.com",
+    "description": "Adds the possibility to use AWS S3 with Assets.",
+    "class": "craft\\plugins\\awss3\\AwsS3"
+}

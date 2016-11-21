@@ -1,5 +1,8 @@
 {
     "require": {
         "league/flysystem-aws-s3-v3": "1.0.13"
+    },
+    "config" : {
+        "vendor-dir": "src/vendor"
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "craftcms/aws-s3",
-  "description": "AWS S3 integration for Craft CMS",
+  "description": "Amazon S3 integration for Craft CMS",
   "version": "1.0.0-beta.1",
   "type": "craft-plugin",
   "keywords": [
@@ -36,6 +36,6 @@
     }
   },
   "extra": {
-    "name": "AWS S3"
+    "name": "Amazon S3"
   }
 }

@@ -8,7 +8,7 @@ use craft\events\RegisterComponentTypesEvent;
 
 
 /**
- * Plugin represents the AWS S3 volume plugin.
+ * Plugin represents the Amazon S3 volume plugin.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since  3.0
@@ -31,7 +31,7 @@ class Plugin extends \craft\base\Plugin
     }
 
     /**
-     * Convert the legacy AWS S3 volumes
+     * Convert the legacy Amazon S3 volumes
      *
      * @throws VolumeException
      * @return void
@@ -57,7 +57,7 @@ class Plugin extends \craft\base\Plugin
                 $convertedVolume->setFieldLayout($volume->getFieldLayout());
 
                 if (!$volumes->saveVolume($convertedVolume)) {
-                   throw new VolumeException('Unable to convert the legacy “{volume}” AWS S3 volume.', ['volume' => $volume->name]);
+                   throw new VolumeException('Unable to convert the legacy “{volume}” Amazon S3 volume.', ['volume' => $volume->name]);
                 }
             }
         }

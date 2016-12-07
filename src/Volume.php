@@ -42,7 +42,7 @@ class Volume extends \craft\base\Volume
      */
     public static function displayName()
     {
-        return Craft::t('app', 'AWS S3');
+        return 'Amazon S3';
     }
 
     // Properties
@@ -225,7 +225,7 @@ class Volume extends \craft\base\Volume
     }
 
     /**
-     * Get the AWS S3 client.
+     * Get the Amazon S3 client.
      *
      * @param $config
      *

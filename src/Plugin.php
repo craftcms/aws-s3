@@ -13,11 +13,11 @@ use craft\events\RegisterComponentTypesEvent;
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since  3.0
  */
-
 class Plugin extends \craft\base\Plugin
 {
     // Public Methods
     // =========================================================================
+
     /**
      * @inheritdoc
      */

@@ -49,63 +49,47 @@ class Volume extends \craft\base\Volume
     // =========================================================================
 
     /**
-     * Whether this is a local source or not. Defaults to false.
-     *
-     * @var bool
+     * @var bool Whether this is a local source or not. Defaults to false.
      */
     protected $isVolumeLocal = false;
 
     /**
-     * Subfolder to use
-     *
-     * @var string
+     * @var string Subfolder to use
      */
     public $subfolder = '';
 
     /**
-     * AWS key ID
-     *
-     * @var string
+     * @var string AWS key ID
      */
     public $keyId = '';
 
     /**
-     * AWS key secret
-     *
-     * @var string
+     * @var string AWS key secret
      */
     public $secret = '';
 
     /**
-     * Bucket to use
-     *
-     * @var string
+     * @var string Bucket to use
      */
     public $bucket = '';
 
     /**
-     * Region to use
-     *
-     * @var string
+     * @var string Region to use
      */
     public $region = '';
 
     /**
-     * Cache expiration period.
-     *
-     * @var string
+     * @var string Cache expiration period.
      */
     public $expires = '';
 
     /**
-     * S3 storage class to use.
-     *
-     * @var string
+     * @var string S3 storage class to use.
      */
     public $storageClass = '';
 
     /**
-     * CloudFront Distribution ID
+     * @var string CloudFront Distribution ID
      */
     public $cfDistributionId;
 
@@ -141,8 +125,8 @@ class Volume extends \craft\base\Volume
      * @param $keyId
      * @param $secret
      *
-     * @throws \InvalidArgumentException
      * @return array
+     * @throws \InvalidArgumentException
      */
     public static function loadBucketList($keyId, $secret)
     {

@@ -10,15 +10,13 @@ use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
 use Aws\S3\Exception\S3Exception;
 use Craft;
-use craft\base\Volume as BaseVolume;
-use craft\cache\adapters\GuzzleCacheAdapter;
 use craft\dates\DateTime;
 use craft\errors\VolumeException;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
 use \League\Flysystem\AwsS3v3\AwsS3Adapter;
-use \Aws\S3\S3Client as S3Client;
+use \Aws\S3\S3Client;
 
 
 /**
@@ -27,14 +25,14 @@ use \Aws\S3\S3Client as S3Client;
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since  3.0
  */
-class Volume extends BaseVolume
+class Volume extends \craft\base\Volume
 {
     // Constants
     // =========================================================================
 
-    const STORAGE_STANDARD = "STANDARD";
-    const STORAGE_REDUCED_REDUNDANCY = "REDUCED_REDUNDANCY";
-    const STORAGE_STANDARD_IA = "STANDARD_IA";
+    const STORAGE_STANDARD = 'STANDARD';
+    const STORAGE_REDUCED_REDUNDANCY = 'REDUCED_REDUNDANCY';
+    const STORAGE_STANDARD_IA = 'STANDARD_IA';
 
     // Static
     // =========================================================================
@@ -44,7 +42,7 @@ class Volume extends BaseVolume
      */
     public static function displayName()
     {
-        return Craft::t('app', 'Amazon S3');
+        return Craft::t('app', 'AWS S3');
     }
 
     // Properties
@@ -62,61 +60,54 @@ class Volume extends BaseVolume
      *
      * @var string
      */
-    public $subfolder = "";
+    public $subfolder = '';
 
     /**
      * AWS key ID
      *
      * @var string
      */
-    public $keyId = "";
+    public $keyId = '';
 
     /**
      * AWS key secret
      *
      * @var string
      */
-    public $secret = "";
+    public $secret = '';
 
     /**
      * Bucket to use
      *
      * @var string
      */
-    public $bucket = "";
+    public $bucket = '';
 
     /**
      * Region to use
      *
      * @var string
      */
-    public $region = "";
+    public $region = '';
 
     /**
      * Cache expiration period.
      *
      * @var string
      */
-    public $expires = "";
+    public $expires = '';
 
     /**
      * S3 storage class to use.
      *
      * @var string
      */
-    public $storageClass = "";
+    public $storageClass = '';
 
     /**
      * CloudFront Distribution ID
      */
     public $cfDistributionId;
-
-    /**
-     * Cache adapter
-     *
-     * @var GuzzleCacheAdapter
-     */
-    private static $_cacheAdapter = null;
 
     // Public Methods
     // =========================================================================
@@ -137,12 +128,11 @@ class Volume extends BaseVolume
      */
     public function getSettingsHtml()
     {
-        return Craft::$app->getView()->renderTemplate('awss3/volumeSettings',
-            [
-                'volume' => $this,
-                'periods' => array_merge(['' => ''], Assets::periodList()),
-                'storageClasses' => static::storageClasses(),
-            ]);
+        return Craft::$app->getView()->renderTemplate('awss3/volumeSettings', [
+            'volume' => $this,
+            'periods' => array_merge(['' => ''], Assets::periodList()),
+            'storageClasses' => static::storageClasses(),
+        ]);
     }
 
     /**

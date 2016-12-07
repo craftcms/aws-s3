@@ -1,10 +1,10 @@
 <?php
 
-namespace craft\plugins\awss3\controllers;
+namespace craft\awss3\controllers;
 
 use Craft;
-use craft\app\web\Controller as BaseController;
-use craft\plugins\awss3\Volume;
+use craft\web\Controller as BaseController;
+use craft\awss3\Volume;
 use yii\web\Response;
 
 /**

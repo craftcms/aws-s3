@@ -4,25 +4,25 @@
  * @copyright Copyright (c) 2015 Pixel & Tonic, Inc.
  * @license   http://buildwithcraft.com/license
  */
-namespace craft\plugins\awss3;
+namespace craft\awss3;
 
 use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
 use Aws\S3\Exception\S3Exception;
 use Craft;
-use craft\app\base\Volume as BaseVolume;
-use craft\app\cache\adapters\GuzzleCacheAdapter;
-use craft\app\dates\DateTime;
-use craft\app\errors\VolumeException;
-use craft\app\helpers\Assets;
-use craft\app\helpers\DateTimeHelper;
-use craft\app\helpers\StringHelper;
+use craft\base\Volume as BaseVolume;
+use craft\cache\adapters\GuzzleCacheAdapter;
+use craft\dates\DateTime;
+use craft\errors\VolumeException;
+use craft\helpers\Assets;
+use craft\helpers\DateTimeHelper;
+use craft\helpers\StringHelper;
 use \League\Flysystem\AwsS3v3\AwsS3Adapter;
 use \Aws\S3\S3Client as S3Client;
 
 
 /**
- * MandrillAdaptor implements a Mandrill transport adapter into Craft’s mailer.
+ * Class Volume
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since  3.0

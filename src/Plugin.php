@@ -1,10 +1,10 @@
 <?php
 
-namespace craft\plugins\awss3;
+namespace craft\awss3;
 
 use Craft;
-use craft\app\base\Plugin;
-use craft\app\errors\VolumeException;
+use craft\errors\VolumeException;
+use craft\events\RegisterComponentTypesEvent;
 
 
 /**
@@ -14,7 +14,7 @@ use craft\app\errors\VolumeException;
  * @since  3.0
  */
 
-class AwsS3 extends Plugin
+class Plugin extends \craft\base\Plugin
 {
     // Public Methods
     // =========================================================================
@@ -25,21 +25,9 @@ class AwsS3 extends Plugin
     {
         parent::init();
 
-        Craft::$app->getVolumes()->on('registerVolumeTypes', [$this, 'registerVolumeType']);
-
-        require __DIR__.'/vendor/autoload.php';
-    }
-
-    /**
-     * Register the Volume Types
-     *
-     * @return void
-     */
-    public function registerVolumeType($event)
-    {
-        $event->types = array_merge($event->types, [
-            Volume::className(),
-        ]);
+        Craft::$app->getVolumes()->on('registerVolumeTypes', function(RegisterComponentTypesEvent $event) {
+            $event->types[] = Volume::class;
+        });
     }
 
     /**
@@ -54,7 +42,8 @@ class AwsS3 extends Plugin
         $allVolumes = $volumes->getAllVolumes();
 
         foreach ($allVolumes as $volume) {
-            if ($volume->className() == 'craft\app\volumes\MissingVolume' && $volume->expectedType == 'craft\app\volumes\AwsS3') {
+            /** @var Volume $volume */
+            if ($volume->className() == 'craft\volumes\MissingVolume' && $volume->expectedType == 'craft\volumes\AwsS3') {
                 /** @var Volume $convertedVolume */
                 $convertedVolume = $volumes->createVolume([
                     'id' => $volume->id,
@@ -74,5 +63,4 @@ class AwsS3 extends Plugin
         }
 
     }
-
 }

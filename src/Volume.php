@@ -9,14 +9,14 @@ namespace craft\awss3;
 use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
 use Aws\S3\Exception\S3Exception;
+use Aws\S3\S3Client;
 use Craft;
-use craft\dates\DateTime;
 use craft\errors\VolumeException;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
-use \League\Flysystem\AwsS3v3\AwsS3Adapter;
-use \Aws\S3\S3Client;
+use DateTime;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
 
 /**

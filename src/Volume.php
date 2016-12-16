@@ -217,7 +217,7 @@ class Volume extends \craft\base\Volume
      */
     protected static function client($config = [])
     {
-        return S3Client::factory($config);
+        return new S3Client($config);
     }
 
     /**

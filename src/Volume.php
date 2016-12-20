@@ -8,6 +8,7 @@ namespace craft\awss3;
 
 use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
+use Aws\Handler\GuzzleV6\GuzzleHandler;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Craft;
@@ -326,6 +327,9 @@ class Volume extends \craft\base\Volume
 
         $config['region'] = $region;
         $config['version'] = 'latest';
+
+        $client = Craft::createGuzzleClient();
+        $config['http_handler'] = new GuzzleHandler($client);
 
         return $config;
     }

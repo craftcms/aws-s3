@@ -8,6 +8,7 @@ namespace craft\awss3;
 
 use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
+use Aws\Handler\GuzzleV6\GuzzleHandler;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Craft;
@@ -154,7 +155,7 @@ class Volume extends \craft\base\Volume
             $bucketList[] = [
                 'bucket' => $bucket['Name'],
                 'urlPrefix' => 'http://'.$bucket['Name'].'.s3.amazonaws.com/',
-                'region' => isset($location['Location']) ? $location['Location'] : ''
+                'region' => isset($location['LocationConstraint']) ? $location['LocationConstraint'] : ''
             ];
         }
 
@@ -318,6 +319,9 @@ class Volume extends \craft\base\Volume
 
         $config['region'] = $region;
         $config['version'] = 'latest';
+
+        $client = Craft::createGuzzleClient();
+        $config['http_handler'] = new GuzzleHandler($client);
 
         return $config;
     }

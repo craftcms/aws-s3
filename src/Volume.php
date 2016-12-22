@@ -164,14 +164,6 @@ class Volume extends \craft\base\Volume
     /**
      * @inheritdoc
      */
-    public function getRootPath()
-    {
-        return null;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getRootUrl()
     {
         return rtrim(rtrim($this->url, '/').'/'.$this->subfolder, '/').'/';

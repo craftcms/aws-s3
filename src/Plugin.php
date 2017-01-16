@@ -5,6 +5,7 @@ namespace craft\awss3;
 use Craft;
 use craft\errors\VolumeException;
 use craft\events\RegisterComponentTypesEvent;
+use craft\volumes\MissingVolume;
 
 
 /**
@@ -43,7 +44,7 @@ class Plugin extends \craft\base\Plugin
 
         foreach ($allVolumes as $volume) {
             /** @var Volume $volume */
-            if ($volume->className() == 'craft\volumes\MissingVolume' && $volume->expectedType == 'craft\volumes\AwsS3') {
+            if ($volume instanceof MissingVolume && $volume->expectedType === 'craft\volumes\AwsS3') {
                 /** @var Volume $convertedVolume */
                 $convertedVolume = $volumes->createVolume([
                     'id' => $volume->id,

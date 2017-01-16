@@ -23,6 +23,9 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 /**
  * Class Volume
  *
+ * @property mixed  $settingsHtml
+ * @property string $rootUrl
+ *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since  3.0
  */
@@ -155,7 +158,7 @@ class Volume extends \craft\base\Volume
             $bucketList[] = [
                 'bucket' => $bucket['Name'],
                 'urlPrefix' => 'http://'.$bucket['Name'].'.s3.amazonaws.com/',
-                'region' => isset($location['LocationConstraint']) ? $location['LocationConstraint'] : ''
+                'region' => $location['LocationConstraint'] ?? ''
             ];
         }
 
@@ -208,7 +211,7 @@ class Volume extends \craft\base\Volume
      *
      * @return S3Client
      */
-    protected static function client($config = [])
+    protected static function client(array $config = []): S3Client
     {
         return new S3Client($config);
     }
@@ -297,6 +300,7 @@ class Volume extends \craft\base\Volume
      *
      * @param $keyId
      * @param $secret
+     * @param $region
      *
      * @return array
      */

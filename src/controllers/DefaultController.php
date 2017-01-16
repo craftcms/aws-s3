@@ -17,9 +17,13 @@ use yii\web\Response;
 class DefaultController extends BaseController
 {
     /**
-     * @var string
+     * @inheritdoc
      */
-    public $defaultAction = 'load-bucket-data';
+    public function init()
+    {
+        parent::init();
+        $this->defaultAction = 'load-bucket-data';
+    }
 
     /**
      * Load bucket data for specified credentials.

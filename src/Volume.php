@@ -41,7 +41,7 @@ class Volume extends \craft\base\Volume
     /**
      * @inheritdoc
      */
-    public static function displayName()
+    public static function displayName(): string
     {
         return 'Amazon S3';
     }
@@ -216,7 +216,7 @@ class Volume extends \craft\base\Volume
     /**
      * @inheritdoc
      */
-    protected function addFileMetadataToConfig($config)
+    protected function addFileMetadataToConfig(array $config): array
     {
         if (!empty($this->expires) && DateTimeHelper::isValidIntervalString($this->expires)) {
             $expires = new DateTime();
@@ -236,7 +236,7 @@ class Volume extends \craft\base\Volume
     /**
      * @inheritdoc
      */
-    protected function invalidateCdnPath($path)
+    protected function invalidateCdnPath(string $path): bool
     {
         if (!empty($this->cfDistributionId)) {
             // If there's a CloudFront distribution ID set, invalidate the path.

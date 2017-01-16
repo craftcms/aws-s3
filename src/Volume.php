@@ -275,9 +275,7 @@ class Volume extends \craft\base\Volume
      */
     private function _getCloudFrontClient()
     {
-        $config = $this->_getConfigArray();
-
-        return CloudFrontClient::factory($config);
+        return new CloudFrontClient($this->_getConfigArray());
     }
 
     /**

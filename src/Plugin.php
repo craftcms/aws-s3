@@ -3,9 +3,7 @@
 namespace craft\awss3;
 
 use Craft;
-use craft\errors\VolumeException;
 use craft\events\RegisterComponentTypesEvent;
-use craft\volumes\MissingVolume;
 
 
 /**
@@ -29,38 +27,5 @@ class Plugin extends \craft\base\Plugin
         Craft::$app->getVolumes()->on('registerVolumeTypes', function(RegisterComponentTypesEvent $event) {
             $event->types[] = Volume::class;
         });
-    }
-
-    /**
-     * Convert the legacy Amazon S3 volumes
-     *
-     * @throws VolumeException
-     * @return void
-     */
-    public function afterInstall()
-    {
-        $volumes = Craft::$app->getVolumes();
-        $allVolumes = $volumes->getAllVolumes();
-
-        foreach ($allVolumes as $volume) {
-            /** @var Volume $volume */
-            if ($volume instanceof MissingVolume && $volume->expectedType === 'craft\volumes\AwsS3') {
-                /** @var Volume $convertedVolume */
-                $convertedVolume = $volumes->createVolume([
-                    'id' => $volume->id,
-                    'type' => Volume::class,
-                    'name' => $volume->name,
-                    'handle' => $volume->handle,
-                    'hasUrls' => $volume->hasUrls,
-                    'url' => $volume->url,
-                    'settings' => $volume->settings
-                ]);
-                $convertedVolume->setFieldLayout($volume->getFieldLayout());
-
-                if (!$volumes->saveVolume($convertedVolume)) {
-                   throw new VolumeException('Unable to convert the legacy “{volume}” Amazon S3 volume.', ['volume' => $volume->name]);
-                }
-            }
-        }
     }
 }

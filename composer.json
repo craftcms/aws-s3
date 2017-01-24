@@ -36,6 +36,7 @@
     }
   },
   "extra": {
-    "name": "Amazon S3"
+    "name": "Amazon S3",
+    "handle": "awsS3"
   }
 }

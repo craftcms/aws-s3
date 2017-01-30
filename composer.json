@@ -36,6 +36,8 @@
   },
   "extra": {
     "name": "Amazon S3",
-    "handle": "awsS3"
+    "handle": "awsS3",
+    "changelogUrl": "https://raw.githubusercontent.com/craftcms/aws-s3/master/CHANGELOG.md",
+    "downloadUrl": "https://github.com/craftcms/aws-s3/archive/master.zip"
   }
 }

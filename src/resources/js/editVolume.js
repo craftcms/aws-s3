@@ -21,7 +21,7 @@ $s3RefreshBucketsBtn.click(function()
 		secret: $s3SecretAccessKeyInput.val()
 	};
 
-	Craft.postActionRequest('awss3', data, function(response, textStatus)
+	Craft.postActionRequest('aws-s3', data, function(response, textStatus)
 	{
 		$s3RefreshBucketsBtn.removeClass('disabled');
 		$s3RefreshBucketsSpinner.addClass('hidden');

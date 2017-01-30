@@ -119,7 +119,7 @@ class Volume extends \craft\base\Volume
         return Craft::$app->getView()->renderTemplate('awss3/volumeSettings', [
             'volume' => $this,
             'periods' => array_merge(['' => ''], Assets::periodList()),
-            'storageClasses' => static::storageClasses(),
+            //'storageClasses' => static::storageClasses(),
         ]);
     }
 
@@ -229,9 +229,11 @@ class Volume extends \craft\base\Volume
             $config['CacheControl'] = 'max-age='.$diff.', must-revalidate';
         }
 
-        if (!empty($this->storageClass)) {
+        // TODO re-add once fully supported by adapter.
+        /*if (!empty($this->storageClass)) {
             $config['StorageClass'] = $this->storageClass;
-        }
+        }*/
+        $config['StorageClass'] = static::STORAGE_STANDARD;
 
         return parent::addFileMetadataToConfig($config);
     }

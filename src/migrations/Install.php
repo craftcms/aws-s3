@@ -9,10 +9,9 @@ namespace craft\awss3\migrations;
 
 use Craft;
 use craft\awss3\Volume;
-use craft\base\Volume as BaseVolume;
 use craft\db\Migration;
-use craft\errors\VolumeException;
-use craft\volumes\MissingVolume;
+use craft\db\Query;
+use craft\helpers\Json;
 
 /**
  * Installation Migration
@@ -51,32 +50,43 @@ class Install extends Migration
      * Converts any old school S3 volumes to this one
      *
      * @return void
-     * @throws VolumeException if the new volume couldn't be saved
      */
     private function _convertVolumes()
     {
-        $volumesService = Craft::$app->getVolumes();
-        /** @var BaseVolume[] $volume */
-        $allVolumes = $volumesService->getAllVolumes();
+        $volumes = (new Query())
+            ->select([
+                'id',
+                'fieldLayoutId',
+                'settings',
+            ])
+            ->where(['type' => 'craft\volumes\AwsS3'])
+            ->from(['{{%volumes}}'])
+            ->all();
 
-        foreach ($allVolumes as $volume) {
-            if ($volume instanceof MissingVolume && $volume->expectedType === 'craft\volumes\AwsS3') {
-                /** @var Volume $convertedVolume */
-                $convertedVolume = $volumesService->createVolume([
-                    'id' => $volume->id,
+        $dbConnection = Craft::$app->getDb();
+
+        foreach ($volumes as $volume) {
+
+            $settings = Json::decode($volume['settings']);
+
+            if ($settings !== null) {
+                $hasUrls = !empty($settings['publicURLs']);
+                $url = ($hasUrls && !empty($settings['urlPrefix'])) ? $settings['urlPrefix'] : null;
+                $settings['region'] = $settings['location'];
+                unset($settings['publicURLs'], $settings['urlPrefix'], $settings['location']);
+
+                $values = [
                     'type' => Volume::class,
-                    'name' => $volume->name,
-                    'handle' => $volume->handle,
-                    'hasUrls' => $volume->hasUrls,
-                    'url' => $volume->url,
-                    'settings' => $volume->settings
-                ]);
-                $convertedVolume->setFieldLayout($volume->getFieldLayout());
+                    'hasUrls' => $hasUrls,
+                    'url' => $url,
+                    'settings' => Json::encode($settings)
+                ];
 
-                if (!$volumesService->saveVolume($convertedVolume)) {
-                    throw new VolumeException('Unable to convert the legacy “{volume}” Amazon S3 volume.', ['volume' => $volume->name]);
-                }
+                $dbConnection->createCommand()
+                    ->update('{{%volumes}}', $values, ['id' => $volume['id']])
+                    ->execute();
             }
+
         }
     }
 }

@@ -4,13 +4,12 @@
   "version": "1.0.0-beta.1",
   "type": "craft-plugin",
   "keywords": [
-    "craft",
+    "aws",
     "cms",
     "craftcms",
-    "aws",
+    "flysystem",
     "s3",
-    "asset",
-    "volume"
+    "yii2"
   ],
   "license": "MIT",
   "authors": [

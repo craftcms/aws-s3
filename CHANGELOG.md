@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 1.0.2 - 2017-02-02
+
+### Fixed
+- Fixed a bug where the Edit Volume page would 404 on Craft Personal and Client editions when this plugin was installed. 
+
 ## 1.0.1 - 2017-01-31
 
 ### Fixed

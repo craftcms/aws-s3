@@ -86,7 +86,6 @@ class Install extends Migration
                     ->update('{{%volumes}}', $values, ['id' => $volume['id']])
                     ->execute();
             }
-
         }
     }
 }

@@ -8,9 +8,11 @@ namespace craft\awss3;
 
 use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
+use Aws\Credentials\Credentials;
 use Aws\Handler\GuzzleV6\GuzzleHandler;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use Aws\Sts\StsClient;
 use Craft;
 use craft\errors\VolumeException;
 use craft\helpers\Assets;
@@ -37,6 +39,16 @@ class Volume extends \craft\base\Volume
     const STORAGE_STANDARD = 'STANDARD';
     const STORAGE_REDUCED_REDUNDANCY = 'REDUCED_REDUNDANCY';
     const STORAGE_STANDARD_IA = 'STANDARD_IA';
+
+    /**
+     * Cache key to use for caching purposes
+     */
+    const CACHE_KEY_PREFIX = 'aws.';
+
+    /**
+     * Cache duration for access token
+     */
+    const CACHE_DURATION_SECONDS = 3600;
 
     // Static
     // =========================================================================
@@ -308,21 +320,31 @@ class Volume extends \craft\base\Volume
      */
     private static function _buildConfigArray($keyId = null, $secret = null, $region = null)
     {
-        if (empty($keyId) || empty($secret)) {
-            $config = [];
-        } else {
-            // TODO Add support for different credential supply methods
-            // And look into v4 signature token caching.
-            $config = [
-                'credentials' => [
-                    'key' => $keyId,
-                    'secret' => $secret
-                ]
-            ];
-        }
+        $config = [
+            'region' => $region,
+            'version' => 'latest'
+        ];
 
-        $config['region'] = $region;
-        $config['version'] = 'latest';
+        if (empty($keyId) || empty($secret)) {
+            // Assume we're running on EC2 and we have an IAM role assigned. Kick back and relax.
+        } else {
+            $tokenKey = static::CACHE_KEY_PREFIX.md5($keyId.$secret);
+            $credentials = new Credentials($keyId, $secret);
+
+            if (Craft::$app->cache->exists($tokenKey)) {
+                $cached = Craft::$app->cache->get($tokenKey);
+                $credentials->unserialize($cached);
+            } else {
+                $config['credentials'] = $credentials;
+                $stsClient = new StsClient($config);
+                $result = $stsClient->getSessionToken(['DurationSeconds' => static::CACHE_DURATION_SECONDS]);
+                $credentials = $stsClient->createCredentials($result);
+                Craft::$app->cache->set($tokenKey, $credentials->serialize(), static::CACHE_DURATION_SECONDS);
+            }
+
+            // TODO Add support for different credential supply methods
+            $config['credentials'] = $credentials;
+        }
 
         $client = Craft::createGuzzleClient();
         $config['http_handler'] = new GuzzleHandler($client);

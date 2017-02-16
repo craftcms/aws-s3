@@ -3,6 +3,9 @@ Changelog
 
 ## Unreleased
 
+### Added
+- Added AWS access token caching.
+
 ### Fixed
 - Fixed a bug where the asset bundle was trying to load a non-existing CSS file.
 

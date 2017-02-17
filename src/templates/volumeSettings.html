@@ -21,29 +21,20 @@
 }) }}
 
 {% set bucketInput %}
-    <table class="inputs">
-        <tr>
-            <td>
-                {{ forms.select({
-                    id: 'bucket',
-                    name: 'bucket',
-                    options: { (volume.bucket): volume.bucket },
-                    value: volume.bucket,
-                    readonly: true,
-                    class: 's3-bucket-select'
-                }) }}
-            </td>
-            <td>
-                <div class="btn s3-refresh-buckets">{{ "Refresh"|t('app') }}</div>
-            </td>
-            <td>
-                <div class="spinner hidden"></div>
-            </td>
-        </tr>
-    </table>
+    <div class="flex">
+        {{ forms.select({
+            id: 'bucket',
+            name: 'bucket',
+            options: { (volume.bucket): volume.bucket },
+            value: volume.bucket,
+            readonly: true,
+            class: 's3-bucket-select'
+        }) }}
+        <div class="btn s3-refresh-buckets">{{ "Refresh"|t('app') }}</div>
+        <div class="spinner hidden"></div>
+    </div>
 
     <input type="hidden" name="region" class="s3-region" value="{{ volume.region }}" />
-
 {% endset %}
 
 {{ forms.field({
@@ -77,26 +68,22 @@
 {% set cacheInput %}
     {% set expires = (volume.expires|length > 0 ? volume.expires|split(' ') : ['', ''])%}
 
-    <table class="inputs">
-        <tr>
-            <td>
-                {{ forms.textField({
-                    id: 'expiresAmount',
-                    value: expires[0],
-                    size: 2,
-                    class: 'expires-amount'
-                }) }}
-            </td>
-            <td>
-                {{ forms.select({
-                    id: 'expiresPeriod',
-                    options: periods,
-                    value: expires[1],
-                    class: 'expires-period'
-                }) }}
-            </td>
-        </tr>
-    </table>
+    <div class="flex">
+        <div>
+            {{ forms.text({
+                id: 'expiresAmount',
+                value: expires[0],
+                size: 2,
+                class: 'expires-amount'
+            }) }}
+        </div>
+        {{ forms.select({
+            id: 'expiresPeriod',
+            options: periods,
+            value: expires[1],
+            class: 'expires-period'
+        }) }}
+    </div>
     {{ forms.hidden({
         name: "expires",
         value: volume.expires,

@@ -274,8 +274,8 @@ class Volume extends \craft\base\Volume
                     ]
                 );
             } catch (CloudFrontException $exception) {
+                // Log the warning, most likely due to 404. Allow the operation to continue, though.
                 Craft::warning($exception->getMessage());
-                throw new VolumeException('Failed to invalidate the CDN path for '.$path);
             }
         }
 

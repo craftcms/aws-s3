@@ -147,7 +147,7 @@ class Volume extends \craft\base\Volume
     public static function loadBucketList($keyId, $secret)
     {
         // Any region will do.
-        $config = static::_buildConfigArray($keyId, $secret, 'us-east-1');
+        $config = self::_buildConfigArray($keyId, $secret, 'us-east-1');
 
         $client = static::client($config);
 
@@ -306,7 +306,7 @@ class Volume extends \craft\base\Volume
         $secret = $this->secret;
         $region = $this->region;
 
-        return static::_buildConfigArray($keyId, $secret, $region);
+        return self::_buildConfigArray($keyId, $secret, $region);
     }
 
     /**

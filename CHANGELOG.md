@@ -3,6 +3,9 @@ Changelog
 
 ## Unreleased
 
+### Changed
+- Craft 3 Beta 20 compatibility.
+
 ### Fixed
 - Fixed a bug where invalidating a CDN path might prevent Craft from thinking the file was deleted.
 

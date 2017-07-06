@@ -128,7 +128,7 @@ class Volume extends \craft\base\Volume
      */
     public function getSettingsHtml()
     {
-        return Craft::$app->getView()->renderTemplate('awss3/volumeSettings', [
+        return Craft::$app->getView()->renderTemplate('aws-s3/volumeSettings', [
             'volume' => $this,
             'periods' => array_merge(['' => ''], Assets::periodList()),
             //'storageClasses' => static::storageClasses(),

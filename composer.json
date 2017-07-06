@@ -26,7 +26,7 @@
     "rss": "https://github.com/craftcms/aws-s3/commits/master.atom"
   },
   "require": {
-    "craftcms/cms": "~3.0.0-beta.1",
+    "craftcms/cms": "~3.0.0-beta.20",
     "league/flysystem-aws-s3-v3": "1.0.13"
   },
   "autoload": {
@@ -42,7 +42,7 @@
   ],
   "extra": {
     "name": "Amazon S3",
-    "handle": "awsS3",
+    "handle": "aws-s3",
     "changelogUrl": "https://raw.githubusercontent.com/craftcms/aws-s3/master/CHANGELOG.md",
     "downloadUrl": "https://github.com/craftcms/aws-s3/archive/master.zip"
   }

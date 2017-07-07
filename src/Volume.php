@@ -128,7 +128,7 @@ class Volume extends \craft\base\Volume
      */
     public function getSettingsHtml()
     {
-        return Craft::$app->getView()->renderTemplate('awss3/volumeSettings', [
+        return Craft::$app->getView()->renderTemplate('aws-s3/volumeSettings', [
             'volume' => $this,
             'periods' => array_merge(['' => ''], Assets::periodList()),
             //'storageClasses' => static::storageClasses(),
@@ -147,7 +147,7 @@ class Volume extends \craft\base\Volume
     public static function loadBucketList($keyId, $secret)
     {
         // Any region will do.
-        $config = static::_buildConfigArray($keyId, $secret, 'us-east-1');
+        $config = self::_buildConfigArray($keyId, $secret, 'us-east-1');
 
         $client = static::client($config);
 
@@ -274,8 +274,8 @@ class Volume extends \craft\base\Volume
                     ]
                 );
             } catch (CloudFrontException $exception) {
+                // Log the warning, most likely due to 404. Allow the operation to continue, though.
                 Craft::warning($exception->getMessage());
-                throw new VolumeException('Failed to invalidate the CDN path for '.$path);
             }
         }
 
@@ -306,7 +306,7 @@ class Volume extends \craft\base\Volume
         $secret = $this->secret;
         $region = $this->region;
 
-        return static::_buildConfigArray($keyId, $secret, $region);
+        return self::_buildConfigArray($keyId, $secret, $region);
     }
 
     /**

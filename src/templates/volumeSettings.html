@@ -1,23 +1,23 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.textField({
-    label: "Access Key ID"|t('app'),
+    label: "Access Key ID"|t('aws-s3'),
     id: 'keyId',
     name: 'keyId',
     value: volume.keyId,
     errors: volume.getErrors('keyId'),
     class: 's3-key-id',
-    instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assigne.'|t('app')
+    instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assigne.'|t('aws-s3')
 }) }}
 
 {{ forms.textField({
-    label: "Secret Access Key"|t('app'),
+    label: "Secret Access Key"|t('aws-s3'),
     id: 'secret',
     name: 'secret',
     value: volume.secret,
     errors: volume.getErrors('secret'),
     class: 's3-secret-key',
-    instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assigne.'|t('app')
+    instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assigne.'|t('aws-s3')
 }) }}
 
 {% set bucketInput %}
@@ -30,7 +30,7 @@
             readonly: true,
             class: 's3-bucket-select'
         }) }}
-        <div class="btn s3-refresh-buckets">{{ "Refresh"|t('app') }}</div>
+        <div class="btn s3-refresh-buckets">{{ "Refresh"|t('aws-s3') }}</div>
         <div class="spinner hidden"></div>
     </div>
 
@@ -38,27 +38,27 @@
 {% endset %}
 
 {{ forms.field({
-    label: "Bucket"|t('app'),
+    label: "Bucket"|t('aws-s3'),
     id: 'bucket'
 }, bucketInput) }}
 
 {{ forms.textField({
-    label: "Subfolder"|t('app'),
-    instructions: "If you want to use a bucket’s subfolder as a Volume, specify the path to use here."|t('app'),
+    label: "Subfolder"|t('aws-s3'),
+    instructions: "If you want to use a bucket’s subfolder as a Volume, specify the path to use here."|t('aws-s3'),
     id: 'subfolder',
     class: 'ltr',
     name: 'subfolder',
     value: volume.subfolder,
     errors: volume.getErrors('subfolder'),
     required: false,
-    placeholder: "path/to/subfolder"|t('app')
+    placeholder: "path/to/subfolder"|t('aws-s3')
 }) }}
 
 <hr>
 
 {# forms.selectField({
-    label: "Storage class"|t("app"),
-    instructions: "Click <a href=\"{link}\" title=\"Storage classes\" target=\"_blank\">here</a> for details."|t('app', {'link': "https://aws.amazon.com/s3/storage-classes/"}),
+    label: "Storage class"|t('aws-s3'),
+    instructions: "Click <a href=\"{link}\" title=\"Storage classes\" target=\"_blank\">here</a> for details."|t('aws-s3', {'link': "https://aws.amazon.com/s3/storage-classes/"}),
     id: 'storageClass',
     name: 'storageClass',
     options: storageClasses,
@@ -98,8 +98,8 @@
 }, cacheInput) }}
 
 {{ forms.textField({
-    label: "CloudFront distribution ID"|t('app'),
-    instructions: "If you're using CloudFront as CDN for your Assets, enter the distribution ID here so Assets can purge the files from CDN."|t('app'),
+    label: "CloudFront distribution ID"|t('aws-s3'),
+    instructions: "If you're using CloudFront as CDN for your Assets, enter the distribution ID here so Assets can purge the files from CDN."|t('aws-s3'),
     id: 'cfDistributionId',
     class: 'ltr',
     name: 'cfDistributionId',

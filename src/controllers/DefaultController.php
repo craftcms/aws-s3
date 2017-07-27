@@ -41,7 +41,7 @@ class DefaultController extends BaseController
 
         try {
             return $this->asJson(Volume::loadBucketList($keyId, $secret));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return $this->asErrorJson($e->getMessage());
         }
     }

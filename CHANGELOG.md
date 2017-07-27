@@ -1,7 +1,10 @@
 Changelog
 =========
 
-## Unreleased
+## 1.0.4 - 2017-07-07
+
+### Changed
+- Craft 3 Beta 20 compatibility.
 
 ### Fixed
 - Fixed a bug where it was not possible to list buckets when using newer AWS SDK versions.

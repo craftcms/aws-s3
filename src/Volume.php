@@ -162,7 +162,7 @@ class Volume extends \craft\base\Volume
 
         foreach ($buckets as $bucket) {
             try {
-                $location = $client->getBucketLocation(['Bucket' => $bucket['Name']]);
+                $location = $client->determineBucketRegion($bucket['Name']);
             } catch (S3Exception $exception) {
                 continue;
             }

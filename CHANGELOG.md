@@ -4,6 +4,7 @@ Changelog
 ## Unreleased
 
 ### Fixed
+- Fixed a bug where it was not possible to list buckets when using newer AWS SDK versions.
 - Fixed a bug where invalidating a CDN path might prevent Craft from thinking the file was deleted.
 
 ## 1.0.3 - 2017-02-17

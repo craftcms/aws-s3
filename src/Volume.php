@@ -170,7 +170,7 @@ class Volume extends \craft\base\Volume
             $bucketList[] = [
                 'bucket' => $bucket['Name'],
                 'urlPrefix' => 'http://'.$bucket['Name'].'.s3.amazonaws.com/',
-                'region' => $location['LocationConstraint'] ?? ''
+                'region' => $location ?? ''
             ];
         }
 

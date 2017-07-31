@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## Unreleased
+## 1.0.5 - 2017-07-31
 
 ### Fixed
 - Fixed a bug where cache duration information was not being saved for Volumes. ([#6](https://github.com/craftcms/aws-s3/issues/6))

@@ -74,14 +74,14 @@
                 id: 'expiresAmount',
                 value: expires[0],
                 size: 2,
-                class: 'expires-amount'
+                class: 's3-expires-amount'
             }) }}
         </div>
         {{ forms.select({
             id: 'expiresPeriod',
             options: periods,
             value: expires[1],
-            class: 'expires-period'
+            class: 's3-expires-period'
         }) }}
     </div>
     {{ forms.hidden({

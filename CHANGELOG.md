@@ -7,7 +7,7 @@ Changelog
 - Fixed a bug where cache duration information was not being saved for Volumes. ([#6](https://github.com/craftcms/aws-s3/issues/6))
 - Fixed a bug where it was not possible to list buckets when using newer AWS SDK versions.
 
-## 1.0.4 - 2017-07-07
+## 1.0.4 - 2017-07-07
 
 ### Changed
 - Craft 3 Beta 20 compatibility.

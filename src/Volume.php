@@ -14,7 +14,6 @@ use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Aws\Sts\StsClient;
 use Craft;
-use craft\errors\VolumeException;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
@@ -162,7 +161,7 @@ class Volume extends \craft\base\Volume
 
         foreach ($buckets as $bucket) {
             try {
-                $location = $client->getBucketLocation(['Bucket' => $bucket['Name']]);
+                $location = $client->determineBucketRegion($bucket['Name']);
             } catch (S3Exception $exception) {
                 continue;
             }
@@ -170,7 +169,7 @@ class Volume extends \craft\base\Volume
             $bucketList[] = [
                 'bucket' => $bucket['Name'],
                 'urlPrefix' => 'http://'.$bucket['Name'].'.s3.amazonaws.com/',
-                'region' => $location['LocationConstraint'] ?? ''
+                'region' => $location ?? ''
             ];
         }
 

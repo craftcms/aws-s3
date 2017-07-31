@@ -79,3 +79,17 @@ $s3BucketSelect.change(function()
 	$('.volume-url').val($selectedOption.data('url-prefix'));
 	$s3Region.val($selectedOption.data('region'));
 });
+
+var s3ChangeExpiryValue = function ()
+{
+    var parent = $(this).parents('.field'),
+        amount = parent.find('.s3-expires-amount').val(),
+        period = parent.find('.s3-expires-period select').val();
+
+    var combinedValue = (parseInt(amount, 10) === 0 || period.length === 0) ? '' : amount + ' ' + period;
+
+    parent.find('[type=hidden]').val(combinedValue);
+};
+
+$('.s3-expires-amount').keyup(s3ChangeExpiryValue).change(s3ChangeExpiryValue);
+$('.s3-expires-period select').change(s3ChangeExpiryValue);

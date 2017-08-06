@@ -15,6 +15,7 @@ use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Aws\Sts\StsClient;
 use Craft;
+use craft\flysystem\FlysystemVolume;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
@@ -31,7 +32,7 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since  3.0
  */
-class Volume extends \craft\base\Volume
+class Volume extends FlysystemVolume
 {
     // Constants
     // =========================================================================

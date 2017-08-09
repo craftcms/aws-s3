@@ -15,7 +15,7 @@ use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Aws\Sts\StsClient;
 use Craft;
-use craft\flysystem\FlysystemVolume;
+use craft\base\FlysystemVolume;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;

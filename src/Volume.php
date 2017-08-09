@@ -22,7 +22,6 @@ use craft\helpers\StringHelper;
 use DateTime;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
-
 /**
  * Class Volume
  *

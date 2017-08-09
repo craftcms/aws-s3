@@ -34,12 +34,6 @@
       "craft\\awss3\\": "src/"
     }
   },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://asset-packagist.org"
-    }
-  ],
   "extra": {
     "name": "Amazon S3",
     "handle": "aws-s3",

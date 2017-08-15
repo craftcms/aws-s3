@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 1.0.6 - 2017-08-15
+
+### Changed
+- Craft 3 Beta 24 compatibility.
+
 ## 1.0.5 - 2017-07-31
 
 ### Fixed

@@ -4,6 +4,8 @@ namespace craft\awss3;
 
 use Craft;
 use craft\events\RegisterComponentTypesEvent;
+use craft\services\Volumes;
+use yii\base\Event;
 
 
 /**
@@ -24,7 +26,7 @@ class Plugin extends \craft\base\Plugin
     {
         parent::init();
 
-        Craft::$app->getVolumes()->on('registerVolumeTypes', function(RegisterComponentTypesEvent $event) {
+        Event::on(Volumes::class, Volumes::EVENT_REGISTER_VOLUME_TYPES, function(RegisterComponentTypesEvent $event) {
             $event->types[] = Volume::class;
         });
     }

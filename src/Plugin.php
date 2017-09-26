@@ -2,7 +2,6 @@
 
 namespace craft\awss3;
 
-use Craft;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Volumes;
 use yii\base\Event;

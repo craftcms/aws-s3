@@ -27,47 +27,41 @@ To install the plugin, follow these instructions.
 
 To create a new asset volume for your Amazon S3 bucket, go to Settings → Assets, create a new volume, and set the Volume Type setting to “Amazon S3”.
 
+### Per-Environment Configuration
 
-### Environment Variables
+Once you’ve created your S3 volume in the Control Panel, you can override its settings with different values for each environment.
 
-It's possible to manage the configuration for this plugin in the environment - just make sure you have the following environment variables:
+First, add the following environment variables to your `.env` and `.env.example` files:
 
-* `AWS_KEY` - the API key with read/write access to S3
-* `AWS_SECRET` - the API secret with read/write access to S3
-* `AWS_BUCKET` - the name of the bucket you wish to use
-* `AWS_REGION` - the region which the bucket above resides
+```
+# The AWS API key with read/write access to S3
+S3_API_KEY=""
 
-And then create a `config/volumes.php` file containing references to these variables:
+# The AWS API key secret
+S3_SECRET=""
+
+# The name of the S3 bucket
+S3_BUCKET=""
+
+# The region the S3 bucket is in
+S3_REGION=""
+``` 
+
+Then fill in the values in your `.env` file (leaving the values in `.env.example` blank).
+
+Finally, create a `config/volumes.php` file containing references to these variables:
 
 ```php
 <?php
 
 return [
-
-    // The key below needs to be the same as your "handle" when creating a new volume
-    
-    'awsS3' => [
+    'myS3VolumeHandle' => [
         'hasUrls' => true,
-        
-        'url' => 'https://s3-eu-west-1.amazonaws.com/' . getenv('AWS_BUCKET') . '/',
-        
-        'keyId' => getenv('AWS_KEY'),
-        
-        'secret' => getenv('AWS_SECRET'),
-        
-        'bucket' => getenv('AWS_BUCKET'),
-        
-        'region' => getenv('AWS_REGION'),
+        'url' => 'https://s3-eu-west-1.amazonaws.com/'.getenv('S3_BUCKET').'/',
+        'keyId' => getenv('S3_API_KEY'),
+        'secret' => getenv('S3_SECRET'),
+        'bucket' => getenv('S3_BUCKET'),
+        'region' => getenv('S3_REGION'),
     ],
 ];
 ```
-
-Finally, make sure your bucket has a valid policy which can be used to display the images from the CMS. Head over to the [AWS Policy Generator](https://awspolicygen.s3.amazonaws.com/policygen.html) and generate a policy with the following details:
-
-* Type of policy: **S3 Bucket Policy**
-* Effect: **Allow**
-* Principal: *****
-* Actions: **GetObject**
-* ARN: **arn:aws:s3:::{bucket}**
-
-Once you have this policy, go to **S3** > **{bucket}** > **Permissions** > **Bucket Policy**, paste in your policy and save.

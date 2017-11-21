@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 1.0.7 - 2017-11-20
+
+### Changed
+- Loosened up the `league/flysystem-aws-s3-v3` version requirement.
+
 ## 1.0.6 - 2017-08-15
 
 ### Changed

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 1.0.8 - 2018-01-02
+
+### Added
+- Amazon S3 volumes’ Base URL settings are now parsed for [aliases](http://www.yiiframework.com/doc-2.0/guide-concept-aliases.html) (e.g. `@web`).
+
 ## 1.0.7 - 2017-11-20
 
 ### Changed

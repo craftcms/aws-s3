@@ -57,7 +57,7 @@ Finally, create a `config/volumes.php` file containing references to these varia
 return [
     'myS3VolumeHandle' => [
         'hasUrls' => true,
-        'url' => 'https://s3-eu-west-1.amazonaws.com/'.getenv('S3_BUCKET').'/',
+        'url' => 'https://'.getenv('S3_REGION').'.amazonaws.com/'.getenv('S3_BUCKET').'/',
         'keyId' => getenv('S3_API_KEY'),
         'secret' => getenv('S3_SECRET'),
         'bucket' => getenv('S3_BUCKET'),

@@ -37,9 +37,12 @@
     <input type="hidden" name="region" class="s3-region" value="{{ volume.region }}" />
 {% endset %}
 
+
 {{ forms.field({
     label: "Bucket"|t('aws-s3'),
-    id: 'bucket'
+    id: 'bucket',
+    required: true,
+    errors: volume.getErrors('bucket'),
 }, bucketInput) }}
 
 {{ forms.textField({

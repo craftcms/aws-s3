@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## Unreleased
+
+### Changed
+- Show validation error when creating a volume and not specify a bucket.
+
 ## 1.0.8 - 2018-01-02
 
 ### Added

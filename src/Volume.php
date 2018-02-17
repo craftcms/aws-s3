@@ -1,8 +1,8 @@
 <?php
 /**
- * @link      https://craftcms.com/
+ * @link https://craftcms.com/
  * @copyright Copyright (c) Pixel & Tonic, Inc.
- * @license   MIT
+ * @license MIT
  */
 
 namespace craft\awss3;
@@ -25,11 +25,10 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 /**
  * Class Volume
  *
- * @property mixed  $settingsHtml
+ * @property mixed $settingsHtml
  * @property string $rootUrl
- *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since  3.0
+ * @since 3.0
  */
 class Volume extends FlysystemVolume
 {
@@ -140,7 +139,6 @@ class Volume extends FlysystemVolume
      *
      * @param $keyId
      * @param $secret
-     *
      * @return array
      * @throws \InvalidArgumentException
      */
@@ -207,7 +205,6 @@ class Volume extends FlysystemVolume
 
     /**
      * @inheritdoc
-     *
      * @return AwsS3Adapter
      */
     protected function createAdapter()
@@ -223,7 +220,6 @@ class Volume extends FlysystemVolume
      * Get the Amazon S3 client.
      *
      * @param $config
-     *
      * @return S3Client
      */
     protected static function client(array $config = []): S3Client
@@ -318,7 +314,6 @@ class Volume extends FlysystemVolume
      * @param $keyId
      * @param $secret
      * @param $region
-     *
      * @return array
      */
     private static function _buildConfigArray($keyId = null, $secret = null, $region = null)

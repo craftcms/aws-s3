@@ -11,7 +11,7 @@ use yii\base\Event;
  * Plugin represents the Amazon S3 volume plugin.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since  3.0
+ * @since 3.0
  */
 class Plugin extends \craft\base\Plugin
 {

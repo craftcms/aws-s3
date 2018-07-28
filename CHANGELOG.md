@@ -1,4 +1,4 @@
-# Release Notes for Amazon S3
+# Release Notes for Amazon S3 for Craft CMS
 
 ## Unreleased
 

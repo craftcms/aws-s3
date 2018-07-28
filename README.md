@@ -1,5 +1,4 @@
-Amazon S3 for Craft CMS
-=======================
+# Amazon S3 for Craft CMS
 
 This plugin provides an [Amazon S3](https://aws.amazon.com/s3/) integration for [Craft CMS](https://craftcms.com/).
 

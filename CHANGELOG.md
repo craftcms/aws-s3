@@ -1,5 +1,4 @@
-Changelog
-=========
+# Release Notes for Amazon S3
 
 ## Unreleased
 

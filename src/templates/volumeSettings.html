@@ -62,15 +62,6 @@
 
 <hr>
 
-{# forms.selectField({
-    label: "Storage class"|t('aws-s3'),
-    instructions: "Click <a href=\"{link}\" title=\"Storage classes\" target=\"_blank\">here</a> for details."|t('aws-s3', {'link': "https://aws.amazon.com/s3/storage-classes/"}),
-    id: 'storageClass',
-    name: 'storageClass',
-    options: storageClasses,
-    value: volume.storageClass
-}) }#}
-
 {% set cacheInput %}
     {% set expires = (volume.expires|length > 0 ? volume.expires|split(' ') : ['', ''])%}
 

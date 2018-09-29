@@ -15,6 +15,15 @@ use yii\base\Event;
  */
 class Plugin extends \craft\base\Plugin
 {
+    // Properties
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public $schemaVersion = '1.0.1';
+
+
     // Public Methods
     // =========================================================================
 

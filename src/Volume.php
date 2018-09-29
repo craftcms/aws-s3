@@ -99,11 +99,6 @@ class Volume extends FlysystemVolume
     public $expires = '';
 
     /**
-     * @var string S3 storage class to use.
-     */
-    public $storageClass = '';
-
-    /**
      * @var string CloudFront Distribution ID
      */
     public $cfDistributionId;
@@ -130,7 +125,6 @@ class Volume extends FlysystemVolume
         return Craft::$app->getView()->renderTemplate('aws-s3/volumeSettings', [
             'volume' => $this,
             'periods' => array_merge(['' => ''], Assets::periodList()),
-            //'storageClasses' => static::storageClasses(),
         ]);
     }
 
@@ -186,20 +180,6 @@ class Volume extends FlysystemVolume
         return $rootUrl;
     }
 
-    /**
-     * Return a list of available storage classes.
-     *
-     * @return array
-     */
-    public static function storageClasses()
-    {
-        return [
-            static::STORAGE_STANDARD => 'Standard',
-            static::STORAGE_REDUCED_REDUNDANCY => 'Reduced Redundancy Storage',
-            static::STORAGE_STANDARD_IA => 'Infrequent Access Storage'
-        ];
-    }
-
     // Protected Methods
     // =========================================================================
 
@@ -239,12 +219,6 @@ class Volume extends FlysystemVolume
             $diff = $expires->format('U') - $now->format('U');
             $config['CacheControl'] = 'max-age='.$diff.', must-revalidate';
         }
-
-        // TODO re-add once fully supported by adapter.
-        /*if (!empty($this->storageClass)) {
-            $config['StorageClass'] = $this->storageClass;
-        }*/
-        $config['StorageClass'] = static::STORAGE_STANDARD;
 
         return parent::addFileMetadataToConfig($config);
     }

@@ -7,7 +7,7 @@
     value: volume.keyId,
     errors: volume.getErrors('keyId'),
     class: 's3-key-id',
-    instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assigne.'|t('aws-s3')
+    instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.'|t('aws-s3')
 }) }}
 
 {{ forms.textField({
@@ -17,7 +17,7 @@
     value: volume.secret,
     errors: volume.getErrors('secret'),
     class: 's3-secret-key',
-    instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assigne.'|t('aws-s3')
+    instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.'|t('aws-s3')
 }) }}
 
 {% set bucketInput %}

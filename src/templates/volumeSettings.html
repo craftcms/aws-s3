@@ -1,19 +1,21 @@
 {% import "_includes/forms" as forms %}
 
-{{ forms.textField({
+{{ forms.autosuggestField({
     label: "Access Key ID"|t('aws-s3'),
     id: 'keyId',
     name: 'keyId',
+    suggestions: craft.cp.getEnvSuggestions(),
     value: volume.keyId,
     errors: volume.getErrors('keyId'),
     class: 's3-key-id',
     instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.'|t('aws-s3')
 }) }}
 
-{{ forms.textField({
+{{ forms.autosuggestField({
     label: "Secret Access Key"|t('aws-s3'),
     id: 'secret',
     name: 'secret',
+    suggestions: craft.cp.getEnvSuggestions(),
     value: volume.secret,
     errors: volume.getErrors('secret'),
     class: 's3-secret-key',
@@ -45,12 +47,13 @@
     errors: volume.getErrors('bucket'),
 }, bucketInput) }}
 
-{{ forms.textField({
+{{ forms.autosuggestField({
     label: "Subfolder"|t('aws-s3'),
     instructions: "If you want to use a bucket’s subfolder as a Volume, specify the path to use here."|t('aws-s3'),
     id: 'subfolder',
     class: 'ltr',
     name: 'subfolder',
+    suggestions: craft.cp.getEnvSuggestions(),
     value: volume.subfolder,
     errors: volume.getErrors('subfolder'),
     required: false,
@@ -100,12 +103,13 @@
     id: 'cacheDuration',
 }, cacheInput) }}
 
-{{ forms.textField({
+{{ forms.autosuggestField({
     label: "CloudFront Distribution ID"|t('aws-s3'),
     instructions: "If you're using CloudFront as CDN for your Assets, enter the distribution ID here so Assets can purge the files from CDN."|t('aws-s3'),
     id: 'cfDistributionId',
     class: 'ltr',
     name: 'cfDistributionId',
+    suggestions: craft.cp.getEnvSuggestions(),
     value: volume.cfDistributionId,
     errors: volume.getErrors('cfDistributionId'),
     required: false

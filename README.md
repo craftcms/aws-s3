@@ -5,7 +5,7 @@ This plugin provides an [Amazon S3](https://aws.amazon.com/s3/) integration for 
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-RC4 or later.
+This plugin requires Craft CMS 3.1.0 or later.
 
 
 ## Installation
@@ -37,39 +37,56 @@ To create a new asset volume for your Amazon S3 bucket, go to Settings → Asset
 
 ### Per-Environment Configuration
 
-Once you’ve created your S3 volume in the Control Panel, you can override its settings with different values for each environment.
+Amazon S3 volumes’ Base URL, Access Key ID, Secret Access Key, Subfolder, and CloudFront Distribution ID settings can be set to environment variables. 
 
 First, add the following environment variables to your `.env` and `.env.example` files:
 
-```
+```bash
+# The S3 volume's base URL
+S3_BASE_URL=""
+
 # The AWS API key with read/write access to S3
 S3_API_KEY=""
 
 # The AWS API key secret
 S3_SECRET=""
 
+# The S3 buckte subfolder the volume should be set to
+S3_SUBFOLDER=""
+
+# The CloudFront distribution ID the S3 bucket is cached by
+S3_CLOUDFRONT_ID=""
+``` 
+
+Fill in the values in your `.env` file (leaving the values in `.env.example` blank).
+
+Then when you create an Amazon S3 volume, you can reference these environment variables in the volume’s setting by typing `$` followed by the environment variable names.
+
+Only the environment variable names will be saved to your database and `project.yaml` file, not their values.
+
+### Overriding the Bucket and Region
+
+Once you’ve created your Amazon S3 volume, you can override its bucket and/or region for an environment by adding two new environment variables:
+
+```bash
 # The name of the S3 bucket
 S3_BUCKET=""
 
 # The region the S3 bucket is in
 S3_REGION=""
-``` 
+```
 
-Then fill in the values in your `.env` file (leaving the values in `.env.example` blank).
-
-Finally, create a `config/volumes.php` file containing references to these variables:
+Then create a `config/volumes.php` file that overrides your volume’s `bucket` and `region` settings to the values provided by these environment variables:
 
 ```php
 <?php
 
 return [
-    'myS3VolumeHandle' => [
-        'hasUrls' => true,
-        'url' => 'https://'.getenv('S3_BUCKET').'.s3.amazonaws.com/',
-        'keyId' => getenv('S3_API_KEY'),
-        'secret' => getenv('S3_SECRET'),
+    'myVolumeHandle' => array_filter([
         'bucket' => getenv('S3_BUCKET'),
         'region' => getenv('S3_REGION'),
-    ],
+    ]),
 ];
 ```
+
+Now any environments that have `S3_BUCKET` and/or `S3_REGION` environment variables defined will override the volume’s `bucket` and `region` settings.

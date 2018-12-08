@@ -180,8 +180,8 @@ class Volume extends FlysystemVolume
      */
     public function getRootUrl()
     {
-        if (($rootUrl = parent::getRootUrl()) !== false && $this->subfolder) {
-            $rootUrl .= rtrim($this->subfolder, '/').'/';
+        if (($rootUrl = parent::getRootUrl()) !== false) {
+            $rootUrl .= $this->_subfolder();
         }
         return $rootUrl;
     }
@@ -213,7 +213,7 @@ class Volume extends FlysystemVolume
 
         $client = static::client($config);
 
-        return new AwsS3Adapter($client, $this->bucket, $this->subfolder);
+        return new AwsS3Adapter($client, $this->bucket, $this->_subfolder());
     }
 
     /**
@@ -261,7 +261,7 @@ class Volume extends FlysystemVolume
             try {
                 $cfClient->createInvalidation(
                     [
-                        'DistributionId' => $this->cfDistributionId,
+                        'DistributionId' => Craft::parseEnv($this->cfDistributionId),
                         'InvalidationBatch' => [
                             'Paths' =>
                                 [
@@ -285,6 +285,19 @@ class Volume extends FlysystemVolume
     // =========================================================================
 
     /**
+     * Returns the parsed subfolder path
+     * @return string|null
+     */
+    private function _subfolder()
+    {
+        if ($this->subfolder && ($subfolder = rtrim(Craft::parseEnv($this->subfolder), '/')) !== '') {
+            return $subfolder . '/';
+        }
+        return null;
+
+    }
+
+    /**
      * Get a CloudFront client.
      *
      * @return CloudFrontClient
@@ -301,8 +314,8 @@ class Volume extends FlysystemVolume
      */
     private function _getConfigArray()
     {
-        $keyId = $this->keyId;
-        $secret = $this->secret;
+        $keyId = Craft::parseEnv($this->keyId);
+        $secret = Craft::parseEnv($this->secret);
         $region = $this->region;
 
         return self::_buildConfigArray($keyId, $secret, $region);

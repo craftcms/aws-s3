@@ -35,8 +35,8 @@ class DefaultController extends BaseController
         $this->requireAcceptsJson();
 
         $request = Craft::$app->getRequest();
-        $keyId = $request->getRequiredBodyParam('keyId');
-        $secret = $request->getRequiredBodyParam('secret');
+        $keyId = Craft::parseEnv($request->getRequiredBodyParam('keyId'));
+        $secret = Craft::parseEnv($request->getRequiredBodyParam('secret'));
 
         try {
             return $this->asJson(Volume::loadBucketList($keyId, $secret));

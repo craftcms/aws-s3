@@ -1,3 +1,5 @@
+$(document).ready(function() {
+
 var $s3AccessKeyIdInput = $('.s3-key-id'),
 	$s3SecretAccessKeyInput = $('.s3-secret-key'),
 	$s3BucketSelect = $('.s3-bucket-select > select'),
@@ -93,3 +95,5 @@ var s3ChangeExpiryValue = function ()
 
 $('.s3-expires-amount').keyup(s3ChangeExpiryValue).change(s3ChangeExpiryValue);
 $('.s3-expires-period select').change(s3ChangeExpiryValue);
+
+});

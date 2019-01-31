@@ -11,6 +11,7 @@ use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
 use Aws\Credentials\Credentials;
 use Aws\Handler\GuzzleV6\GuzzleHandler;
+use Aws\Rekognition\RekognitionClient;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Aws\Sts\StsClient;
@@ -28,7 +29,7 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
  * @property mixed $settingsHtml
  * @property string $rootUrl
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 1.0
  */
 class Volume extends FlysystemVolume
 {
@@ -102,6 +103,11 @@ class Volume extends FlysystemVolume
      * @var string CloudFront Distribution ID
      */
     public $cfDistributionId;
+
+    /**
+     * @var bool Whether facial detection should be attempted to set the focal point automatically
+     */
+    public $autoFocalPoint = false;
 
     // Public Methods
     // =========================================================================

@@ -18,9 +18,9 @@ use craft\services\Volumes;
  * Installation Migration
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 1.0
+ * @since 1.2
  */
-class Install extends Migration
+class m190131_214300_cleanup_config extends Migration
 {
     // Public Methods
     // =========================================================================
@@ -30,7 +30,7 @@ class Install extends Migration
      */
     public function safeUp()
     {
-        // Convert any built-in S3 volumes to ours
+        // Cleanup failed conversions
         $this->_convertVolumes();
 
         return true;
@@ -58,7 +58,7 @@ class Install extends Migration
         $projectConfig->muteEvents = true;
 
         foreach ($projectConfig->get(Volumes::CONFIG_VOLUME_KEY) as $uid => &$volume) {
-            if ($volume['type'] == Volume::class && isset($volume['settings']) && is_array($volume['settings'])) {
+            if ($volume['type'] == Volume::class && !empty($volume['settings']) && is_array($volume['settings']) && array_key_exists('urlPrefix ', $volume['settings'])) {
                 $settings = $volume['settings'];
 
                 $hasUrls = !empty($volume['hasUrls']);

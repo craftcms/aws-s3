@@ -3,7 +3,8 @@
 ## Unreleased
 
 ### Added
-- Access Key ID, Secret Access Key, Subfolder, and CloudFront Distribution ID settings can now be set to environment variables. ([#35](https://github.com/craftcms/aws-s3/issues/35)) 
+- It's now possible to detect faces on upload and set the focal point accordingly.
+- Access Key ID, Secret Access Key, Subfolder, and CloudFront Distribution ID settings can now be set to environment variables. ([#35](https://github.com/craftcms/aws-s3/issues/35))
 
 ### Changed
 - Show validation error when creating a volume and not specify a bucket.

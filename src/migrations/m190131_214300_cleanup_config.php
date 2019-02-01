@@ -57,7 +57,9 @@ class m190131_214300_cleanup_config extends Migration
         $projectConfig = Craft::$app->getProjectConfig();
         $projectConfig->muteEvents = true;
 
-        foreach ($projectConfig->get(Volumes::CONFIG_VOLUME_KEY) as $uid => &$volume) {
+        $volumes = $projectConfig->get(Volumes::CONFIG_VOLUME_KEY) ?? [];
+
+        foreach ($volumes as $uid => &$volume) {
             if ($volume['type'] === Volume::class && !empty($volume['settings']) && is_array($volume['settings']) && array_key_exists('urlPrefix ', $volume['settings'])) {
                 $settings = $volume['settings'];
 

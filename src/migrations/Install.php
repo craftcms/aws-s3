@@ -57,7 +57,9 @@ class Install extends Migration
         $projectConfig = Craft::$app->getProjectConfig();
         $projectConfig->muteEvents = true;
 
-        foreach ($projectConfig->get(Volumes::CONFIG_VOLUME_KEY) as $uid => &$volume) {
+        $volumes = $projectConfig->get(Volumes::CONFIG_VOLUME_KEY) ?? [];
+
+        foreach ($volumes as $uid => &$volume) {
             if ($volume['type'] === Volume::class && isset($volume['settings']) && is_array($volume['settings'])) {
                 $settings = $volume['settings'];
 

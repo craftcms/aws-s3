@@ -27,7 +27,7 @@ class m180929_165000_remove_storageclass_setting extends Migration
                 unset($volume['settings']['storageClass']);
 
                 $this->update('{{%volumes}}', [
-                    'settings' => Json::encode($settings),
+                    'settings' => Json::encode($volume['settings']),
                 ], ['uid' => $uid]);
 
                 $projectConfig->set(Volumes::CONFIG_VOLUME_KEY . '.' . $uid, $volume);

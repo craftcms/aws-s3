@@ -1,6 +1,6 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## Unreleased
+## 1.1.0 - 2019-02-01
 
 ### Added
 - It's now possible to detect faces on upload and set the focal point accordingly.

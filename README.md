@@ -90,3 +90,11 @@ return [
 ```
 
 Now any environments that have `S3_BUCKET` and/or `S3_REGION` environment variables defined will override the volume’s `bucket` and `region` settings.
+
+### Using the automatic focal point detection
+
+This plugin can use the AWS Rekognition service to detect faces in an image and automatically set the focal point accordingly. This requires the image to be either a jpg or a png file. To enable this feature, just turn it on the volume settings.
+
+:warning: ️Using this will incur extra cost for each upload
+
+:warning: ️Using this requires the <code>rekognition:DetectFaces</code> action to be allowed.

@@ -100,6 +100,12 @@ class Volume extends FlysystemVolume
     public $expires = '';
 
     /**
+     * @var string S3 storage class to use.
+     * @deprecated in 1.1.1
+     */
+    public $storageClass = '';
+
+    /**
      * @var string CloudFront Distribution ID
      */
     public $cfDistributionId;

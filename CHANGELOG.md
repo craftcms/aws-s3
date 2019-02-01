@@ -4,6 +4,7 @@
 
 ### Fixed
 - Fixed an error that occurred when installing this plugin with no volumes defined. ([#41](https://github.com/craftcms/aws-s3/issues/41))
+- Fixed an error that occurred when updating to 1.1.0 in some cases. ([#40](https://github.com/craftcms/aws-s3/issues/40))
 
 ## 1.1.0 - 2019-02-01
 

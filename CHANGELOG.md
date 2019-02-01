@@ -10,7 +10,7 @@
 - Show validation error when creating a volume and not specify a bucket.
 
 ### Fixed
-- Fixed an error where it was not possible to use this plugin on installs that were updated from Craft 2 to Craft 3.1 ([#38](https://github.com/craftcms/aws-s3/issues/38))
+- Fixed an error that occurred when updating from Craft 2 to Craft 3.1 when using this plugin. ([#38](https://github.com/craftcms/aws-s3/issues/38))
 - Fixed a migration error. ([#39](https://github.com/craftcms/aws-s3/issues/39))
 
 ## 1.0.8 - 2018-01-02

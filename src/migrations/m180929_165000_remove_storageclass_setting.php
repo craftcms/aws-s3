@@ -23,7 +23,7 @@ class m180929_165000_remove_storageclass_setting extends Migration
         $projectConfig->muteEvents = true;
 
         foreach ($projectConfig->get(Volumes::CONFIG_VOLUME_KEY) as $uid => &$volume) {
-            if ($volume['type'] == Volume::class && isset($volume['settings']) && is_array($volume['settings'])) {
+            if ($volume['type'] === Volume::class && isset($volume['settings']) && is_array($volume['settings'])) {
                 unset($volume['settings']['storageClass']);
 
                 $this->update('{{%volumes}}', [

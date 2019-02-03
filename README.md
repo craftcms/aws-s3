@@ -1,12 +1,12 @@
-# Amazon S3 for Craft CMS
+<p align="center"><img src="./src/icon.svg" width="100" height="100" alt="Craft Commerce icon"></p>
+
+<h1 align="center">Amazon S3 for Craft CMS</h1>
 
 This plugin provides an [Amazon S3](https://aws.amazon.com/s3/) integration for [Craft CMS](https://craftcms.com/).
-
 
 ## Requirements
 
 This plugin requires Craft CMS 3.1.0 or later.
-
 
 ## Installation
 

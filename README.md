@@ -1,4 +1,4 @@
-<p align="center"><img src="./src/icon.svg" width="100" height="100" alt="Craft Commerce icon"></p>
+<p align="center"><img src="./src/icon.svg" width="100" height="100" alt="Amazon S3 for Craft CMS icon"></p>
 
 <h1 align="center">Amazon S3 for Craft CMS</h1>
 

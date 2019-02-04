@@ -35,34 +35,9 @@ composer require craftcms/aws-s3
 
 To create a new asset volume for your Amazon S3 bucket, go to Settings → Assets, create a new volume, and set the Volume Type setting to “Amazon S3”.
 
-### Per-Environment Configuration
-
-Amazon S3 volumes’ Base URL, Access Key ID, Secret Access Key, Subfolder, and CloudFront Distribution ID settings can be set to environment variables. 
-
-First, add the following environment variables to your `.env` and `.env.example` files:
-
-```bash
-# The S3 volume's base URL
-S3_BASE_URL=""
-
-# The AWS API key with read/write access to S3
-S3_API_KEY=""
-
-# The AWS API key secret
-S3_SECRET=""
-
-# The S3 buckte subfolder the volume should be set to
-S3_SUBFOLDER=""
-
-# The CloudFront distribution ID the S3 bucket is cached by
-S3_CLOUDFRONT_ID=""
-``` 
-
-Fill in the values in your `.env` file (leaving the values in `.env.example` blank).
-
-Then when you create an Amazon S3 volume, you can reference these environment variables in the volume’s setting by typing `$` followed by the environment variable names.
-
-Only the environment variable names will be saved to your database and `project.yaml` file, not their values.
+::: tip
+The Base URL, Access Key ID, Secret Access Key, Subfolder, and CloudFront Distribution ID settings can be set to environment variables. See [Environmental Configuration](https://docs.craftcms.com/v3/config/environments.html) in the Craft docs to learn more about that.
+:::
 
 ### Overriding the Bucket and Region
 

@@ -5,7 +5,6 @@ namespace craft\awss3\migrations;
 use Craft;
 use craft\awss3\Volume;
 use craft\db\Migration;
-use craft\db\Query;
 use craft\helpers\Json;
 use craft\services\Volumes;
 
@@ -20,8 +19,14 @@ class m180929_165000_remove_storageclass_setting extends Migration
     public function safeUp()
     {
         $projectConfig = Craft::$app->getProjectConfig();
-        $projectConfig->muteEvents = true;
 
+        // Don't make the same config changes twice
+        $schemaVersion = $projectConfig->get('plugins.aws-s3.schemaVersion', true);
+        if (version_compare($schemaVersion, '1.1', '>=')) {
+            return true;
+        }
+
+        $projectConfig->muteEvents = true;
         $volumes = $projectConfig->get(Volumes::CONFIG_VOLUME_KEY) ?? [];
 
         foreach ($volumes as $uid => &$volume) {

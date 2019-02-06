@@ -5,6 +5,12 @@
 ### Fixed
 - Fixed a bug where migrations were making project config changes when they shouldn't have been. ([#43](https://github.com/craftcms/aws-s3/issues/43))
 
+## 1.1.2 - 2019-02-04
+
+### Changed
+- Amazon S3 now requires Craft 3.1.5.
+- Settings that can be set to environment variables now show a tip about that if the value is not already set to an environment variable or alias.
+
 ## 1.1.1 - 2019-02-01
 
 ### Fixed

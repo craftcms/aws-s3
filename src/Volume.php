@@ -316,12 +316,12 @@ class Volume extends FlysystemVolume
      * Returns the parsed subfolder path
      * @return string|null
      */
-    private function _subfolder()
+    private function _subfolder(): string
     {
         if ($this->subfolder && ($subfolder = rtrim(Craft::parseEnv($this->subfolder), '/')) !== '') {
             return $subfolder . '/';
         }
-        return null;
+        return '';
 
     }
 

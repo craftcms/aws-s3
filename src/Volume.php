@@ -111,6 +111,11 @@ class Volume extends FlysystemVolume
     public $cfDistributionId;
 
     /**
+     * @var string CloudFront Distribution Prefix
+     */
+    public $cfDistributionPrefix;
+
+    /**
      * @var bool Whether facial detection should be attempted to set the focal point automatically
      */
     public $autoFocalPoint = false;
@@ -243,6 +248,7 @@ class Volume extends FlysystemVolume
         if (!empty($this->cfDistributionId)) {
             // If there's a CloudFront distribution ID set, invalidate the path.
             $cfClient = $this->_getCloudFrontClient();
+            $itemPrefix = trim($this->cfDistributionPrefix??"","/");
 
             try {
                 $cfClient->createInvalidation(
@@ -252,7 +258,7 @@ class Volume extends FlysystemVolume
                             'Paths' =>
                                 [
                                     'Quantity' => 1,
-                                    'Items' => ['/'.ltrim($path, '/')]
+                                    'Items' => ['/' . ($itemPrefix ? $itemPrefix."/":"") . ltrim($path, '/')]
                                 ],
                             'CallerReference' => 'Craft-'.StringHelper::randomString(24)
                         ]

@@ -173,7 +173,7 @@ class Volume extends FlysystemVolume
 
             $bucketList[] = [
                 'bucket' => $bucket['Name'],
-                'urlPrefix' => 'http://'.$bucket['Name'].'.s3.amazonaws.com/',
+                'urlPrefix' => 'http://' . $bucket['Name'] . '.s3.amazonaws.com/',
                 'region' => $location ?? ''
             ];
         }
@@ -227,9 +227,9 @@ class Volume extends FlysystemVolume
         if (!empty($this->expires) && DateTimeHelper::isValidIntervalString($this->expires)) {
             $expires = new DateTime();
             $now = new DateTime();
-            $expires->modify('+'.$this->expires);
+            $expires->modify('+' . $this->expires);
             $diff = $expires->format('U') - $now->format('U');
-            $config['CacheControl'] = 'max-age='.$diff.', must-revalidate';
+            $config['CacheControl'] = 'max-age=' . $diff . ', must-revalidate';
         }
 
         return parent::addFileMetadataToConfig($config);
@@ -252,9 +252,9 @@ class Volume extends FlysystemVolume
                             'Paths' =>
                                 [
                                     'Quantity' => 1,
-                                    'Items' => ['/'.ltrim($path, '/')]
+                                    'Items' => ['/' . ltrim($path, '/')]
                                 ],
-                            'CallerReference' => 'Craft-'.StringHelper::randomString(24)
+                            'CallerReference' => 'Craft-' . StringHelper::randomString(24)
                         ]
                     ]
                 );
@@ -288,7 +288,7 @@ class Volume extends FlysystemVolume
             'Image' => [
                 'S3Object' => [
                     'Name' => $filePath,
-                    'Bucket'=> $this->bucket,
+                    'Bucket' => $this->bucket,
                 ],
             ],
         ];
@@ -314,6 +314,7 @@ class Volume extends FlysystemVolume
 
     /**
      * Returns the parsed subfolder path
+     *
      * @return string|null
      */
     private function _subfolder(): string
@@ -322,7 +323,6 @@ class Volume extends FlysystemVolume
             return $subfolder . '/';
         }
         return '';
-
     }
 
     /**
@@ -367,7 +367,7 @@ class Volume extends FlysystemVolume
         if (empty($keyId) || empty($secret)) {
             // Assume we're running on EC2 and we have an IAM role assigned. Kick back and relax.
         } else {
-            $tokenKey = static::CACHE_KEY_PREFIX.md5($keyId.$secret);
+            $tokenKey = static::CACHE_KEY_PREFIX . md5($keyId . $secret);
             $credentials = new Credentials($keyId, $secret);
 
             if (Craft::$app->cache->exists($tokenKey)) {

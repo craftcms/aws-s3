@@ -3,7 +3,7 @@
 ## Unreleased
 
 ### Added
-- Added the Cloudfront Path Prefix setting.
+- Added the CloudFront Path Prefix setting.
 
 ## 1.1.3 - 2019-02-06
 

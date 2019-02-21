@@ -111,6 +111,11 @@ class Volume extends FlysystemVolume
     public $cfDistributionId;
 
     /**
+     * @var string CloudFront Distribution Prefix
+     */
+    public $cfPrefix;
+
+    /**
      * @var bool Whether facial detection should be attempted to set the focal point automatically
      */
     public $autoFocalPoint = false;
@@ -252,7 +257,7 @@ class Volume extends FlysystemVolume
                             'Paths' =>
                                 [
                                     'Quantity' => 1,
-                                    'Items' => ['/' . ltrim($path, '/')]
+                                    'Items' => ['/' . $this->_cfPrefix() . ltrim($path, '/')]
                                 ],
                             'CallerReference' => 'Craft-' . StringHelper::randomString(24)
                         ]
@@ -321,6 +326,19 @@ class Volume extends FlysystemVolume
     {
         if ($this->subfolder && ($subfolder = rtrim(Craft::parseEnv($this->subfolder), '/')) !== '') {
             return $subfolder . '/';
+        }
+        return '';
+    }
+
+    /**
+     * Returns the parsed CloudFront distribution prefix
+     *
+     * @return string|null
+     */
+    private function _cfPrefix(): string
+    {
+        if ($this->cfPrefix && ($cfPrefix = rtrim(Craft::parseEnv($this->cfPrefix), '/')) !== '') {
+            return $cfPrefix . '/';
         }
         return '';
     }

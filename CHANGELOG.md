@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Added
+- Added the Cloudfront Path Prefix setting.
+
 ## 1.1.3 - 2019-02-06
 
 ### Fixed

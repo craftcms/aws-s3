@@ -10,7 +10,6 @@ namespace craft\awss3\migrations;
 use Craft;
 use craft\awss3\Volume;
 use craft\db\Migration;
-use craft\db\Query;
 use craft\helpers\Json;
 use craft\services\Volumes;
 

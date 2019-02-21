@@ -41,7 +41,7 @@ class Plugin extends \craft\base\Plugin
             $event->types[] = Volume::class;
         });
 
-        Event::on(Asset::class, Element::EVENT_AFTER_SAVE, function (ModelEvent $event) {
+        Event::on(Asset::class, Element::EVENT_AFTER_SAVE, function(ModelEvent $event) {
             /** @var Asset $asset */
             $asset = $event->sender;
 
@@ -56,7 +56,7 @@ class Plugin extends \craft\base\Plugin
                 return;
             }
 
-            $fullPath = (!empty($volume->subfolder) ? rtrim($volume->subfolder, '/') . '/'  : '') . $asset->getPath();
+            $fullPath = (!empty($volume->subfolder) ? rtrim($volume->subfolder, '/') . '/' : '') . $asset->getPath();
 
             $focalPoint = $volume->detectFocalPoint($fullPath);
 
@@ -65,7 +65,6 @@ class Plugin extends \craft\base\Plugin
                 $assetRecord->focalPoint = implode(';', $focalPoint);
                 $assetRecord->save();
             }
-
         });
     }
 }

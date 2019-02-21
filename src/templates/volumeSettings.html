@@ -114,14 +114,14 @@
 }) }}
 
 {{ forms.autosuggestField({
-    label: "CloudFront Distribution Prefix"|t('aws-s3'),
+    label: "CloudFront Path Prefix"|t('aws-s3'),
     instructions: "If you’re using CloudFront as CDN for your assets and have configured subfolders or custom behaviors, enter the path prefix Craft should use when invalidating files."|t('aws-s3'),
-    id: 'cfDistributionPrefix',
+    id: 'cfPrefix',
     class: 'ltr',
-    name: 'cfDistributionPrefix',
+    name: 'cfPrefix',
     suggestEnvVars: true,
-    value: volume.cfDistributionPrefix,
-    errors: volume.getErrors('cfDistributionPrefix')
+    value: volume.cfPrefix,
+    errors: volume.getErrors('cfPrefix')
 }) }}
 
 {% do view.registerAssetBundle("craft\\awss3\\AwsS3Bundle") %}

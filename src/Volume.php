@@ -113,7 +113,7 @@ class Volume extends FlysystemVolume
     /**
      * @var string CloudFront Distribution Prefix
      */
-    public $cfDistributionPrefix;
+    public $cfPrefix;
 
     /**
      * @var bool Whether facial detection should be attempted to set the focal point automatically
@@ -257,7 +257,7 @@ class Volume extends FlysystemVolume
                             'Paths' =>
                                 [
                                     'Quantity' => 1,
-                                    'Items' => ['/' . $this->_cfDistributionPrefix() . ltrim($path, '/')]
+                                    'Items' => ['/' . $this->_cfPrefix() . ltrim($path, '/')]
                                 ],
                             'CallerReference' => 'Craft-' . StringHelper::randomString(24)
                         ]
@@ -335,10 +335,10 @@ class Volume extends FlysystemVolume
      *
      * @return string|null
      */
-    private function _cfDistributionPrefix(): string
+    private function _cfPrefix(): string
     {
-        if ($this->cfDistributionPrefix && ($cfDistributionPrefix = rtrim(Craft::parseEnv($this->cfDistributionPrefix), '/')) !== '') {
-            return $cfDistributionPrefix . '/';
+        if ($this->cfPrefix && ($cfPrefix = rtrim(Craft::parseEnv($this->cfPrefix), '/')) !== '') {
+            return $cfPrefix . '/';
         }
         return '';
     }

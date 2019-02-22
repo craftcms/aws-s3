@@ -3,7 +3,7 @@
 ## Unreleased
 
 ### Added
-- Added the CloudFront Path Prefix setting.
+- Added the CloudFront Path Prefix setting. ([#46](https://github.com/craftcms/aws-s3/pull/46))
 
 ## 1.1.3 - 2019-02-06
 

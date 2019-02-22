@@ -17,6 +17,7 @@ use Aws\S3\S3Client;
 use Aws\Sts\StsClient;
 use Craft;
 use craft\base\FlysystemVolume;
+use craft\behaviors\EnvAttributeParserBehavior;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
@@ -144,6 +145,27 @@ class Volume extends FlysystemVolume
         }
 
         parent::__construct($config);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['parser'] = [
+            'class' => EnvAttributeParserBehavior::class,
+            'attributes' => [
+                'keyId',
+                'secret',
+                'bucket',
+                'region',
+                'subfolder',
+                'cfDistributionId',
+                'cfPrefix',
+            ],
+        ];
+        return $behaviors;
     }
 
     /**

@@ -17,6 +17,7 @@ use Aws\S3\S3Client;
 use Aws\Sts\StsClient;
 use Craft;
 use craft\base\FlysystemVolume;
+use craft\helpers\ArrayHelper;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
@@ -85,6 +86,11 @@ class Volume extends FlysystemVolume
     public $secret = '';
 
     /**
+     * @var string Bucket selection mode ('choose' or 'manual')
+     */
+    public $bucketSelectionMode = 'choose';
+
+    /**
      * @var string Bucket to use
      */
     public $bucket = '';
@@ -122,6 +128,23 @@ class Volume extends FlysystemVolume
 
     // Public Methods
     // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct(array $config = [])
+    {
+        if (isset($config['manualBucket'])) {
+            if (isset($config['bucketSelectionMode']) && $config['bucketSelectionMode'] === 'manual') {
+                $config['bucket'] = ArrayHelper::remove($config, 'manualBucket');
+                $config['region'] = ArrayHelper::remove($config, 'manualRegion');
+            } else {
+                unset($config['manualBucket'], $config['manualRegion']);
+            }
+        }
+
+        parent::__construct($config);
+    }
 
     /**
      * @inheritdoc
@@ -210,7 +233,7 @@ class Volume extends FlysystemVolume
 
         $client = static::client($config);
 
-        return new AwsS3Adapter($client, $this->bucket, $this->_subfolder());
+        return new AwsS3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder());
     }
 
     /**
@@ -293,7 +316,7 @@ class Volume extends FlysystemVolume
             'Image' => [
                 'S3Object' => [
                     'Name' => $filePath,
-                    'Bucket' => $this->bucket,
+                    'Bucket' => Craft::parseEnv($this->bucket),
                 ],
             ],
         ];
@@ -362,7 +385,7 @@ class Volume extends FlysystemVolume
     {
         $keyId = Craft::parseEnv($this->keyId);
         $secret = Craft::parseEnv($this->secret);
-        $region = $this->region;
+        $region = Craft::parseEnv($this->region);
 
         return self::_buildConfigArray($keyId, $secret, $region);
     }

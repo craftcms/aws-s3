@@ -35,34 +35,7 @@ composer require craftcms/aws-s3
 
 To create a new asset volume for your Amazon S3 bucket, go to Settings → Assets, create a new volume, and set the Volume Type setting to “Amazon S3”.
 
-> **Tip:** The Base URL, Access Key ID, Secret Access Key, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://docs.craftcms.com/v3/config/environments.html) in the Craft docs to learn more about that.
-
-### Overriding the Bucket and Region
-
-Once you’ve created your Amazon S3 volume, you can override its bucket and/or region for an environment by adding two new environment variables:
-
-```bash
-# The name of the S3 bucket
-S3_BUCKET=""
-
-# The region the S3 bucket is in
-S3_REGION=""
-```
-
-Then create a `config/volumes.php` file that overrides your volume’s `bucket` and `region` settings to the values provided by these environment variables:
-
-```php
-<?php
-
-return [
-    'myVolumeHandle' => array_filter([
-        'bucket' => getenv('S3_BUCKET'),
-        'region' => getenv('S3_REGION'),
-    ]),
-];
-```
-
-Now any environments that have `S3_BUCKET` and/or `S3_REGION` environment variables defined will override the volume’s `bucket` and `region` settings.
+> **Tip:** The Base URL, Access Key ID, Secret Access Key, Bucket, Region, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://docs.craftcms.com/v3/config/environments.html) in the Craft docs to learn more about that.
 
 ### Using the automatic focal point detection
 

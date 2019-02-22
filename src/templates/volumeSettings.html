@@ -23,17 +23,55 @@
 }) }}
 
 {% set bucketInput %}
-    <div class="flex">
+    <div class="flex fullwidth">
         {{ forms.select({
-            id: 'bucket',
-            name: 'bucket',
-            options: { (volume.bucket): volume.bucket },
-            value: volume.bucket,
-            readonly: true,
-            class: 's3-bucket-select'
+            name: 'bucketSelectionMode',
+            options: [
+                { label: 'Choose…'|t('aws-s3'), value: 'choose' },
+                { label: 'Manual…'|t('aws-s3'), value: 'manual' }
+            ],
+            value: volume.bucketSelectionMode,
+            toggle: true,
+            targetPrefix: '.bsm-'
         }) }}
-        <div class="btn s3-refresh-buckets">{{ "Refresh"|t('aws-s3') }}</div>
-        <div class="spinner hidden"></div>
+
+        <div class="bsm-choose{% if volume.bucketSelectionMode == 'manual' %} hidden{% endif %}">
+            {{ forms.select({
+                id: 'bucket',
+                name: 'bucket',
+                options: { (volume.bucket): volume.bucket },
+                value: volume.bucketSelectionMode == 'manual' ? volume.bucket,
+                readonly: true,
+                class: 's3-bucket-select'
+            }) }}
+        </div>
+        <div class="bsm-choose{% if volume.bucketSelectionMode == 'manual' %} hidden{% endif %}">
+            <div class="btn s3-refresh-buckets">{{ "Refresh"|t('aws-s3') }}</div>
+        </div>
+        <div class="bsm-choose{% if volume.bucketSelectionMode == 'manual' %} hidden{% endif %}">
+            <div class="spinner hidden"></div>
+        </div>
+
+        <div class="bsm-manual{% if volume.bucketSelectionMode == 'choose' %} hidden{% endif %} flex-grow">
+            {{ forms.autosuggest({
+                label: "Bucket"|t('aws-s3'),
+                class: 'ltr',
+                name: 'manualBucket',
+                suggestEnvVars: true,
+                value: volume.bucket,
+                placeholder: 'Bucket'|t('aws-s3')
+            }) }}
+        </div>
+        <div class="bsm-manual{% if volume.bucketSelectionMode == 'choose' %} hidden{% endif %} flex-grow">
+            {{ forms.autosuggest({
+                label: "Region"|t('aws-s3'),
+                class: 'ltr',
+                name: 'manualRegion',
+                suggestEnvVars: true,
+                value: volume.region,
+                placeholder: 'Region'|t('aws-s3')
+            }) }}
+        </div>
     </div>
 
     <input type="hidden" name="region" class="s3-region" value="{{ volume.region }}" />

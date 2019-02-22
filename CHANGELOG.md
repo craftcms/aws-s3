@@ -4,6 +4,7 @@
 
 ### Added
 - Added the CloudFront Path Prefix setting. ([#46](https://github.com/craftcms/aws-s3/pull/46))
+- The Bucket and Region settings can now be set to environment variables. ([#42](https://github.com/craftcms/aws-s3/issues/42))
 
 ## 1.1.3 - 2019-02-06
 

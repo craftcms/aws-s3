@@ -215,16 +215,11 @@ class Volume extends FlysystemVolume
         $bucketList = [];
 
         foreach ($buckets as $bucket) {
-            try {
-                $location = $client->determineBucketRegion($bucket['Name']);
-            } catch (S3Exception $exception) {
-                continue;
-            }
-
+            $region = $client->determineBucketRegion($bucket['Name']);
             $bucketList[] = [
                 'bucket' => $bucket['Name'],
-                'urlPrefix' => 'http://' . $bucket['Name'] . '.s3.amazonaws.com/',
-                'region' => $location ?? ''
+                'urlPrefix' => 'https://s3.'.$region.'.amazonaws.com/'.$bucket['Name'].'/',
+                'region' => $region
             ];
         }
 

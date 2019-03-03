@@ -22,7 +22,7 @@
     "email": "support@craftcms.com",
     "issues": "https://github.com/craftcms/aws-s3/issues?state=open",
     "source": "https://github.com/craftcms/aws-s3",
-    "docs": "https://github.com/craftcms/aws-s3",
+    "docs": "https://github.com/craftcms/aws-s3/blob/master/README.md",
     "rss": "https://github.com/craftcms/aws-s3/commits/master.atom"
   },
   "require": {
@@ -37,7 +37,6 @@
   "extra": {
     "name": "Amazon S3",
     "handle": "aws-s3",
-    "changelogUrl": "https://raw.githubusercontent.com/craftcms/aws-s3/master/CHANGELOG.md",
-    "downloadUrl": "https://github.com/craftcms/aws-s3/archive/master.zip"
+    "documentationUrl": "https://github.com/craftcms/aws-s3/blob/master/README.md"
   }
 }

@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Fixed
+- Fixed an error that occurred if expiry time was set up incorrectly. ([#47](https://github.com/craftcms/aws-s3/issues/47))
+
 ## 1.2.0 - 2019-02-21
 
 ### Added

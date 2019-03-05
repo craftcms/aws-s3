@@ -101,7 +101,7 @@
 
 {{ forms.lightswitchField({
     label: "Attempt to set the focal point automatically?"|t('aws-s3'),
-    instructions: "Turn this on if you want to use the AWS Rekognition to try to set the focal point to a detected face.<br /> ⚠️Using this will incur extra cost for each upload.<br /> ⚠️Using this requires the <code>rekognition:DetectFaces</code> action to be allowed."|t('aws-s3'),
+    instructions: "Turn this on if you want to use the AWS Rekognition to try to set the focal point to a detected face.\n ⚠️Using this will incur extra cost for each upload.\n ⚠️Using this requires the `rekognition:DetectFaces` action to be allowed."|t('aws-s3'),
     name: 'autoFocalPoint',
     on: volume.autoFocalPoint,
 }) }}

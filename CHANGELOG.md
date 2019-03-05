@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Changed
+- Default URLs for buckets now use HTTPS. ([#34](https://github.com/craftcms/aws-s3/issues/34))
+
 ### Fixed
 - Fixed an error that occurred if expiry time was set up incorrectly. ([#47](https://github.com/craftcms/aws-s3/issues/47))
 

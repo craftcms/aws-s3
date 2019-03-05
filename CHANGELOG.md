@@ -1,6 +1,6 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## Unreleased
+## 1.2.1 - 2019-03-05
 
 ### Changed
 - Default URLs for buckets now use HTTPS. ([#34](https://github.com/craftcms/aws-s3/issues/34))

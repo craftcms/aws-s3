@@ -216,15 +216,18 @@ class Volume extends FlysystemVolume
 
         foreach ($buckets as $bucket) {
             try {
-                $location = $client->determineBucketRegion($bucket['Name']);
+                $region = $client->determineBucketRegion($bucket['Name']);
             } catch (S3Exception $exception) {
+
+                // If a bucket cannot be accessed by the current policy, move along:
+                // https://github.com/craftcms/aws-s3/pull/29#issuecomment-468193410
                 continue;
             }
 
             $bucketList[] = [
                 'bucket' => $bucket['Name'],
-                'urlPrefix' => 'http://' . $bucket['Name'] . '.s3.amazonaws.com/',
-                'region' => $location ?? ''
+                'urlPrefix' => 'https://s3.'.$region.'.amazonaws.com/'.$bucket['Name'].'/',
+                'region' => $region
             ];
         }
 

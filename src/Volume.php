@@ -107,6 +107,11 @@ class Volume extends FlysystemVolume
     public $expires = '';
 
     /**
+     * @var string Set ACL for Uploads
+     */
+	public $acl = 'public-read';
+
+    /**
      * @var string S3 storage class to use.
      * @deprecated in 1.1.1
      */
@@ -284,6 +289,10 @@ class Volume extends FlysystemVolume
             $diff = $expires->format('U') - $now->format('U');
             $config['CacheControl'] = 'max-age=' . $diff . ', must-revalidate';
         }
+
+		if (!empty($this->acl)) {
+			$config["ACL"] = $this->acl;
+		}
 
         return parent::addFileMetadataToConfig($config);
     }

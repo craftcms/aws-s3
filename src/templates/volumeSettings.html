@@ -99,7 +99,7 @@
 
 {{ forms.autosuggestField({
     label: "Upload ACL"|t('aws-s3'),
-	instructions: "Set the ACL for uploaded objects independent of whether or not assets have public URLs",
+	instructions: "Set the ACL for uploaded objects. If unset will default to value of the Public Urls field.",
     id: 'acl',
     name: 'acl',
     suggestEnvVars: true,

@@ -1,4 +1,4 @@
-<?php
+// <?php
 /**
  * @link https://craftcms.com/
  * @copyright Copyright (c) Pixel & Tonic, Inc.
@@ -24,6 +24,8 @@ use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
 use DateTime;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\AdapterInterface;
+
 
 /**
  * Class Volume
@@ -109,7 +111,7 @@ class Volume extends FlysystemVolume
     /**
      * @var string Set ACL for Uploads
      */
-	public $acl = 'public-read';
+	public $acl = '';
 
     /**
      * @var string S3 storage class to use.
@@ -290,10 +292,6 @@ class Volume extends FlysystemVolume
             $config['CacheControl'] = 'max-age=' . $diff . ', must-revalidate';
         }
 
-		if (!empty($this->acl)) {
-			$config["ACL"] = $this->acl;
-		}
-
         return parent::addFileMetadataToConfig($config);
     }
 
@@ -465,4 +463,17 @@ class Volume extends FlysystemVolume
 
         return $config;
     }
+
+	 /**
+     * Returns the visibility setting for the Volume. If acl is set we ignore the hasUrls setting.
+     *
+     * @return string
+     */
+	protected function visibility(): string {
+		if (!$this->acl) {
+			return $this->hasUrls ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
+		} else {
+			return $this->acl;
+		}
+	}
 }

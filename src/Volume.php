@@ -108,9 +108,9 @@ class Volume extends FlysystemVolume
     public $expires = '';
 
     /**
-     * @var string Set ACL for Uploads
+     * @var bool Set ACL for Uploads
      */
-    public $acl = '';
+    public $makeUploadsPublic = true;
 
     /**
      * @var string S3 storage class to use.
@@ -464,15 +464,11 @@ class Volume extends FlysystemVolume
     }
 
     /**
-     * Returns the visibility setting for the Volume. If acl is set we ignore the hasUrls setting.
+     * Returns the visibility setting for the Volume.
      *
      * @return string
      */
     protected function visibility(): string {
-        if (!$this->acl) {
-            return parent::visibility();
-        } else {
-            return $this->acl;
-        }
+        return $this->makeUploadsPublic ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
     }
 }

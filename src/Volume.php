@@ -471,7 +471,7 @@ class Volume extends FlysystemVolume
      */
 	protected function visibility(): string {
 		if (!$this->acl) {
-			return $this->hasUrls ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
+			return parent::visibility();
 		} else {
 			return $this->acl;
 		}

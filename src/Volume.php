@@ -26,7 +26,6 @@ use DateTime;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\AdapterInterface;
 
-
 /**
  * Class Volume
  *
@@ -111,7 +110,7 @@ class Volume extends FlysystemVolume
     /**
      * @var string Set ACL for Uploads
      */
-	public $acl = '';
+    public $acl = '';
 
     /**
      * @var string S3 storage class to use.
@@ -310,10 +309,10 @@ class Volume extends FlysystemVolume
                         'DistributionId' => Craft::parseEnv($this->cfDistributionId),
                         'InvalidationBatch' => [
                             'Paths' =>
-                                [
-                                    'Quantity' => 1,
-                                    'Items' => ['/' . $this->_cfPrefix() . ltrim($path, '/')]
-                                ],
+                            [
+                                'Quantity' => 1,
+                                'Items' => ['/' . $this->_cfPrefix() . ltrim($path, '/')]
+                            ],
                             'CallerReference' => 'Craft-' . StringHelper::randomString(24)
                         ]
                     ]
@@ -464,16 +463,16 @@ class Volume extends FlysystemVolume
         return $config;
     }
 
-	 /**
+    /**
      * Returns the visibility setting for the Volume. If acl is set we ignore the hasUrls setting.
      *
      * @return string
      */
-	protected function visibility(): string {
-		if (!$this->acl) {
-			return parent::visibility();
-		} else {
-			return $this->acl;
-		}
-	}
+    protected function visibility(): string {
+        if (!$this->acl) {
+            return parent::visibility();
+        } else {
+            return $this->acl;
+        }
+    }
 }

@@ -97,16 +97,12 @@
     placeholder: "path/to/subfolder"|t('aws-s3')
 }) }}
 
-{{ forms.autosuggestField({
-    label: "Upload ACL"|t('aws-s3'),
-	instructions: "Set the ACL for uploaded objects. If unset will default to value of the Public Urls field.",
-    id: 'acl',
-    name: 'acl',
-    suggestEnvVars: true,
-    value: volume.acl,
-    errors: volume.getErrors('acl'),
-    class: 's3-acl',
-
+{{ forms.lightswitchField({
+    label: "Make Uploads Public"|t('aws-s3'),
+    instructions: "Sets the ACL for uploaded objects.",
+    id: 'makeUploadsPublic',
+    name: 'makeUploadsPublic',
+    on: volume.makeUploadsPublic
 }) }}
 
 <hr/>

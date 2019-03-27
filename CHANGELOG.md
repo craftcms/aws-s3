@@ -5,6 +5,9 @@
 ### Added
 - Added the `makeUploadsPublic` setting which defaults to true and determines whether the uploaded Assets are public on the bucket. ([#48](https://github.com/craftcms/aws-s3/issues/48))
 
+### Fixed
+- Fixed an error that could occur when installing the plugin on a site that was migrated from Craft 2. ([#47](https://github.com/craftcms/aws-s3/issues/47))
+
 ## 1.2.1 - 2019-03-05
 
 ### Changed

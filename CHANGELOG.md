@@ -5,15 +5,15 @@
 ### Added
 - Added the `makeUploadsPublic` setting which defaults to true and determines whether the uploaded Assets are public on the bucket. ([#48](https://github.com/craftcms/aws-s3/issues/48))
 
-### Fixed
+### Fixed
 - Fixed an error that could occur when installing the plugin on a site that was migrated from Craft 2. ([#47](https://github.com/craftcms/aws-s3/issues/47))
 
 ## 1.2.1 - 2019-03-05
 
-### Changed
+### Changed
 - Default URLs for buckets now use HTTPS. ([#34](https://github.com/craftcms/aws-s3/issues/34))
 
-### Fixed
+### Fixed
 - Fixed an error that occurred if expiry time was set up incorrectly. ([#47](https://github.com/craftcms/aws-s3/issues/47))
 
 ## 1.2.0 - 2019-02-21
@@ -22,7 +22,7 @@
 - Added the CloudFront Path Prefix setting. ([#46](https://github.com/craftcms/aws-s3/pull/46))
 - The Bucket and Region settings can now be set to environment variables. ([#42](https://github.com/craftcms/aws-s3/issues/42))
 
-## 1.1.3 - 2019-02-06
+## 1.1.3 - 2019-02-06
 
 ### Fixed
 - Fixed a bug where migrations were making project config changes when they shouldn't have been. ([#43](https://github.com/craftcms/aws-s3/issues/43))
@@ -35,7 +35,7 @@
 
 ## 1.1.1 - 2019-02-01
 
-### Fixed
+### Fixed
 - Fixed an error that occurred when installing this plugin with no volumes defined. ([#41](https://github.com/craftcms/aws-s3/issues/41))
 - Fixed an error that occurred when updating to 1.1.0 in some cases. ([#40](https://github.com/craftcms/aws-s3/issues/40))
 
@@ -48,7 +48,7 @@
 ### Changed
 - Show validation error when creating a volume and not specify a bucket.
 
-### Fixed
+### Fixed
 - Fixed an error that occurred when updating from Craft 2 to Craft 3.1 when using this plugin. ([#38](https://github.com/craftcms/aws-s3/issues/38))
 - Fixed a migration error. ([#39](https://github.com/craftcms/aws-s3/issues/39))
 

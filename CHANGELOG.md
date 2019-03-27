@@ -1,6 +1,6 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## Unreleased
+## 1.2.2 - 2019-03-27
 
 ### Added
 - Added the `makeUploadsPublic` setting which defaults to true and determines whether the uploaded Assets are public on the bucket. ([#48](https://github.com/craftcms/aws-s3/issues/48))

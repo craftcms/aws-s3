@@ -97,6 +97,14 @@
     placeholder: "path/to/subfolder"|t('aws-s3')
 }) }}
 
+{{ forms.lightswitchField({
+    label: "Make Uploads Public"|t('aws-s3'),
+    instructions: "Sets the ACL for uploaded objects.",
+    id: 'makeUploadsPublic',
+    name: 'makeUploadsPublic',
+    on: volume.makeUploadsPublic
+}) }}
+
 <hr/>
 
 {{ forms.lightswitchField({

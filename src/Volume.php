@@ -24,6 +24,7 @@ use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
 use DateTime;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\AdapterInterface;
 
 /**
  * Class Volume
@@ -105,6 +106,11 @@ class Volume extends FlysystemVolume
      * @var string Cache expiration period.
      */
     public $expires = '';
+
+    /**
+     * @var bool Set ACL for Uploads
+     */
+    public $makeUploadsPublic = true;
 
     /**
      * @var string S3 storage class to use.
@@ -303,10 +309,10 @@ class Volume extends FlysystemVolume
                         'DistributionId' => Craft::parseEnv($this->cfDistributionId),
                         'InvalidationBatch' => [
                             'Paths' =>
-                                [
-                                    'Quantity' => 1,
-                                    'Items' => ['/' . $this->_cfPrefix() . ltrim($path, '/')]
-                                ],
+                            [
+                                'Quantity' => 1,
+                                'Items' => ['/' . $this->_cfPrefix() . ltrim($path, '/')]
+                            ],
                             'CallerReference' => 'Craft-' . StringHelper::randomString(24)
                         ]
                     ]
@@ -455,5 +461,14 @@ class Volume extends FlysystemVolume
         $config['http_handler'] = new GuzzleHandler($client);
 
         return $config;
+    }
+
+    /**
+     * Returns the visibility setting for the Volume.
+     *
+     * @return string
+     */
+    protected function visibility(): string {
+        return $this->makeUploadsPublic ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
     }
 }

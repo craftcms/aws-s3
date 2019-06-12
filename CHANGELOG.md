@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Fixed
+- Fixed a bug where facial detection (if enabled) was applied every time an Asset was saved. ([#59](https://github.com/craftcms/aws-s3/issues/59))
+
 ## 1.2.2 - 2019-03-27
 
 ### Added

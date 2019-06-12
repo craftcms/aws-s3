@@ -42,6 +42,10 @@ class Plugin extends \craft\base\Plugin
         });
 
         Event::on(Asset::class, Element::EVENT_AFTER_SAVE, function(ModelEvent $event) {
+            if (!$event->isNew) {
+                return;
+            }
+
             /** @var Asset $asset */
             $asset = $event->sender;
 

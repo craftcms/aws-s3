@@ -62,7 +62,7 @@ A typical IAM policy that grants the user to choose a bucket can look like this:
         "Action": [
             "s3:ListAllMyBuckets"
         ],
-        "Resource": "arn:aws:s3:::"
+        "Resource": "*"
     },
     {
         "Effect": "Allow",

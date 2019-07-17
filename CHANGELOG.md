@@ -1,6 +1,6 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## Unreleased
+## 1.2.4 - 2019-07-17
 
 ### Fixed
 - Fixed an error where access token was cached for a fixed amount of time, ignoring the actual token duration. ([#22](https://github.com/craftcms/aws-s3/issues/22))

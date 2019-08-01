@@ -13,7 +13,6 @@ use Aws\Credentials\Credentials;
 use Aws\Handler\GuzzleV6\GuzzleHandler;
 use Aws\Rekognition\RekognitionClient;
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3Client;
 use Aws\Sts\StsClient;
 use Craft;
 use craft\base\FlysystemVolume;
@@ -207,7 +206,7 @@ class Volume extends FlysystemVolume
     public static function loadBucketList($keyId, $secret)
     {
         // Any region will do.
-        $config = self::_buildConfigArray($keyId, $secret, 'us-east-1');
+        $config = self::buildConfigArray($keyId, $secret, 'us-east-1');
 
         $client = static::client($config);
 
@@ -262,7 +261,7 @@ class Volume extends FlysystemVolume
     {
         $config = $this->_getConfigArray();
 
-        $client = static::client($config);
+        $client = static::client($config, $this->_getCredentials());
 
         return new AwsS3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder());
     }
@@ -270,11 +269,24 @@ class Volume extends FlysystemVolume
     /**
      * Get the Amazon S3 client.
      *
-     * @param $config
+     * @param array $config client config
+     * @param array $credentials credentials to use when generating a new token
      * @return S3Client
      */
-    protected static function client(array $config = []): S3Client
+    protected static function client(array $config = [], array $credentials = []): S3Client
     {
+        if (!empty($config['credentials']) && $config['credentials'] instanceof Credentials) {
+            $config['generateNewConfig'] = function() use ($credentials) {
+                $args = [
+                    $credentials['keyId'],
+                    $credentials['secret'],
+                    $credentials['region'],
+                    true
+                ];
+                return call_user_func_array(self::class . '::buildConfigArray', $args);
+            };
+        }
+
         return new S3Client($config);
     }
 
@@ -368,6 +380,51 @@ class Volume extends FlysystemVolume
         return [];
     }
 
+    /**
+     * Build the config array based on a keyID and secret
+     *
+     * @param string|null $keyId The key ID
+     * @param string|null $secret The key secret
+     * @param string|null $region The region to user
+     * @param bool $refreshToken If true will always refresh token
+     * @return array
+     */
+    public static function buildConfigArray($keyId = null, $secret = null, $region = null, $refreshToken = false): array
+    {
+        $config = [
+            'region' => $region,
+            'version' => 'latest'
+        ];
+
+        $client = Craft::createGuzzleClient();
+        $config['http_handler'] = new GuzzleHandler($client);
+
+        if (empty($keyId) || empty($secret)) {
+            // Assume we're running on EC2 and we have an IAM role assigned. Kick back and relax.
+        } else {
+            $tokenKey = static::CACHE_KEY_PREFIX . md5($keyId . $secret);
+            $credentials = new Credentials($keyId, $secret);
+
+            if (Craft::$app->cache->exists($tokenKey) && !$refreshToken) {
+                $cached = Craft::$app->cache->get($tokenKey);
+                $credentials->unserialize($cached);
+            } else {
+                $config['credentials'] = $credentials;
+                $stsClient = new StsClient($config);
+                $result = $stsClient->getSessionToken(['DurationSeconds' => static::CACHE_DURATION_SECONDS]);
+                $credentials = $stsClient->createCredentials($result);
+                $cacheDuration = $credentials->getExpiration() - time();
+                $cacheDuration = $cacheDuration > 0 ?: static::CACHE_DURATION_SECONDS;
+                Craft::$app->cache->set($tokenKey, $credentials->serialize(), $cacheDuration);
+            }
+
+            // TODO Add support for different credential supply methods
+            $config['credentials'] = $credentials;
+        }
+
+        return $config;
+    }
+
     // Private Methods
     // =========================================================================
 
@@ -414,57 +471,24 @@ class Volume extends FlysystemVolume
      */
     private function _getConfigArray()
     {
-        $keyId = Craft::parseEnv($this->keyId);
-        $secret = Craft::parseEnv($this->secret);
-        $region = Craft::parseEnv($this->region);
+        $credentials = $this->_getCredentials();
 
-        return self::_buildConfigArray($keyId, $secret, $region);
+        return self::buildConfigArray($credentials['keyId'], $credentials['secret'], $credentials['region']);
     }
 
     /**
-     * Build the config array based on a keyID and secret
+     * Return the credentials as an array
      *
-     * @param $keyId
-     * @param $secret
-     * @param $region
      * @return array
      */
-    private static function _buildConfigArray($keyId = null, $secret = null, $region = null)
+    private function _getCredentials()
     {
-        $config = [
-            'region' => $region,
-            'version' => 'latest'
+        return [
+            'keyId' => Craft::parseEnv($this->keyId),
+            'secret' => Craft::parseEnv($this->secret),
+            'region' => Craft::parseEnv($this->region),
         ];
-
-        if (empty($keyId) || empty($secret)) {
-            // Assume we're running on EC2 and we have an IAM role assigned. Kick back and relax.
-        } else {
-            $tokenKey = static::CACHE_KEY_PREFIX . md5($keyId . $secret);
-            $credentials = new Credentials($keyId, $secret);
-
-            if (Craft::$app->cache->exists($tokenKey)) {
-                $cached = Craft::$app->cache->get($tokenKey);
-                $credentials->unserialize($cached);
-            } else {
-                $config['credentials'] = $credentials;
-                $stsClient = new StsClient($config);
-                $result = $stsClient->getSessionToken(['DurationSeconds' => static::CACHE_DURATION_SECONDS]);
-                $credentials = $stsClient->createCredentials($result);
-                $cacheDuration = $credentials->getExpiration() - time();
-                $cacheDuration = $cacheDuration > 0 ?: static::CACHE_DURATION_SECONDS;
-                Craft::$app->cache->set($tokenKey, $credentials->serialize(), $cacheDuration);
-            }
-
-            // TODO Add support for different credential supply methods
-            $config['credentials'] = $credentials;
-        }
-
-        $client = Craft::createGuzzleClient();
-        $config['http_handler'] = new GuzzleHandler($client);
-
-        return $config;
     }
-
     /**
      * Returns the visibility setting for the Volume.
      *

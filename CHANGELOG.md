@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Changed
+- When an expired access token is used, generate a new one instead.
+
 ## 1.2.4 - 2019-07-17
 
 ### Fixed

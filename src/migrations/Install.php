@@ -67,7 +67,7 @@ class Install extends Migration
                 $settings['region'] = $settings['location'];
                 unset($settings['urlPrefix'], $settings['location'], $settings['storageClass']);
 
-                if (preg_match('/^([\d]+)([a-z]+)$/', $settings['expires'], $matches)) {
+                if (array_key_exists('expires', $settings) && preg_match('/^([\d]+)([a-z]+)$/', $settings['expires'], $matches)) {
                     $settings['expires'] = $matches[1] . ' ' . $matches[2];
                 }
 

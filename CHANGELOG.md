@@ -1,5 +1,11 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Fixed
+- Fixed an error that could occur when installing the plugin on a site that was migrated from Craft 2. ([#75](https://github.com/craftcms/aws-s3/issues/75))
+- Fixed a bug where opening a file stream would still transfer the whole file. ([#23](https://github.com/craftcms/aws-s3/pull/23))
+
 ## 1.2.5 - 2019-8-05
 
 ### Changed

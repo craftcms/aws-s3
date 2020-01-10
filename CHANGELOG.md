@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Fixed
+- Reverted file stream changes that broke Asset CP downloads. ([#77](https://github.com/craftcms/aws-s3/issues/77)
+
 ## 1.2.6 - 2020-01-09
 
 ### Fixed

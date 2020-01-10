@@ -18,15 +18,12 @@ use Craft;
 use craft\base\FlysystemVolume;
 use craft\behaviors\EnvAttributeParserBehavior;
 use craft\helpers\ArrayHelper;
-use craft\errors\AssetException;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
 use DateTime;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\AdapterInterface;
-use League\Flysystem\Config;
-use League\Flysystem\Filesystem;
 
 /**
  * Class Volume
@@ -134,11 +131,6 @@ class Volume extends FlysystemVolume
      * @var bool Whether facial detection should be attempted to set the focal point automatically
      */
     public $autoFocalPoint = false;
-
-    /**
-     * @var AwsS3Adapter|null The Flysystem adapter configured for streaming.
-     */
-    private $_streamingAdapter;
 
     // Public Methods
     // =========================================================================
@@ -258,20 +250,6 @@ class Volume extends FlysystemVolume
         return $rootUrl;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getFileStream(string $uriPath)
-    {
-        $stream = $this->streamingFilesystem(['disable_asserts' => true])->readStream($uriPath);
-
-        if (!$stream) {
-            throw new AssetException('Could not open create the stream for “'.$uriPath.'”');
-        }
-
-        return $stream;
-    }
-
     // Protected Methods
     // =========================================================================
 
@@ -286,38 +264,6 @@ class Volume extends FlysystemVolume
         $client = static::client($config, $this->_getCredentials());
 
         return new AwsS3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder());
-    }
-
-    /**
-     * Returns the Flysystem adapter instance configured for streaming.
-     *
-     * @return AwsS3Adapter The Flysystem adapter for streaming.
-     */
-    protected function streamingAdapter(): AwsS3Adapter
-    {
-        if ($this->_streamingAdapter !== null) {
-            return $this->_streamingAdapter;
-        }
-
-        $config = $this->_getConfigArray();
-        $client = static::client($config);
-
-        $options = [
-            '@http' => ['stream' => true],
-        ];
-
-        return $this->_streamingAdapter = new AwsS3Adapter($client, $this->bucket, $this->subfolder, $options);
-    }
-
-    /**
-     * Returns Flysystem filesystem configured with the Flysystem adapter for streaming.
-     *
-     * @param array $config
-     * @return Filesystem The Flysystem filesystem.
-     */
-    protected function streamingFilesystem(array $config = []): Filesystem
-    {
-        return new Filesystem($this->streamingAdapter(), new Config($config));
     }
 
     /**

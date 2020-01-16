@@ -98,6 +98,13 @@
 }) }}
 
 {{ forms.lightswitchField({
+    label: "Add the subfolder to the Base URL?"|t('aws-s3'),
+    instructions: "Turn this on if you want to add the specified subfolder to the Base URL."|t('aws-s3'),
+    name: 'addSubfolderToRootUrl',
+    on: volume.addSubfolderToRootUrl,
+}) }}
+
+{{ forms.lightswitchField({
     label: "Make Uploads Public"|t('aws-s3'),
     instructions: "Sets the ACL for uploaded objects.",
     id: 'makeUploadsPublic',

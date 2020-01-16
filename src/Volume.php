@@ -132,6 +132,11 @@ class Volume extends FlysystemVolume
      */
     public $autoFocalPoint = false;
 
+    /**
+     * @var bool Whether the specified sub folder shoul be added to the root URL
+     */
+    public $addSubfolderToRootUrl = true;
+
     // Public Methods
     // =========================================================================
 
@@ -245,7 +250,9 @@ class Volume extends FlysystemVolume
     public function getRootUrl()
     {
         if (($rootUrl = parent::getRootUrl()) !== false) {
-            $rootUrl .= $this->_subfolder();
+            if ($this->addSubfolderToRootUrl) {
+                $rootUrl .= $this->_subfolder();
+            }
         }
         return $rootUrl;
     }

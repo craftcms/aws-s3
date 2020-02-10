@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Added
+- Added the `addSubfolderToRootUrl` setting which defaults to true and changes the behavaior of wether adding the subfolder to the Base URL or not.
+
 ## 1.2.7 - 2020-01-09
 
 ### Fixed

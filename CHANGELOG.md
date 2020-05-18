@@ -5,6 +5,9 @@
 ### Added
 - Added the `addSubfolderToRootUrl` setting which defaults to true and changes the behavaior of wether adding the subfolder to the Base URL or not.
 
+### Changed
+- CDN invalidation paths are now batched instead of being executed one by one. ([#73](https://github.com/craftcms/aws-s3/issues/73))
+
 ## 1.2.7 - 2020-01-09
 
 ### Fixed

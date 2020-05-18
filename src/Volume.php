@@ -24,6 +24,7 @@ use craft\helpers\StringHelper;
 use DateTime;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\AdapterInterface;
+use yii\base\Application;
 
 /**
  * Class Volume
@@ -136,6 +137,11 @@ class Volume extends FlysystemVolume
      * @var bool Whether the specified sub folder shoul be added to the root URL
      */
     public $addSubfolderToRootUrl = true;
+
+    /**
+     * @var array A list of paths to invalidate at the end of request.
+     */
+    protected $pathsToInvalidate = [];
 
     // Public Methods
     // =========================================================================
@@ -319,8 +325,26 @@ class Volume extends FlysystemVolume
     protected function invalidateCdnPath(string $path): bool
     {
         if (!empty($this->cfDistributionId)) {
+            if (empty($this->pathsToInvalidate)) {
+                Craft::$app->on(Application::EVENT_AFTER_REQUEST, [$this, 'purgeQueuedPaths']);
+            }
+
+            $this->pathsToInvalidate[$path] = true;
+        }
+
+        return true;
+    }
+
+    public function purgeQueuedPaths()
+    {
+        if (!empty($this->pathsToInvalidate)) {
             // If there's a CloudFront distribution ID set, invalidate the path.
             $cfClient = $this->_getCloudFrontClient();
+            $items = [];
+
+            foreach ($this->pathsToInvalidate as $path => $bool) {
+                $items[] = '/' . $this->_cfPrefix() . ltrim($path, '/');
+            }
 
             try {
                 $cfClient->createInvalidation(
@@ -328,10 +352,10 @@ class Volume extends FlysystemVolume
                         'DistributionId' => Craft::parseEnv($this->cfDistributionId),
                         'InvalidationBatch' => [
                             'Paths' =>
-                            [
-                                'Quantity' => 1,
-                                'Items' => ['/' . $this->_cfPrefix() . ltrim($path, '/')]
-                            ],
+                                [
+                                    'Quantity' => count($items),
+                                    'Items' => $items
+                                ],
                             'CallerReference' => 'Craft-' . StringHelper::randomString(24)
                         ]
                     ]
@@ -341,8 +365,6 @@ class Volume extends FlysystemVolume
                 Craft::warning($exception->getMessage());
             }
         }
-
-        return true;
     }
 
     /**

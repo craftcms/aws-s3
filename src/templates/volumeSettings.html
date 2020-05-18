@@ -55,7 +55,7 @@
         <div class="bsm-manual{% if volume.bucketSelectionMode == 'choose' %} hidden{% endif %} flex-grow">
             {{ forms.autosuggest({
                 label: "Bucket"|t('aws-s3'),
-                class: 'ltr',
+                class: 'ltr s3-manualBucket',
                 name: 'manualBucket',
                 suggestEnvVars: true,
                 value: volume.bucket,
@@ -65,7 +65,7 @@
         <div class="bsm-manual{% if volume.bucketSelectionMode == 'choose' %} hidden{% endif %} flex-grow">
             {{ forms.autosuggest({
                 label: "Region"|t('aws-s3'),
-                class: 'ltr',
+                class: 'ltr s3-manualRegion',
                 name: 'manualRegion',
                 suggestEnvVars: true,
                 value: volume.region,

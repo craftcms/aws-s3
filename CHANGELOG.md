@@ -8,6 +8,7 @@
 ### Changed
 - CDN invalidation paths are now batched instead of being executed one by one. ([#73](https://github.com/craftcms/aws-s3/issues/73))
 - If enabled, volume’s URL is updated automatically when updating region or bucket manually. ([#68](https://github.com/craftcms/aws-s3/issues/68))
+- The `must-revalidate` header is no longer added to uploads. ([#27](https://github.com/craftcms/aws-s3/issues/27))
 
 ## 1.2.7 - 2020-01-09
 

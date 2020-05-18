@@ -313,7 +313,7 @@ class Volume extends FlysystemVolume
             $now = new DateTime();
             $expires->modify('+' . $this->expires);
             $diff = $expires->format('U') - $now->format('U');
-            $config['CacheControl'] = 'max-age=' . $diff . ', must-revalidate';
+            $config['CacheControl'] = 'max-age=' . $diff;
         }
 
         return parent::addFileMetadataToConfig($config);

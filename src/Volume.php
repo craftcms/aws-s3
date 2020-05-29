@@ -387,7 +387,7 @@ class Volume extends FlysystemVolume
         $params = [
             'Image' => [
                 'S3Object' => [
-                    'Name' => $filePath,
+                    'Name' => Craft::parseEnv($filePath),
                     'Bucket' => Craft::parseEnv($this->bucket),
                 ],
             ],

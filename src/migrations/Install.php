@@ -62,6 +62,11 @@ class Install extends Migration
             if ($volume['type'] === Volume::class && isset($volume['settings']) && is_array($volume['settings'])) {
                 $settings = $volume['settings'];
 
+                // This is not a legacy S3 volume
+                if (empty($volume['location'])) {
+                    continue;
+                }
+
                 $hasUrls = !empty($volume['hasUrls']);
                 $url = ($hasUrls && !empty($settings['urlPrefix'])) ? $settings['urlPrefix'] : null;
                 $settings['region'] = $settings['location'];

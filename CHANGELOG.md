@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Fixed
+- Fixed a bug where it was impossible to install the plugin correctly when updating from Craft 2. ([#54](https://github.com/craftcms/aws-s3/issues/54))
+
 ## 1.2.9 - 2020-07-23
 
 ### Fixed

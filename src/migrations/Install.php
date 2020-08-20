@@ -63,7 +63,7 @@ class Install extends Migration
                 $settings = $volume['settings'];
 
                 // This is not a legacy S3 volume
-                if (empty($volume['location'])) {
+                if (empty($settings['location'])) {
                     continue;
                 }
 

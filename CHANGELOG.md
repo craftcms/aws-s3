@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Changed
+- Amazon S3 now requires `league/flysystem-aws-s3-v3` to be at least on version 1.0.28.
+
 ## 1.2.10 - 2020-08-20
 
 ### Fixed

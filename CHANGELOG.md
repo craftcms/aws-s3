@@ -5,6 +5,9 @@
 ### Changed
 - Amazon S3 now requires `league/flysystem-aws-s3-v3` to be at least on version 1.0.28.
 
+### Fixed
+- Fixed a bug where it was impossible to download assets from volumes that were hosted on AWS S3. ([#95](https://github.com/craftcms/aws-s3/pull/95))
+
 ## 1.2.10 - 2020-08-20
 
 ### Fixed

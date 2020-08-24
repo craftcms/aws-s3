@@ -276,7 +276,7 @@ class Volume extends FlysystemVolume
 
         $client = static::client($config, $this->_getCredentials());
 
-        return new AwsS3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder());
+        return new AwsS3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder(), ['@http' => ['stream' => false]]);
     }
 
     /**

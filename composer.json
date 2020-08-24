@@ -1,7 +1,7 @@
 {
   "name": "craftcms/aws-s3",
   "description": "Amazon S3 integration for Craft CMS",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "type": "craft-plugin",
   "keywords": [
     "aws",

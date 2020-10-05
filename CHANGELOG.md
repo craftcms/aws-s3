@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Fixed
+- Fixed a bug that could sometimes occur if automatic focal point detection was turned on. ([#101](https://github.com/craftcms/aws-s3/issues/101))
+
 ## 1.2.11 - 2020-08-24
 
 ### Changed

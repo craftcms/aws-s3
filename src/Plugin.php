@@ -66,7 +66,7 @@ class Plugin extends \craft\base\Plugin
 
             if (!empty($focalPoint)) {
                 $assetRecord = \craft\records\Asset::findOne($asset->id);
-                $assetRecord->focalPoint = implode(';', $focalPoint);
+                $assetRecord->focalPoint = min(max($focalPoint[0], 0), 1) . ';' . min(max($focalPoint[1], 0), 1);
                 $assetRecord->save();
             }
         });

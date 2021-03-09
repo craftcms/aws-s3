@@ -103,7 +103,7 @@ $(document).ready(function() {
 
 	var maybeUpdateUrl = function () {
 		if ($hasUrls.val() && $manualBucket.val().length && $manualRegion.val().length) {
-			$volumeUrl.val('https://s3.' + $manualRegion.val() + '.amazonaws/' + $manualBucket.val() + '/');
+			$volumeUrl.val('https://s3.' + $manualRegion.val() + '.amazonaws.com/' + $manualBucket.val() + '/');
 		}
 	};
 

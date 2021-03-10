@@ -4,6 +4,7 @@
 
 ### Fixed
 - Fixed a bug that could sometimes occur if automatic focal point detection was turned on. ([#101](https://github.com/craftcms/aws-s3/issues/101))
+- Fixed an error that would cause incorrect URLs to be auto-generated for volumes. ([#109](https://github.com/craftcms/aws-s3/issues/109))
 
 ## 1.2.11 - 2020-08-24
 

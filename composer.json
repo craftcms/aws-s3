@@ -1,7 +1,7 @@
 {
   "name": "craftcms/aws-s3",
   "description": "Amazon S3 integration for Craft CMS",
-  "version": "1.2.11",
+  "version": "2.0.0-alpha.1",
   "type": "craft-plugin",
   "keywords": [
     "aws",
@@ -26,8 +26,8 @@
     "rss": "https://github.com/craftcms/aws-s3/commits/master.atom"
   },
   "require": {
-    "craftcms/cms": "^3.1.5",
-    "league/flysystem-aws-s3-v3": "^1.0.28"
+    "craftcms/craft-flysystem": "^1.0.0-alpha.1",
+    "league/flysystem-aws-s3-v3": "^2.0.0"
   },
   "autoload": {
     "psr-4": {

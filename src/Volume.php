@@ -15,15 +15,17 @@ use Aws\Rekognition\RekognitionClient;
 use Aws\S3\Exception\S3Exception;
 use Aws\Sts\StsClient;
 use Craft;
-use craft\base\FlysystemVolume;
 use craft\behaviors\EnvAttributeParserBehavior;
+use craft\flysystem\base\FlysystemVolume;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
 use DateTime;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
-use League\Flysystem\AdapterInterface;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\AwsS3V3\PortableVisibilityConverter;
+use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\Visibility;
 use yii\base\Application;
 
 /**
@@ -166,7 +168,7 @@ class Volume extends FlysystemVolume
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         $behaviors = parent::behaviors();
         $behaviors['parser'] = [
@@ -187,7 +189,7 @@ class Volume extends FlysystemVolume
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = parent::rules();
         $rules[] = [['bucket', 'region'], 'required'];
@@ -268,15 +270,15 @@ class Volume extends FlysystemVolume
 
     /**
      * @inheritdoc
-     * @return AwsS3Adapter
+     * @return AwsS3V3Adapter
      */
-    protected function createAdapter()
+    protected function createAdapter(): FilesystemAdapter
     {
         $config = $this->_getConfigArray();
 
         $client = static::client($config, $this->_getCredentials());
 
-        return new AwsS3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder(), [], false);
+        return new AwsS3V3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder(), new PortableVisibilityConverter($this->visibility()), null, [], false);
     }
 
     /**
@@ -524,6 +526,6 @@ class Volume extends FlysystemVolume
      * @return string
      */
     protected function visibility(): string {
-        return $this->makeUploadsPublic ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
+        return $this->makeUploadsPublic ? Visibility::PUBLIC : Visibility::PRIVATE;
     }
 }

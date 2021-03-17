@@ -124,12 +124,12 @@ class Volume extends FlysystemVolume
     /**
      * @var string CloudFront Distribution ID
      */
-    public string $cfDistributionId;
+    public string $cfDistributionId = '';
 
     /**
      * @var string CloudFront Distribution Prefix
      */
-    public string $cfPrefix;
+    public string $cfPrefix = '';
 
     /**
      * @var bool Whether facial detection should be attempted to set the focal point automatically

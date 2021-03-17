@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * @link https://craftcms.com/
  * @copyright Copyright (c) Pixel & Tonic, Inc.
@@ -41,19 +42,19 @@ class Volume extends FlysystemVolume
     // Constants
     // =========================================================================
 
-    const STORAGE_STANDARD = 'STANDARD';
-    const STORAGE_REDUCED_REDUNDANCY = 'REDUCED_REDUNDANCY';
-    const STORAGE_STANDARD_IA = 'STANDARD_IA';
+    public const STORAGE_STANDARD = 'STANDARD';
+    public const STORAGE_REDUCED_REDUNDANCY = 'REDUCED_REDUNDANCY';
+    public const STORAGE_STANDARD_IA = 'STANDARD_IA';
 
     /**
      * Cache key to use for caching purposes
      */
-    const CACHE_KEY_PREFIX = 'aws.';
+    public const CACHE_KEY_PREFIX = 'aws.';
 
     /**
      * Cache duration for access token
      */
-    const CACHE_DURATION_SECONDS = 3600;
+    public const CACHE_DURATION_SECONDS = 3600;
 
     // Static
     // =========================================================================
@@ -72,78 +73,78 @@ class Volume extends FlysystemVolume
     /**
      * @var bool Whether this is a local source or not. Defaults to false.
      */
-    protected $isVolumeLocal = false;
+    protected bool $isVolumeLocal = false;
 
     /**
      * @var string Subfolder to use
      */
-    public $subfolder = '';
+    public string $subfolder = '';
 
     /**
      * @var string AWS key ID
      */
-    public $keyId = '';
+    public string $keyId = '';
 
     /**
      * @var string AWS key secret
      */
-    public $secret = '';
+    public string $secret = '';
 
     /**
      * @var string Bucket selection mode ('choose' or 'manual')
      */
-    public $bucketSelectionMode = 'choose';
+    public string $bucketSelectionMode = 'choose';
 
     /**
      * @var string Bucket to use
      */
-    public $bucket = '';
+    public string $bucket = '';
 
     /**
      * @var string Region to use
      */
-    public $region = '';
+    public string $region = '';
 
     /**
      * @var string Cache expiration period.
      */
-    public $expires = '';
+    public string $expires = '';
 
     /**
      * @var bool Set ACL for Uploads
      */
-    public $makeUploadsPublic = true;
+    public bool $makeUploadsPublic = true;
 
     /**
      * @var string S3 storage class to use.
      * @deprecated in 1.1.1
      */
-    public $storageClass = '';
+    public string $storageClass = '';
 
     /**
      * @var string CloudFront Distribution ID
      */
-    public $cfDistributionId;
+    public string $cfDistributionId;
 
     /**
      * @var string CloudFront Distribution Prefix
      */
-    public $cfPrefix;
+    public string $cfPrefix;
 
     /**
      * @var bool Whether facial detection should be attempted to set the focal point automatically
      */
-    public $autoFocalPoint = false;
+    public bool $autoFocalPoint = false;
 
     /**
      * @var bool Whether the specified sub folder shoul be added to the root URL
      */
-    public $addSubfolderToRootUrl = true;
+    public bool $addSubfolderToRootUrl = true;
 
     /**
      * @var array A list of paths to invalidate at the end of request.
      */
-    protected $pathsToInvalidate = [];
+    protected array $pathsToInvalidate = [];
 
     // Public Methods
     // =========================================================================
@@ -200,7 +201,7 @@ class Volume extends FlysystemVolume
     /**
      * @inheritdoc
      */
-    public function getSettingsHtml()
+    public function getSettingsHtml(): ?string
     {
         return Craft::$app->getView()->renderTemplate('aws-s3/volumeSettings', [
             'volume' => $this,
@@ -216,7 +217,7 @@ class Volume extends FlysystemVolume
      * @return array
      * @throws \InvalidArgumentException
      */
-    public static function loadBucketList($keyId, $secret)
+    public static function loadBucketList($keyId, $secret): array
     {
         // Any region will do.
         $config = self::buildConfigArray($keyId, $secret, 'us-east-1');
@@ -257,10 +258,8 @@ class Volume extends FlysystemVolume
      */
     public function getRootUrl()
     {
-        if (($rootUrl = parent::getRootUrl()) !== false) {
-            if ($this->addSubfolderToRootUrl) {
-                $rootUrl .= $this->_subfolder();
-            }
+        if ((($rootUrl = parent::getRootUrl()) !== false) && $this->addSubfolderToRootUrl) {
+            $rootUrl .= $this->_subfolder();
         }
         return $rootUrl;
     }
@@ -291,7 +290,7 @@ class Volume extends FlysystemVolume
     protected static function client(array $config = [], array $credentials = []): S3Client
     {
         if (!empty($config['credentials']) && $config['credentials'] instanceof Credentials) {
-            $config['generateNewConfig'] = function() use ($credentials) {
+            $config['generateNewConfig'] = static function() use ($credentials) {
                 $args = [
                     $credentials['keyId'],
                     $credentials['secret'],
@@ -337,7 +336,7 @@ class Volume extends FlysystemVolume
         return true;
     }
 
-    public function purgeQueuedPaths()
+    public function purgeQueuedPaths(): void
     {
         if (!empty($this->pathsToInvalidate)) {
             // If there's a CloudFront distribution ID set, invalidate the path.
@@ -430,6 +429,7 @@ class Volume extends FlysystemVolume
         $client = Craft::createGuzzleClient();
         $config['http_handler'] = new GuzzleHandler($client);
 
+        /** @noinspection MissingOrEmptyGroupStatementInspection */
         if (empty($keyId) || empty($secret)) {
             // Assume we're running on EC2 and we have an IAM role assigned. Kick back and relax.
         } else {
@@ -490,7 +490,7 @@ class Volume extends FlysystemVolume
      *
      * @return CloudFrontClient
      */
-    private function _getCloudFrontClient()
+    private function _getCloudFrontClient(): CloudFrontClient
     {
         return new CloudFrontClient($this->_getConfigArray());
     }
@@ -500,7 +500,7 @@ class Volume extends FlysystemVolume
      *
      * @return array
      */
-    private function _getConfigArray()
+    private function _getConfigArray(): array
     {
         $credentials = $this->_getCredentials();
 
@@ -512,7 +512,7 @@ class Volume extends FlysystemVolume
      *
      * @return array
      */
-    private function _getCredentials()
+    private function _getCredentials(): array
     {
         return [
             'keyId' => Craft::parseEnv($this->keyId),

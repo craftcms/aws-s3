@@ -28,7 +28,7 @@ cd /path/to/my-project.test
 composer require craftcms/aws-s3
 
 # tell Craft to install the plugin
-./craft install/plugin aws-s3
+./craft plugin/install aws-s3
 ```
 
 ## Setup

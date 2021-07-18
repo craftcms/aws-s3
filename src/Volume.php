@@ -10,6 +10,7 @@ namespace craft\awss3;
 use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
 use Aws\Credentials\Credentials;
+use Aws\Credentials\CredentialProvider;
 use Aws\Handler\GuzzleV6\GuzzleHandler;
 use Aws\Rekognition\RekognitionClient;
 use Aws\S3\Exception\S3Exception;
@@ -298,6 +299,18 @@ class Volume extends FlysystemVolume
                 ];
                 return call_user_func_array(self::class . '::buildConfigArray', $args);
             };
+        }
+        else if (!empty(Craft::parseEnv("AWS_WEB_IDENTITY_TOKEN_FILE")) && !empty(Craft::parseEnv("AWS_ROLE_ARN"))) {
+            // Our instance/pod/task has a web identity configured, so we should use that
+            // Pretty much just lifted this from: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_provider.html#assume-role-with-web-identity-provider
+            $provider = CredentialProvider::assumeRoleWithWebIdentityCredentialProvider();
+            $provider = CredentialProvider::memoize($provider);
+            // Probably not the idiomatic approach relative to existing codebase, but we can just return the config array
+            $config = [
+                'region' => $credentials['region'],
+                'version' => 'latest',
+                'credentials' => $provider
+            ];
         }
 
         return new S3Client($config);

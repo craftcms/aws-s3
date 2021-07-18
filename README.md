@@ -99,3 +99,7 @@ This plugin can use the AWS Rekognition service to detect faces in an image and 
 :warning: ️Using this will incur extra cost for each upload
 
 :warning: ️Using this requires the <code>rekognition:DetectFaces</code> action to be allowed.
+
+### Assuming Role with OIDC
+
+This plugin also has the ability to assume a role provided to the runtime with the `AWS_WEB_IDENTITY_TOKEN_FILE` and `AWS_ROLE_ARN` environment variables. If you provide no credentials to AWS and these environment variables exist, then the plugin will attempt to create a connection to AWS using the `CredentialProvider::assumeRoleWithWebIdentityCredentialProvider`. This is the ideal way to allow fine-grained access control for hosting CraftCMS in Kubernetes (for example). See [the IAM documentation on AWS for more details](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html).

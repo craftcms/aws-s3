@@ -300,18 +300,6 @@ class Volume extends FlysystemVolume
                 return call_user_func_array(self::class . '::buildConfigArray', $args);
             };
         }
-        else if (!empty(Craft::parseEnv("AWS_WEB_IDENTITY_TOKEN_FILE")) && !empty(Craft::parseEnv("AWS_ROLE_ARN"))) {
-            // Our instance/pod/task has a web identity configured, so we should use that
-            // Pretty much just lifted this from: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_provider.html#assume-role-with-web-identity-provider
-            $provider = CredentialProvider::assumeRoleWithWebIdentityCredentialProvider();
-            $provider = CredentialProvider::memoize($provider);
-            // Probably not the idiomatic approach relative to existing codebase, but we can just return the config array
-            $config = [
-                'region' => $credentials['region'],
-                'version' => 'latest',
-                'credentials' => $provider
-            ];
-        }
 
         return new S3Client($config);
     }
@@ -442,7 +430,19 @@ class Volume extends FlysystemVolume
         $config['http_handler'] = new GuzzleHandler($client);
 
         if (empty($keyId) || empty($secret)) {
-            // Assume we're running on EC2 and we have an IAM role assigned. Kick back and relax.
+            // Check for predefined access
+            if (!empty(Craft::parseEnv("AWS_WEB_IDENTITY_TOKEN_FILE")) && !empty(Craft::parseEnv("AWS_ROLE_ARN"))) {
+                // Check if anything is defined for a web identity provider (see: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_provider.html#assume-role-with-web-identity-provider)
+                $provider = CredentialProvider::assumeRoleWithWebIdentityCredentialProvider();
+                $provider = CredentialProvider::memoize($provider);
+                // Probably not the idiomatic approach relative to existing codebase, but we can just return the config array
+                $config = [
+                    'region' => $region,
+                    'version' => 'latest',
+                    'credentials' => $provider
+                ];
+            }
+            // If that didn't happen, assume we're running on EC2 and we have an IAM role assigned so no action required.
         } else {
             $tokenKey = static::CACHE_KEY_PREFIX . md5($keyId . $secret);
             $credentials = new Credentials($keyId, $secret);

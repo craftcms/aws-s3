@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- If no credentials are set, the plugin will now also look at the `AWS_WEB_IDENTITY_TOKEN_FILE` and `AWS_ROLE_ARN` environment variables. ([#118](https://github.com/craftcms/aws-s3/pull/118))
+
 ### Fixed
 - Fixed a bug that could sometimes occur if automatic focal point detection was turned on. ([#101](https://github.com/craftcms/aws-s3/issues/101))
 - Fixed an error that would cause incorrect URLs to be auto-generated for volumes. ([#109](https://github.com/craftcms/aws-s3/issues/109))

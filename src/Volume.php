@@ -10,6 +10,7 @@ namespace craft\awss3;
 use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
 use Aws\Credentials\Credentials;
+use Aws\Credentials\CredentialProvider;
 use Aws\Handler\GuzzleV6\GuzzleHandler;
 use Aws\Rekognition\RekognitionClient;
 use Aws\S3\Exception\S3Exception;
@@ -429,7 +430,14 @@ class Volume extends FlysystemVolume
         $config['http_handler'] = new GuzzleHandler($client);
 
         if (empty($keyId) || empty($secret)) {
-            // Assume we're running on EC2 and we have an IAM role assigned. Kick back and relax.
+            // Check for predefined access
+            if (!empty(Craft::parseEnv("AWS_WEB_IDENTITY_TOKEN_FILE")) && !empty(Craft::parseEnv("AWS_ROLE_ARN"))) {
+                // Check if anything is defined for a web identity provider (see: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_provider.html#assume-role-with-web-identity-provider)
+                $provider = CredentialProvider::assumeRoleWithWebIdentityCredentialProvider();
+                $provider = CredentialProvider::memoize($provider);
+                $config['credentials'] = $provider;
+            }
+            // If that didn't happen, assume we're running on EC2 and we have an IAM role assigned so no action required.
         } else {
             $tokenKey = static::CACHE_KEY_PREFIX . md5($keyId . $secret);
             $credentials = new Credentials($keyId, $secret);

@@ -435,12 +435,7 @@ class Volume extends FlysystemVolume
                 // Check if anything is defined for a web identity provider (see: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_provider.html#assume-role-with-web-identity-provider)
                 $provider = CredentialProvider::assumeRoleWithWebIdentityCredentialProvider();
                 $provider = CredentialProvider::memoize($provider);
-                // Probably not the idiomatic approach relative to existing codebase, but we can just return the config array
-                $config = [
-                    'region' => $region,
-                    'version' => 'latest',
-                    'credentials' => $provider
-                ];
+                $config['credentials'] = $provider;
             }
             // If that didn't happen, assume we're running on EC2 and we have an IAM role assigned so no action required.
         } else {

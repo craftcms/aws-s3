@@ -1,6 +1,6 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## Unreleased
+## 1.2.12 - 2021-07-20
 
 ### Added
 - If no credentials are set, the plugin will now also look at the `AWS_WEB_IDENTITY_TOKEN_FILE` and `AWS_ROLE_ARN` environment variables. ([#118](https://github.com/craftcms/aws-s3/pull/118))

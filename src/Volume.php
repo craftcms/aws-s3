@@ -431,7 +431,7 @@ class Volume extends FlysystemVolume
 
         if (empty($keyId) || empty($secret)) {
             // Check for predefined access
-            if (!empty(Craft::parseEnv("AWS_WEB_IDENTITY_TOKEN_FILE")) && !empty(Craft::parseEnv("AWS_ROLE_ARN"))) {
+            if (App::env('AWS_WEB_IDENTITY_TOKEN_FILE') && App::env('AWS_ROLE_ARN')) {
                 // Check if anything is defined for a web identity provider (see: https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_provider.html#assume-role-with-web-identity-provider)
                 $provider = CredentialProvider::assumeRoleWithWebIdentityCredentialProvider();
                 $provider = CredentialProvider::memoize($provider);

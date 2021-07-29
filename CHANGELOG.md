@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## 1.2.13 - 2021-07-29
+### Fixed
+- Fixed a regression introduced by [#118](https://github.com/craftcms/aws-s3/pull/118) that would prevent credential-less EC2 access from working. ([#120](https://github.com/craftcms/aws-s3/issues/120))
+
 ## 1.2.12 - 2021-07-20
 
 ### Added

@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Added
+- If no credentials are set, the plugin will now also check the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable to determine if IAM ECS authorization is possible. ([#122](https://github.com/craftcms/aws-s3/pull/122))
+
 ## 1.2.13 - 2021-07-29
 
 ### Fixed
@@ -8,7 +13,7 @@
 ## 1.2.12 - 2021-07-20
 
 ### Added
-- If no credentials are set, the plugin will now also look at the `AWS_WEB_IDENTITY_TOKEN_FILE` and `AWS_ROLE_ARN` environment variables. ([#118](https://github.com/craftcms/aws-s3/pull/118))
+- If no credentials are set, the plugin will now also check the `AWS_WEB_IDENTITY_TOKEN_FILE` and `AWS_ROLE_ARN` environment variables. ([#118](https://github.com/craftcms/aws-s3/pull/118))
 
 ### Fixed
 - Fixed a bug that could sometimes occur if automatic focal point detection was turned on. ([#101](https://github.com/craftcms/aws-s3/issues/101))

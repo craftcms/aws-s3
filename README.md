@@ -103,3 +103,7 @@ This plugin can use the AWS Rekognition service to detect faces in an image and 
 ### Assuming Role with OIDC
 
 This plugin also has the ability to assume a role provided to the runtime with the `AWS_WEB_IDENTITY_TOKEN_FILE` and `AWS_ROLE_ARN` environment variables. If you provide no credentials to AWS and these environment variables exist, then the plugin will attempt to create a connection to AWS using the `CredentialProvider::assumeRoleWithWebIdentityCredentialProvider`. This is the ideal way to allow fine-grained access control for hosting CraftCMS in Kubernetes (for example). See [the IAM documentation on AWS for more details](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html).
+
+### Tasks running in ECS
+
+This pluging is compatible with IAM roles for ECS tasks and will automatically use the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable. For more informations on task IAM roles please refer to [AWS documentation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html).

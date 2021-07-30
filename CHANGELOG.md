@@ -1,6 +1,6 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## Unreleased
+## 1.2.14 - 2021-07-30
 
 ### Added
 - If no credentials are set, the plugin will now also check the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable to determine if IAM ECS authorization is possible. ([#122](https://github.com/craftcms/aws-s3/pull/122))

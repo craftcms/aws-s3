@@ -106,4 +106,4 @@ This plugin also has the ability to assume a role provided to the runtime with t
 
 ### Tasks running in ECS
 
-This pluging is compatible with IAM roles for ECS tasks and will automatically use the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable. For more informations on task IAM roles please refer to [AWS documentation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html).
+This plugin is compatible with IAM roles for ECS tasks and will automatically use the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable, if it's available. See [the IAM Roles for Tasks documentation on AWS for more details](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html).

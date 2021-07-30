@@ -437,6 +437,13 @@ class Volume extends FlysystemVolume
                 $provider = CredentialProvider::memoize($provider);
                 $config['credentials'] = $provider;
             }
+            // Check if running on ECS
+            if (App::env('AWS_CONTAINER_CREDENTIALS_RELATIVE_URI')) {
+                // Check if anything is defined for an ecsCredentials provider
+                $provider = CredentialProvider::ecsCredentials();
+                $provider = CredentialProvider::memoize($provider);
+                $config['credentials'] = $provider;
+            }
             // If that didn't happen, assume we're running on EC2 and we have an IAM role assigned so no action required.
         } else {
             $tokenKey = static::CACHE_KEY_PREFIX . md5($keyId . $secret);

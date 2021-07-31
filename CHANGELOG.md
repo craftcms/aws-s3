@@ -1,9 +1,14 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## 1.2.14 - 2021-07-30
+## 1.2.15 - 2021-07-30
 
 ### Added
 - If no credentials are set, the plugin will now also check the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable to determine if IAM ECS authorization is possible. ([#122](https://github.com/craftcms/aws-s3/pull/122))
+
+## 1.2.14 - 2021-07-29
+
+### Fixed
+- Fixed a bug with a missing class import when using credential-less EC2 access.
 
 ## 1.2.13 - 2021-07-29
 

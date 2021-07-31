@@ -18,6 +18,7 @@ use Aws\Sts\StsClient;
 use Craft;
 use craft\base\FlysystemVolume;
 use craft\behaviors\EnvAttributeParserBehavior;
+use craft\helpers\App;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;

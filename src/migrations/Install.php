@@ -27,7 +27,7 @@ class Install extends Migration
     /**
      * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): bool
     {
         // Convert any built-in S3 volumes to ours
         $this->_convertVolumes();
@@ -38,7 +38,7 @@ class Install extends Migration
     /**
      * @inheritdoc
      */
-    public function safeDown()
+    public function safeDown(): bool
     {
         return true;
     }

@@ -7,8 +7,8 @@
 
 namespace craft\awss3;
 
-use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
+use yii\web\AssetBundle;
 
 /**
  * Asset bundle for the Dashboard
@@ -18,18 +18,19 @@ class AwsS3Bundle extends AssetBundle
     /**
      * @inheritdoc
      */
-    public function init()
-    {
-        $this->sourcePath = '@craft/awss3/resources';
+    public $sourcePath = '@craft/awss3/resources';
 
-        $this->depends = [
-            CpAsset::class,
-        ];
+    /**
+     * @inheritdoc
+     */
+    public $depends = [
+        CpAsset::class,
+    ];
 
-        $this->js = [
-            'js/editVolume.js',
-        ];
-
-        parent::init();
-    }
+    /**
+     * @inheritdoc
+     */
+    public $js = [
+        'js/editVolume.js',
+    ];
 }

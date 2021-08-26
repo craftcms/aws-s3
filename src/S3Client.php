@@ -27,7 +27,7 @@ class S3Client extends AwsS3Client
     /**
      * @var AwsS3Client the wrapped AWS client to use for all requests
      */
-    private $_wrappedClient;
+    private AwsS3Client $_wrappedClient;
 
     /**
      * @inheritdoc

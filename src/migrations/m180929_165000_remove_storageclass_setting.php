@@ -48,7 +48,7 @@ class m180929_165000_remove_storageclass_setting extends Migration
     /**
      * @inheritdoc
      */
-    public function safeDown()
+    public function safeDown(): bool
     {
         echo "m180929_165000_remove_storageclass_setting cannot be reverted.\n";
         return false;

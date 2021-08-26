@@ -5,6 +5,7 @@ namespace craft\awss3\controllers;
 use Craft;
 use craft\awss3\Volume;
 use craft\web\Controller as BaseController;
+use Throwable;
 use yii\web\Response;
 
 /**
@@ -18,7 +19,7 @@ class DefaultController extends BaseController
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         $this->defaultAction = 'load-bucket-data';
@@ -29,7 +30,7 @@ class DefaultController extends BaseController
      *
      * @return Response
      */
-    public function actionLoadBucketData()
+    public function actionLoadBucketData(): Response
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
@@ -40,7 +41,7 @@ class DefaultController extends BaseController
 
         try {
             return $this->asJson(Volume::loadBucketList($keyId, $secret));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->asErrorJson($e->getMessage());
         }
     }

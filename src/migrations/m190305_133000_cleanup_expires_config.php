@@ -27,7 +27,7 @@ class m190305_133000_cleanup_expires_config extends Migration
     /**
      * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): bool
     {
         // Cleanup failed conversions
         $projectConfig = Craft::$app->getProjectConfig();
@@ -62,7 +62,7 @@ class m190305_133000_cleanup_expires_config extends Migration
     /**
      * @inheritdoc
      */
-    public function safeDown()
+    public function safeDown(): bool
     {
         return true;
     }

@@ -9,23 +9,24 @@ namespace craft\awss3;
 
 use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
-use Aws\Credentials\Credentials;
 use Aws\Credentials\CredentialProvider;
+use Aws\Credentials\Credentials;
 use Aws\Handler\GuzzleV6\GuzzleHandler;
 use Aws\Rekognition\RekognitionClient;
 use Aws\S3\Exception\S3Exception;
 use Aws\Sts\StsClient;
 use Craft;
-use craft\base\FlysystemVolume;
 use craft\behaviors\EnvAttributeParserBehavior;
+use craft\flysystem\base\FlysystemVolume;
 use craft\helpers\App;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
 use DateTime;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
-use League\Flysystem\AdapterInterface;
+use InvalidArgumentException;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\Visibility;
 use yii\base\Application;
 
 /**
@@ -72,78 +73,78 @@ class Volume extends FlysystemVolume
     /**
      * @var bool Whether this is a local source or not. Defaults to false.
      */
-    protected $isVolumeLocal = false;
+    protected bool $isVolumeLocal = false;
 
     /**
      * @var string Subfolder to use
      */
-    public $subfolder = '';
+    public string $subfolder = '';
 
     /**
      * @var string AWS key ID
      */
-    public $keyId = '';
+    public string $keyId = '';
 
     /**
      * @var string AWS key secret
      */
-    public $secret = '';
+    public string $secret = '';
 
     /**
      * @var string Bucket selection mode ('choose' or 'manual')
      */
-    public $bucketSelectionMode = 'choose';
+    public string $bucketSelectionMode = 'choose';
 
     /**
      * @var string Bucket to use
      */
-    public $bucket = '';
+    public string $bucket = '';
 
     /**
      * @var string Region to use
      */
-    public $region = '';
+    public string $region = '';
 
     /**
      * @var string Cache expiration period.
      */
-    public $expires = '';
+    public string $expires = '';
 
     /**
      * @var bool Set ACL for Uploads
      */
-    public $makeUploadsPublic = true;
+    public bool $makeUploadsPublic = true;
 
     /**
      * @var string S3 storage class to use.
      * @deprecated in 1.1.1
      */
-    public $storageClass = '';
+    public string $storageClass = '';
 
     /**
      * @var string CloudFront Distribution ID
      */
-    public $cfDistributionId;
+    public string $cfDistributionId;
 
     /**
      * @var string CloudFront Distribution Prefix
      */
-    public $cfPrefix;
+    public string $cfPrefix;
 
     /**
      * @var bool Whether facial detection should be attempted to set the focal point automatically
      */
-    public $autoFocalPoint = false;
+    public bool $autoFocalPoint = false;
 
     /**
      * @var bool Whether the specified sub folder shoul be added to the root URL
      */
-    public $addSubfolderToRootUrl = true;
+    public bool $addSubfolderToRootUrl = true;
 
     /**
      * @var array A list of paths to invalidate at the end of request.
      */
-    protected $pathsToInvalidate = [];
+    protected array $pathsToInvalidate = [];
 
     // Public Methods
     // =========================================================================
@@ -168,7 +169,7 @@ class Volume extends FlysystemVolume
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         $behaviors = parent::behaviors();
         $behaviors['parser'] = [
@@ -189,7 +190,7 @@ class Volume extends FlysystemVolume
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = parent::rules();
         $rules[] = [['bucket', 'region'], 'required'];
@@ -200,7 +201,7 @@ class Volume extends FlysystemVolume
     /**
      * @inheritdoc
      */
-    public function getSettingsHtml()
+    public function getSettingsHtml(): string
     {
         return Craft::$app->getView()->renderTemplate('aws-s3/volumeSettings', [
             'volume' => $this,
@@ -214,7 +215,7 @@ class Volume extends FlysystemVolume
      * @param string|null $keyId The key ID
      * @param string|null $secret The key secret
      * @return array
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function loadBucketList(?string $keyId, ?string $secret): array
     {
@@ -244,8 +245,8 @@ class Volume extends FlysystemVolume
 
             $bucketList[] = [
                 'bucket' => $bucket['Name'],
-                'urlPrefix' => 'https://s3.'.$region.'.amazonaws.com/'.$bucket['Name'].'/',
-                'region' => $region
+                'urlPrefix' => 'https://s3.' . $region . '.amazonaws.com/' . $bucket['Name'] . '/',
+                'region' => $region,
             ];
         }
 
@@ -255,7 +256,7 @@ class Volume extends FlysystemVolume
     /**
      * @inheritdoc
      */
-    public function getRootUrl()
+    public function getRootUrl(): string
     {
         if (($rootUrl = parent::getRootUrl()) !== false) {
             if ($this->addSubfolderToRootUrl) {
@@ -270,15 +271,12 @@ class Volume extends FlysystemVolume
 
     /**
      * @inheritdoc
-     * @return AwsS3Adapter
+     * @return AwsS3V3Adapter
      */
-    protected function createAdapter()
+    protected function createAdapter(): AwsS3V3Adapter
     {
-        $config = $this->_getConfigArray();
-
-        $client = static::client($config, $this->_getCredentials());
-
-        return new AwsS3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder(), [], false);
+        $client = static::client($this->_getConfigArray(), $this->_getCredentials());
+        return new AwsS3V3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder());
     }
 
     /**
@@ -296,7 +294,7 @@ class Volume extends FlysystemVolume
                     $credentials['keyId'],
                     $credentials['secret'],
                     $credentials['region'],
-                    true
+                    true,
                 ];
                 return call_user_func_array(self::class . '::buildConfigArray', $args);
             };
@@ -356,10 +354,10 @@ class Volume extends FlysystemVolume
                             'Paths' =>
                                 [
                                     'Quantity' => count($items),
-                                    'Items' => $items
+                                    'Items' => $items,
                                 ],
-                            'CallerReference' => 'Craft-' . StringHelper::randomString(24)
-                        ]
+                            'CallerReference' => 'Craft-' . StringHelper::randomString(24),
+                        ],
                     ]
                 );
             } catch (CloudFrontException $exception) {
@@ -424,7 +422,7 @@ class Volume extends FlysystemVolume
     {
         $config = [
             'region' => $region,
-            'version' => 'latest'
+            'version' => 'latest',
         ];
 
         $client = Craft::createGuzzleClient();
@@ -504,7 +502,7 @@ class Volume extends FlysystemVolume
      *
      * @return CloudFrontClient
      */
-    private function _getCloudFrontClient()
+    private function _getCloudFrontClient(): CloudFrontClient
     {
         return new CloudFrontClient($this->_getConfigArray());
     }
@@ -514,7 +512,7 @@ class Volume extends FlysystemVolume
      *
      * @return array
      */
-    private function _getConfigArray()
+    private function _getConfigArray(): array
     {
         $credentials = $this->_getCredentials();
 
@@ -526,7 +524,7 @@ class Volume extends FlysystemVolume
      *
      * @return array
      */
-    private function _getCredentials()
+    private function _getCredentials(): array
     {
         return [
             'keyId' => Craft::parseEnv($this->keyId),
@@ -534,12 +532,14 @@ class Volume extends FlysystemVolume
             'region' => Craft::parseEnv($this->region),
         ];
     }
+
     /**
      * Returns the visibility setting for the Volume.
      *
      * @return string
      */
-    protected function visibility(): string {
-        return $this->makeUploadsPublic ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
+    protected function visibility(): string
+    {
+        return $this->makeUploadsPublic ? Visibility::PUBLIC : Visibility::PRIVATE;
     }
 }

@@ -27,7 +27,7 @@ class m190131_214300_cleanup_config extends Migration
     /**
      * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): bool
     {
         // Cleanup failed conversions
         $this->_convertVolumes();
@@ -38,7 +38,7 @@ class m190131_214300_cleanup_config extends Migration
     /**
      * @inheritdoc
      */
-    public function safeDown()
+    public function safeDown(): bool
     {
         return true;
     }

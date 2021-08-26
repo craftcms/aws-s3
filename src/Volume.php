@@ -211,12 +211,12 @@ class Volume extends FlysystemVolume
     /**
      * Get the bucket list using the specified credentials.
      *
-     * @param $keyId
-     * @param $secret
+     * @param string|null $keyId The key ID
+     * @param string|null $secret The key secret
      * @return array
      * @throws \InvalidArgumentException
      */
-    public static function loadBucketList($keyId, $secret)
+    public static function loadBucketList(?string $keyId, ?string $secret): array
     {
         // Any region will do.
         $config = self::buildConfigArray($keyId, $secret, 'us-east-1');
@@ -314,7 +314,7 @@ class Volume extends FlysystemVolume
             $expires = new DateTime();
             $now = new DateTime();
             $expires->modify('+' . $this->expires);
-            $diff = $expires->format('U') - $now->format('U');
+            $diff = (int)$expires->format('U') - (int)$now->format('U');
             $config['CacheControl'] = 'max-age=' . $diff;
         }
 
@@ -420,7 +420,7 @@ class Volume extends FlysystemVolume
      * @param bool $refreshToken If true will always refresh token
      * @return array
      */
-    public static function buildConfigArray($keyId = null, $secret = null, $region = null, $refreshToken = false): array
+    public static function buildConfigArray(?string $keyId = null, ?string $secret = null, ?string $region = null, bool $refreshToken = false): array
     {
         $config = [
             'region' => $region,
@@ -476,7 +476,7 @@ class Volume extends FlysystemVolume
     /**
      * Returns the parsed subfolder path
      *
-     * @return string|null
+     * @return string
      */
     private function _subfolder(): string
     {
@@ -489,7 +489,7 @@ class Volume extends FlysystemVolume
     /**
      * Returns the parsed CloudFront distribution prefix
      *
-     * @return string|null
+     * @return string
      */
     private function _cfPrefix(): string
     {

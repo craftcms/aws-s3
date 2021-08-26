@@ -29,10 +29,16 @@
     "craftcms/cms": "^3.1.5",
     "league/flysystem-aws-s3-v3": "^1.0.28"
   },
+  "require-dev": {
+    "phpstan/phpstan": "^0.12.96"
+  },
   "autoload": {
     "psr-4": {
       "craft\\awss3\\": "src/"
     }
+  },
+  "scripts": {
+    "phpstan": "phpstan --memory-limit=1G"
   },
   "extra": {
     "name": "Amazon S3",

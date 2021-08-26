@@ -16,7 +16,7 @@ class m180929_165000_remove_storageclass_setting extends Migration
     /**
      * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): bool
     {
         $projectConfig = Craft::$app->getProjectConfig();
 
@@ -42,6 +42,7 @@ class m180929_165000_remove_storageclass_setting extends Migration
         }
 
         $projectConfig->muteEvents = false;
+        return true;
     }
 
     /**

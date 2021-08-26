@@ -26,8 +26,8 @@
     "rss": "https://github.com/craftcms/aws-s3/commits/master.atom"
   },
   "require": {
-    "craftcms/cms": "^4.0.x-dev",
-    "craftcms/craft-flysystem": "dev-main",
+    "craftcms/cms": "^4.0.0-alpha",
+    "craftcms/craft-flysystem": "^1.0.0-alpha",
     "league/flysystem-aws-s3-v3": "^2.1.0"
   },
   "require-dev": {

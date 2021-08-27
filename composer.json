@@ -25,6 +25,7 @@
     "docs": "https://github.com/craftcms/aws-s3/blob/master/README.md",
     "rss": "https://github.com/craftcms/aws-s3/commits/master.atom"
   },
+  "minimum-stability": "dev",
   "require": {
     "craftcms/cms": "^4.0.0-alpha",
     "craftcms/craft-flysystem": "^1.0.0-alpha",

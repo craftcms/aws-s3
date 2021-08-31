@@ -190,12 +190,11 @@ class Volume extends FlysystemVolume
     /**
      * @inheritdoc
      */
-    public function rules(): array
+    protected function defineRules(): array
     {
-        $rules = parent::rules();
-        $rules[] = [['bucket', 'region'], 'required'];
-
-        return $rules;
+        return array_merge(parent::defineRules(), [
+            [['bucket', 'region'], 'required'],
+        ]);
     }
 
     /**

@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Changed
+- Amazon S3 now requires Craft 3.4 or later.
+
 ## 1.2.15 - 2021-07-30
 
 ### Added

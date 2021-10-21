@@ -1,9 +1,12 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## Unreleased
+## 1.3.0 - 2021-10-21
 
 ### Changed
 - Amazon S3 now requires Craft 3.4 or later.
+
+### Fixed
+- Fixed a bug where Cloudfront invalidations did not include the configured subfolder.
 
 ## 1.2.15 - 2021-07-30
 
@@ -51,7 +54,7 @@
 ## 1.2.8 - 2020-05-18
 
 ### Added
-- Added the `addSubfolderToRootUrl` setting which defaults to true and changes the behavaior of wether adding the subfolder to the Base URL or not.
+- Added the `addSubfolderToRootUrl` setting which defaults to true and changes the behavior of whether adding the subfolder to the Base URL or not.
 
 ### Changed
 - CDN invalidation paths are now batched instead of being executed one by one. ([#73](https://github.com/craftcms/aws-s3/issues/73))

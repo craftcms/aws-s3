@@ -331,6 +331,8 @@ class Volume extends FlysystemVolume
                 Craft::$app->on(Application::EVENT_AFTER_REQUEST, [$this, 'purgeQueuedPaths']);
             }
 
+            $path = $this->_subfolder() . $path;
+
             $this->pathsToInvalidate[$path] = true;
         }
 

@@ -133,7 +133,7 @@ class Fs extends FlysystemFs
     public bool $autoFocalPoint = false;
 
     /**
-     * @var bool Whether the specified sub folder shoul be added to the root URL
+     * @var bool Whether the specified sub folder should be added to the root URL
      */
     public bool $addSubfolderToRootUrl = true;
 
@@ -247,6 +247,20 @@ class Fs extends FlysystemFs
         }
 
         return $bucketList;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRootUrl(): ?string
+    {
+        $rootUrl = parent::getRootUrl();
+
+        if ($rootUrl && $this->addSubfolderToRootUrl) {
+            $rootUrl .= $this->_subfolder();
+        }
+
+        return $rootUrl;
     }
 
     // Protected Methods

@@ -208,12 +208,12 @@ class Fs extends FlysystemFs
     /**
      * Get the bucket list using the specified credentials.
      *
-     * @param $keyId
-     * @param $secret
+     * @param string $keyId
+     * @param string $secret
      * @return array
      * @throws \InvalidArgumentException
      */
-    public static function loadBucketList($keyId, $secret): array
+    public static function loadBucketList(string $keyId, string $secret): array
     {
         // Any region will do.
         $config = self::buildConfigArray($keyId, $secret, 'us-east-1');
@@ -298,7 +298,7 @@ class Fs extends FlysystemFs
             $expires = new DateTime();
             $now = new DateTime();
             $expires->modify('+' . $this->expires);
-            $diff = $expires->format('U') - $now->format('U');
+            $diff = (int)$expires->format('U') - (int)$now->format('U');
             $config['CacheControl'] = 'max-age=' . $diff;
         }
 
@@ -398,13 +398,13 @@ class Fs extends FlysystemFs
     /**
      * Build the config array based on a keyID and secret
      *
-     * @param string|null $keyId The key ID
-     * @param string|null $secret The key secret
-     * @param string|null $region The region to user
+     * @param ?string $keyId The key ID
+     * @param ?string $secret The key secret
+     * @param ?string $region The region to user
      * @param bool $refreshToken If true will always refresh token
      * @return array
      */
-    public static function buildConfigArray($keyId = null, $secret = null, $region = null, $refreshToken = false): array
+    public static function buildConfigArray(?string $keyId = null, ?string $secret = null, ?string $region = null, bool $refreshToken = false): array
     {
         $config = [
             'region' => $region,
@@ -454,26 +454,28 @@ class Fs extends FlysystemFs
     /**
      * Returns the parsed subfolder path
      *
-     * @return string|null
+     * @return string
      */
     private function _subfolder(): string
     {
         if ($this->subfolder && ($subfolder = rtrim(Craft::parseEnv($this->subfolder), '/')) !== '') {
             return $subfolder . '/';
         }
+
         return '';
     }
 
     /**
      * Returns the parsed CloudFront distribution prefix
      *
-     * @return string|null
+     * @return string
      */
     private function _cfPrefix(): string
     {
         if ($this->cfPrefix && ($cfPrefix = rtrim(Craft::parseEnv($this->cfPrefix), '/')) !== '') {
             return $cfPrefix . '/';
         }
+
         return '';
     }
 

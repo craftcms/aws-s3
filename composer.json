@@ -25,9 +25,13 @@
     "docs": "https://github.com/craftcms/aws-s3/blob/master/README.md",
     "rss": "https://github.com/craftcms/aws-s3/commits/master.atom"
   },
+  "minimum-stability": "dev",
   "require": {
     "craftcms/craft-flysystem": "^1.0.0-alpha.1",
     "league/flysystem-aws-s3-v3": "^2.0.0"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^0.12.96"
   },
   "autoload": {
     "psr-4": {
@@ -38,5 +42,8 @@
     "name": "Amazon S3",
     "handle": "aws-s3",
     "documentationUrl": "https://github.com/craftcms/aws-s3/blob/master/README.md"
+  },
+  "scripts": {
+    "phpstan": "phpstan --memory-limit=1G"
   }
 }

@@ -335,6 +335,9 @@ class Fs extends FlysystemFs
         return true;
     }
 
+    /**
+     * Purge any queued paths from the CDN.
+     */
     public function purgeQueuedPaths(): void
     {
         if (!empty($this->pathsToInvalidate)) {

@@ -8,10 +8,10 @@
 namespace craft\awss3\migrations;
 
 use Craft;
-use craft\awss3\Volume;
+use craft\awss3\Fs;
 use craft\db\Migration;
 use craft\helpers\Json;
-use craft\services\Volumes;
+use craft\services\ProjectConfig;
 
 /**
  * Installation Migration
@@ -58,10 +58,10 @@ class m190131_214300_cleanup_config extends Migration
         $schemaVersion = $projectConfig->get('plugins.aws-s3.schemaVersion', true);
         $projectConfig->muteEvents = true;
 
-        $volumes = $projectConfig->get(Volumes::CONFIG_VOLUME_KEY, true) ?? [];
+        $volumes = $projectConfig->get(ProjectConfig::PATH_VOLUMES, true) ?? [];
 
         foreach ($volumes as $uid => &$volume) {
-            if ($volume['type'] === Volume::class && !empty($volume['settings']) && is_array($volume['settings']) && array_key_exists('urlPrefix', $volume['settings'])) {
+            if ($volume['type'] === Fs::class && !empty($volume['settings']) && is_array($volume['settings']) && array_key_exists('urlPrefix', $volume['settings'])) {
                 $settings = $volume['settings'];
 
                 $hasUrls = !empty($volume['hasUrls']);
@@ -79,7 +79,7 @@ class m190131_214300_cleanup_config extends Migration
 
                 // If project config schema up to date, don't update project config
                 if (!version_compare($schemaVersion, '1.1', '>=')) {
-                    $projectConfig->set(Volumes::CONFIG_VOLUME_KEY . '.' . $uid, $volume);
+                    $projectConfig->set(ProjectConfig::PATH_VOLUMES . '.' . $uid, $volume);
                 }
             }
         }

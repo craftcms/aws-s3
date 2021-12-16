@@ -5,8 +5,8 @@
     id: 'keyId',
     name: 'keyId',
     suggestEnvVars: true,
-    value: volume.keyId,
-    errors: volume.getErrors('keyId'),
+    value: fs.keyId,
+    errors: fs.getErrors('keyId'),
     class: 's3-key-id',
     instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.'|t('aws-s3')
 }) }}
@@ -16,8 +16,8 @@
     id: 'secret',
     name: 'secret',
     suggestEnvVars: true,
-    value: volume.secret,
-    errors: volume.getErrors('secret'),
+    value: fs.secret,
+    errors: fs.getErrors('secret'),
     class: 's3-secret-key',
     instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.'|t('aws-s3')
 }) }}
@@ -30,51 +30,51 @@
                 { label: 'Choose…'|t('aws-s3'), value: 'choose' },
                 { label: 'Manual…'|t('aws-s3'), value: 'manual' }
             ],
-            value: volume.bucketSelectionMode,
+            value: fs.bucketSelectionMode,
             toggle: true,
             targetPrefix: '.bsm-'
         }) }}
 
-        <div class="bsm-choose{% if volume.bucketSelectionMode == 'manual' %} hidden{% endif %}">
+        <div class="bsm-choose{% if fs.bucketSelectionMode == 'manual' %} hidden{% endif %}">
             {{ forms.select({
                 id: 'bucket',
                 name: 'bucket',
-                options: { (volume.bucket): volume.bucket },
-                value: volume.bucketSelectionMode == 'manual' ? volume.bucket,
+                options: { (fs.bucket): fs.bucket },
+                value: fs.bucketSelectionMode == 'manual' ? fs.bucket,
                 readonly: true,
                 class: 's3-bucket-select'
             }) }}
         </div>
-        <div class="bsm-choose{% if volume.bucketSelectionMode == 'manual' %} hidden{% endif %}">
+        <div class="bsm-choose{% if fs.bucketSelectionMode == 'manual' %} hidden{% endif %}">
             <div class="btn s3-refresh-buckets">{{ "Refresh"|t('aws-s3') }}</div>
         </div>
-        <div class="bsm-choose{% if volume.bucketSelectionMode == 'manual' %} hidden{% endif %}">
+        <div class="bsm-choose{% if fs.bucketSelectionMode == 'manual' %} hidden{% endif %}">
             <div class="spinner hidden"></div>
         </div>
 
-        <div class="bsm-manual{% if volume.bucketSelectionMode == 'choose' %} hidden{% endif %} flex-grow">
+        <div class="bsm-manual{% if fs.bucketSelectionMode == 'choose' %} hidden{% endif %} flex-grow">
             {{ forms.autosuggest({
                 label: "Bucket"|t('aws-s3'),
                 class: 'ltr s3-manualBucket',
                 name: 'manualBucket',
                 suggestEnvVars: true,
-                value: volume.bucket,
+                value: fs.bucket,
                 placeholder: 'Bucket'|t('aws-s3')
             }) }}
         </div>
-        <div class="bsm-manual{% if volume.bucketSelectionMode == 'choose' %} hidden{% endif %} flex-grow">
+        <div class="bsm-manual{% if fs.bucketSelectionMode == 'choose' %} hidden{% endif %} flex-grow">
             {{ forms.autosuggest({
                 label: "Region"|t('aws-s3'),
                 class: 'ltr s3-manualRegion',
                 name: 'manualRegion',
                 suggestEnvVars: true,
-                value: volume.region,
+                value: fs.region,
                 placeholder: 'Region'|t('aws-s3')
             }) }}
         </div>
     </div>
 
-    <input type="hidden" name="region" class="s3-region" value="{{ volume.region }}" />
+    <input type="hidden" name="region" class="s3-region" value="{{ fs.region }}" />
 {% endset %}
 
 
@@ -82,18 +82,18 @@
     label: "Bucket"|t('aws-s3'),
     id: 'bucket',
     required: true,
-    errors: volume.getErrors('bucket'),
+    errors: fs.getErrors('bucket'),
 }, bucketInput) }}
 
 {{ forms.autosuggestField({
     label: "Subfolder"|t('aws-s3'),
-    instructions: "If you want to use a bucket’s subfolder as a Volume, specify the path to use here."|t('aws-s3'),
+    instructions: "If you want to use a bucket’s subfolder as a fs, specify the path to use here."|t('aws-s3'),
     id: 'subfolder',
     class: 'ltr',
     name: 'subfolder',
     suggestEnvVars: true,
-    value: volume.subfolder,
-    errors: volume.getErrors('subfolder'),
+    value: fs.subfolder,
+    errors: fs.getErrors('subfolder'),
     placeholder: "path/to/subfolder"|t('aws-s3')
 }) }}
 
@@ -101,7 +101,7 @@
     label: "Add the subfolder to the Base URL?"|t('aws-s3'),
     instructions: "Turn this on if you want to add the specified subfolder to the Base URL."|t('aws-s3'),
     name: 'addSubfolderToRootUrl',
-    on: volume.addSubfolderToRootUrl,
+    on: fs.addSubfolderToRootUrl,
 }) }}
 
 {{ forms.lightswitchField({
@@ -109,7 +109,7 @@
     instructions: "Sets the ACL for uploaded objects.",
     id: 'makeUploadsPublic',
     name: 'makeUploadsPublic',
-    on: volume.makeUploadsPublic
+    on: fs.makeUploadsPublic
 }) }}
 
 <hr/>
@@ -118,12 +118,12 @@
     label: "Attempt to set the focal point automatically?"|t('aws-s3'),
     instructions: "Turn this on if you want to use the AWS Rekognition to try to set the focal point to a detected face.\n ⚠️Using this will incur extra cost for each upload.\n ⚠️Using this requires the `rekognition:DetectFaces` action to be allowed."|t('aws-s3'),
     name: 'autoFocalPoint',
-    on: volume.autoFocalPoint,
+    on: fs.autoFocalPoint,
 }) }}
 
 <hr />
 {% set cacheInput %}
-    {% set expires = (volume.expires|length > 0 ? volume.expires|split(' ') : ['', ''])%}
+    {% set expires = (fs.expires|length > 0 ? fs.expires|split(' ') : ['', ''])%}
 
     <div class="flex">
         <div>
@@ -143,7 +143,7 @@
     </div>
     {{ forms.hidden({
         name: "expires",
-        value: volume.expires,
+        value: fs.expires,
         class: "expires-combined"
     }) }}
 {% endset %}
@@ -161,8 +161,8 @@
     class: 'ltr',
     name: 'cfDistributionId',
     suggestEnvVars: true,
-    value: volume.cfDistributionId,
-    errors: volume.getErrors('cfDistributionId')
+    value: fs.cfDistributionId,
+    errors: fs.getErrors('cfDistributionId')
 }) }}
 
 {{ forms.autosuggestField({
@@ -172,8 +172,8 @@
     class: 'ltr',
     name: 'cfPrefix',
     suggestEnvVars: true,
-    value: volume.cfPrefix,
-    errors: volume.getErrors('cfPrefix')
+    value: fs.cfPrefix,
+    errors: fs.getErrors('cfPrefix')
 }) }}
 
 {% do view.registerAssetBundle("craft\\awss3\\AwsS3Bundle") %}

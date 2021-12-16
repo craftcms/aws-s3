@@ -8,10 +8,10 @@
 namespace craft\awss3\migrations;
 
 use Craft;
-use craft\awss3\Volume;
+use craft\awss3\Fs;
 use craft\db\Migration;
 use craft\helpers\Json;
-use craft\services\Volumes;
+use craft\services\ProjectConfig;
 
 /**
  * Installation Migration
@@ -56,10 +56,10 @@ class Install extends Migration
         $projectConfig = Craft::$app->getProjectConfig();
         $projectConfig->muteEvents = true;
 
-        $volumes = $projectConfig->get(Volumes::CONFIG_VOLUME_KEY) ?? [];
+        $volumes = $projectConfig->get(ProjectConfig::PATH_VOLUMES) ?? [];
 
         foreach ($volumes as $uid => &$volume) {
-            if ($volume['type'] === Volume::class && isset($volume['settings']) && is_array($volume['settings'])) {
+            if ($volume['type'] === Fs::class && isset($volume['settings']) && is_array($volume['settings'])) {
                 $settings = $volume['settings'];
 
                 // This is not a legacy S3 volume
@@ -84,7 +84,7 @@ class Install extends Migration
                     'url' => $url,
                 ], ['uid' => $uid]);
 
-                $projectConfig->set(Volumes::CONFIG_VOLUME_KEY . '.' . $uid, $volume);
+                $projectConfig->set(ProjectConfig::PATH_VOLUMES . '.' . $uid, $volume);
             }
         }
 

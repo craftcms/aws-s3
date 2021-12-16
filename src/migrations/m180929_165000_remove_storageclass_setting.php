@@ -3,10 +3,10 @@
 namespace craft\awss3\migrations;
 
 use Craft;
-use craft\awss3\Volume;
+use craft\awss3\Fs;
 use craft\db\Migration;
 use craft\helpers\Json;
-use craft\services\Volumes;
+use craft\services\ProjectConfig;
 
 /**
  * m180929_165000_remove_storageclass_setting migration.
@@ -27,17 +27,17 @@ class m180929_165000_remove_storageclass_setting extends Migration
         }
 
         $projectConfig->muteEvents = true;
-        $volumes = $projectConfig->get(Volumes::CONFIG_VOLUME_KEY) ?? [];
+        $volumes = $projectConfig->get(ProjectConfig::PATH_VOLUMES) ?? [];
 
         foreach ($volumes as $uid => &$volume) {
-            if ($volume['type'] === Volume::class && isset($volume['settings']) && is_array($volume['settings'])) {
+            if ($volume['type'] === Fs::class && isset($volume['settings']) && is_array($volume['settings'])) {
                 unset($volume['settings']['storageClass']);
 
                 $this->update('{{%volumes}}', [
                     'settings' => Json::encode($volume['settings']),
                 ], ['uid' => $uid]);
 
-                $projectConfig->set(Volumes::CONFIG_VOLUME_KEY . '.' . $uid, $volume);
+                $projectConfig->set(ProjectConfig::PATH_VOLUMES . '.' . $uid, $volume);
             }
         }
 

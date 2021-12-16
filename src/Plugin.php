@@ -6,12 +6,12 @@ use craft\base\Element;
 use craft\elements\Asset;
 use craft\events\ModelEvent;
 use craft\events\RegisterComponentTypesEvent;
-use craft\services\Volumes;
+use craft\services\Filesystems;
 use yii\base\Event;
 
 
 /**
- * Plugin represents the Amazon S3 volume plugin.
+ * Plugin represents the Amazon S3 filesystem.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since 3.0
@@ -24,7 +24,7 @@ class Plugin extends \craft\base\Plugin
     /**
      * @inheritdoc
      */
-    public $schemaVersion = '1.2';
+    public string $schemaVersion = '1.2';
 
 
     // Public Methods
@@ -37,8 +37,8 @@ class Plugin extends \craft\base\Plugin
     {
         parent::init();
 
-        Event::on(Volumes::class, Volumes::EVENT_REGISTER_VOLUME_TYPES, function(RegisterComponentTypesEvent $event) {
-            $event->types[] = Volume::class;
+        Event::on(Filesystems::class, Filesystems::EVENT_REGISTER_FILESYSTEM_TYPES, function(RegisterComponentTypesEvent $event) {
+            $event->types[] = Fs::class;
         });
 
         Event::on(Asset::class, Element::EVENT_AFTER_SAVE, function(ModelEvent $event) {
@@ -49,10 +49,10 @@ class Plugin extends \craft\base\Plugin
             /** @var Asset $asset */
             $asset = $event->sender;
 
-            /** @var Volume $volume */
+            /** @var Fs $volume */
             $volume = $asset->getVolume();
 
-            if (!$volume instanceof Volume) {
+            if (!$volume instanceof Fs) {
                 return;
             }
 

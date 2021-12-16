@@ -18,7 +18,7 @@ use Aws\S3\Exception\S3Exception;
 use Aws\Sts\StsClient;
 use Craft;
 use craft\behaviors\EnvAttributeParserBehavior;
-use craft\flysystem\base\FlysystemVolume;
+use craft\flysystem\base\FlysystemFs;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
@@ -31,14 +31,14 @@ use League\Flysystem\Visibility;
 use yii\base\Application;
 
 /**
- * Class Volume
+ * Class Fs
  *
  * @property mixed $settingsHtml
  * @property string $rootUrl
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since 1.0
  */
-class Volume extends FlysystemVolume
+class Fs extends FlysystemFs
 {
     // Constants
     // =========================================================================
@@ -70,11 +70,6 @@ class Volume extends FlysystemVolume
 
     // Properties
     // =========================================================================
-
-    /**
-     * @var bool Whether this is a local source or not. Defaults to false.
-     */
-    protected bool $isVolumeLocal = false;
 
     /**
      * @var string Subfolder to use
@@ -204,8 +199,8 @@ class Volume extends FlysystemVolume
      */
     public function getSettingsHtml(): ?string
     {
-        return Craft::$app->getView()->renderTemplate('aws-s3/volumeSettings', [
-            'volume' => $this,
+        return Craft::$app->getView()->renderTemplate('aws-s3/fsSettings', [
+            'fs' => $this,
             'periods' => array_merge(['' => ''], Assets::periodList()),
         ]);
     }
@@ -252,17 +247,6 @@ class Volume extends FlysystemVolume
         }
 
         return $bucketList;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getRootUrl()
-    {
-        if ((($rootUrl = parent::getRootUrl()) !== false) && $this->addSubfolderToRootUrl) {
-            $rootUrl .= $this->_subfolder();
-        }
-        return $rootUrl;
     }
 
     // Protected Methods
@@ -529,7 +513,7 @@ class Volume extends FlysystemVolume
         ];
     }
     /**
-     * Returns the visibility setting for the Volume.
+     * Returns the visibility setting for the Fs.
      *
      * @return string
      */

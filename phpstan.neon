@@ -15,5 +15,3 @@ parameters:
             - end
         yii\base\ErrorHandler:
             - convertExceptionToError
-    stubFiles:
-        - stubs/BaseYii.stub

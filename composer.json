@@ -46,8 +46,5 @@
     "name": "Amazon S3",
     "handle": "aws-s3",
     "documentationUrl": "https://github.com/craftcms/aws-s3/blob/master/README.md"
-  },
-  "scripts": {
-    "phpstan": "phpstan --memory-limit=1G"
   }
 }

@@ -49,20 +49,20 @@ class Plugin extends \craft\base\Plugin
             /** @var Asset $asset */
             $asset = $event->sender;
 
-            /** @var Fs $volume */
-            $volume = $asset->getVolume();
+            /** @var Fs $filesystem */
+            $filesystem = $asset->getVolume()->getFilesystem();
 
-            if (!$volume instanceof Fs) {
+            if (!$filesystem instanceof Fs) {
                 return;
             }
 
-            if (!$volume->autoFocalPoint) {
+            if (!$filesystem->autoFocalPoint) {
                 return;
             }
 
-            $fullPath = (!empty($volume->subfolder) ? rtrim($volume->subfolder, '/') . '/' : '') . $asset->getPath();
+            $fullPath = (!empty($filesystem->subfolder) ? rtrim($filesystem->subfolder, '/') . '/' : '') . $asset->getPath();
 
-            $focalPoint = $volume->detectFocalPoint($fullPath);
+            $focalPoint = $filesystem->detectFocalPoint($fullPath);
 
             if (!empty($focalPoint)) {
                 $assetRecord = \craft\records\Asset::findOne($asset->id);

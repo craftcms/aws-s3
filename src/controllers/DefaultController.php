@@ -3,7 +3,7 @@
 namespace craft\awss3\controllers;
 
 use Craft;
-use craft\awss3\Volume;
+use craft\awss3\Fs;
 use craft\web\Controller as BaseController;
 use Throwable;
 use yii\web\Response;
@@ -40,8 +40,8 @@ class DefaultController extends BaseController
         $secret = Craft::parseEnv($request->getRequiredBodyParam('secret'));
 
         try {
-            return $this->asJson(Volume::loadBucketList($keyId, $secret));
-        } catch (Throwable $e) {
+            return $this->asJson(Fs::loadBucketList($keyId, $secret));
+        } catch (\Throwable $e) {
             return $this->asErrorJson($e->getMessage());
         }
     }

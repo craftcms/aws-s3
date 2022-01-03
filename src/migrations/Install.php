@@ -8,10 +8,11 @@
 namespace craft\awss3\migrations;
 
 use Craft;
-use craft\awss3\Volume;
+use craft\awss3\Fs;
 use craft\db\Migration;
+use craft\db\Table;
 use craft\helpers\Json;
-use craft\services\Volumes;
+use craft\services\ProjectConfig;
 
 /**
  * Installation Migration
@@ -47,7 +48,7 @@ class Install extends Migration
     // =========================================================================
 
     /**
-     * Converts any old school S3 volumes to this one
+     * Converts any old school S3 filesystems to a filesystem
      *
      * @return void
      */
@@ -56,13 +57,13 @@ class Install extends Migration
         $projectConfig = Craft::$app->getProjectConfig();
         $projectConfig->muteEvents = true;
 
-        $volumes = $projectConfig->get(Volumes::CONFIG_VOLUME_KEY) ?? [];
+        $volumes = $projectConfig->get(ProjectConfig::PATH_FILESYSTEMS) ?? [];
 
         foreach ($volumes as $uid => &$volume) {
-            if ($volume['type'] === Volume::class && isset($volume['settings']) && is_array($volume['settings'])) {
+            if ($volume['type'] === Fs::class && isset($volume['settings']) && is_array($volume['settings'])) {
                 $settings = $volume['settings'];
 
-                // This is not a legacy S3 volume
+                // This is not a legacy S3 filesystem
                 if (empty($settings['location'])) {
                     continue;
                 }
@@ -79,12 +80,12 @@ class Install extends Migration
                 $volume['url'] = $url;
                 $volume['settings'] = $settings;
 
-                $this->update('{{%volumes}}', [
+                $this->update(Table::FILESYSTEMS, [
                     'settings' => Json::encode($settings),
                     'url' => $url,
                 ], ['uid' => $uid]);
 
-                $projectConfig->set(Volumes::CONFIG_VOLUME_KEY . '.' . $uid, $volume);
+                $projectConfig->set(ProjectConfig::PATH_FILESYSTEMS . '.' . $uid, $volume);
             }
         }
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * @link https://craftcms.com/
  * @copyright Copyright (c) Pixel & Tonic, Inc.
@@ -17,7 +18,7 @@ use Aws\S3\Exception\S3Exception;
 use Aws\Sts\StsClient;
 use Craft;
 use craft\behaviors\EnvAttributeParserBehavior;
-use craft\flysystem\base\FlysystemVolume;
+use craft\flysystem\base\FlysystemFs;
 use craft\helpers\App;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Assets;
@@ -26,35 +27,37 @@ use craft\helpers\StringHelper;
 use DateTime;
 use InvalidArgumentException;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\AwsS3V3\PortableVisibilityConverter;
+use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Visibility;
 use yii\base\Application;
 
 /**
- * Class Volume
+ * Class Fs
  *
  * @property mixed $settingsHtml
  * @property string $rootUrl
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since 1.0
  */
-class Volume extends FlysystemVolume
+class Fs extends FlysystemFs
 {
     // Constants
     // =========================================================================
 
-    const STORAGE_STANDARD = 'STANDARD';
-    const STORAGE_REDUCED_REDUNDANCY = 'REDUCED_REDUNDANCY';
-    const STORAGE_STANDARD_IA = 'STANDARD_IA';
+    public const STORAGE_STANDARD = 'STANDARD';
+    public const STORAGE_REDUCED_REDUNDANCY = 'REDUCED_REDUNDANCY';
+    public const STORAGE_STANDARD_IA = 'STANDARD_IA';
 
     /**
      * Cache key to use for caching purposes
      */
-    const CACHE_KEY_PREFIX = 'aws.';
+    public const CACHE_KEY_PREFIX = 'aws.';
 
     /**
      * Cache duration for access token
      */
-    const CACHE_DURATION_SECONDS = 3600;
+    public const CACHE_DURATION_SECONDS = 3600;
 
     // Static
     // =========================================================================
@@ -69,11 +72,6 @@ class Volume extends FlysystemVolume
 
     // Properties
     // =========================================================================
-
-    /**
-     * @var bool Whether this is a local source or not. Defaults to false.
-     */
-    protected bool $isVolumeLocal = false;
 
     /**
      * @var string Subfolder to use
@@ -124,12 +122,12 @@ class Volume extends FlysystemVolume
     /**
      * @var string CloudFront Distribution ID
      */
-    public string $cfDistributionId;
+    public string $cfDistributionId = '';
 
     /**
      * @var string CloudFront Distribution Prefix
      */
-    public string $cfPrefix;
+    public string $cfPrefix = '';
 
     /**
      * @var bool Whether facial detection should be attempted to set the focal point automatically
@@ -137,7 +135,7 @@ class Volume extends FlysystemVolume
     public bool $autoFocalPoint = false;
 
     /**
-     * @var bool Whether the specified sub folder shoul be added to the root URL
+     * @var bool Whether the specified sub folder should be added to the root URL
      */
     public bool $addSubfolderToRootUrl = true;
 
@@ -202,8 +200,8 @@ class Volume extends FlysystemVolume
      */
     public function getSettingsHtml(): string
     {
-        return Craft::$app->getView()->renderTemplate('aws-s3/volumeSettings', [
-            'volume' => $this,
+        return Craft::$app->getView()->renderTemplate('aws-s3/fsSettings', [
+            'fs' => $this,
             'periods' => array_merge(['' => ''], Assets::periodList()),
         ]);
     }
@@ -255,13 +253,14 @@ class Volume extends FlysystemVolume
     /**
      * @inheritdoc
      */
-    public function getRootUrl(): string
+    public function getRootUrl(): ?string
     {
-        if (($rootUrl = parent::getRootUrl()) !== false) {
-            if ($this->addSubfolderToRootUrl) {
-                $rootUrl .= $this->_subfolder();
-            }
+        $rootUrl = parent::getRootUrl();
+
+        if ($rootUrl && $this->addSubfolderToRootUrl) {
+            $rootUrl .= $this->_subfolder();
         }
+
         return $rootUrl;
     }
 
@@ -272,10 +271,10 @@ class Volume extends FlysystemVolume
      * @inheritdoc
      * @return AwsS3V3Adapter
      */
-    protected function createAdapter(): AwsS3V3Adapter
+    protected function createAdapter(): FilesystemAdapter
     {
         $client = static::client($this->_getConfigArray(), $this->_getCredentials());
-        return new AwsS3V3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder());
+        return new AwsS3V3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder(), new PortableVisibilityConverter($this->visibility()), null, [], false);
     }
 
     /**
@@ -288,7 +287,7 @@ class Volume extends FlysystemVolume
     protected static function client(array $config = [], array $credentials = []): S3Client
     {
         if (!empty($config['credentials']) && $config['credentials'] instanceof Credentials) {
-            $config['generateNewConfig'] = function() use ($credentials) {
+            $config['generateNewConfig'] = static function() use ($credentials) {
                 $args = [
                     $credentials['keyId'],
                     $credentials['secret'],
@@ -334,7 +333,10 @@ class Volume extends FlysystemVolume
         return true;
     }
 
-    public function purgeQueuedPaths()
+    /**
+     * Purge any queued paths from the CDN.
+     */
+    public function purgeQueuedPaths(): void
     {
         if (!empty($this->pathsToInvalidate)) {
             // If there's a CloudFront distribution ID set, invalidate the path.
@@ -411,9 +413,9 @@ class Volume extends FlysystemVolume
     /**
      * Build the config array based on a keyID and secret
      *
-     * @param string|null $keyId The key ID
-     * @param string|null $secret The key secret
-     * @param string|null $region The region to user
+     * @param ?string $keyId The key ID
+     * @param ?string $secret The key secret
+     * @param ?string $region The region to user
      * @param bool $refreshToken If true will always refresh token
      * @return array
      */
@@ -427,6 +429,7 @@ class Volume extends FlysystemVolume
         $client = Craft::createGuzzleClient();
         $config['http_handler'] = new GuzzleHandler($client);
 
+        /** @noinspection MissingOrEmptyGroupStatementInspection */
         if (empty($keyId) || empty($secret)) {
             // Check for predefined access
             if (App::env('AWS_WEB_IDENTITY_TOKEN_FILE') && App::env('AWS_ROLE_ARN')) {
@@ -480,6 +483,7 @@ class Volume extends FlysystemVolume
         if ($this->subfolder && ($subfolder = rtrim(Craft::parseEnv($this->subfolder), '/')) !== '') {
             return $subfolder . '/';
         }
+
         return '';
     }
 
@@ -493,6 +497,7 @@ class Volume extends FlysystemVolume
         if ($this->cfPrefix && ($cfPrefix = rtrim(Craft::parseEnv($this->cfPrefix), '/')) !== '') {
             return $cfPrefix . '/';
         }
+
         return '';
     }
 
@@ -533,7 +538,7 @@ class Volume extends FlysystemVolume
     }
 
     /**
-     * Returns the visibility setting for the Volume.
+     * Returns the visibility setting for the Fs.
      *
      * @return string
      */

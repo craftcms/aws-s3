@@ -3,6 +3,7 @@ parameters:
     paths:
         - src
     scanFiles:
+        - vendor/craftcms/cms/src/web/View.php
         - vendor/craftcms/cms/src/Craft.php
         - vendor/yiisoft/yii2/Yii.php
     stubFiles:
@@ -14,3 +15,5 @@ parameters:
             - end
         yii\base\ErrorHandler:
             - convertExceptionToError
+    stubFiles:
+        - stubs/BaseYii.stub

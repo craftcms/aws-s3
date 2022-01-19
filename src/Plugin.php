@@ -1,4 +1,9 @@
 <?php
+/**
+ * @link https://craftcms.com/
+ * @copyright Copyright (c) Pixel & Tonic, Inc.
+ * @license MIT
+ */
 
 namespace craft\awss3;
 
@@ -6,7 +11,7 @@ use craft\base\Element;
 use craft\elements\Asset;
 use craft\events\ModelEvent;
 use craft\events\RegisterComponentTypesEvent;
-use craft\services\Filesystems;
+use craft\services\Fs as FsService;
 use yii\base\Event;
 
 
@@ -14,7 +19,6 @@ use yii\base\Event;
  * Plugin represents the Amazon S3 filesystem.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
  */
 class Plugin extends \craft\base\Plugin
 {
@@ -36,7 +40,7 @@ class Plugin extends \craft\base\Plugin
     {
         parent::init();
 
-        Event::on(Filesystems::class, Filesystems::EVENT_REGISTER_FILESYSTEM_TYPES, function(RegisterComponentTypesEvent $event) {
+        Event::on(FsService::class, FsService::EVENT_REGISTER_FILESYSTEM_TYPES, function(RegisterComponentTypesEvent $event) {
             $event->types[] = Fs::class;
         });
 
@@ -47,15 +51,9 @@ class Plugin extends \craft\base\Plugin
 
             /** @var Asset $asset */
             $asset = $event->sender;
+            $filesystem = $asset->getFs();
 
-            /** @var Fs $filesystem */
-            $filesystem = $asset->getVolume()->getFilesystem();
-
-            if (!$filesystem instanceof Fs) {
-                return;
-            }
-
-            if (!$filesystem->autoFocalPoint) {
+            if (!$filesystem instanceof Fs || !$filesystem->autoFocalPoint) {
                 return;
             }
 

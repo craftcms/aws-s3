@@ -27,50 +27,53 @@ $(document).ready(function() {
 			secret: $s3SecretAccessKeyInput.val()
 		};
 
-		Craft.postActionRequest('aws-s3', data, function(response, textStatus)
-		{
+		const onResponse = () => {
 			$s3RefreshBucketsBtn.removeClass('disabled');
 			$s3RefreshBucketsSpinner.addClass('hidden');
+		};
 
-			if (textStatus == 'success')
-			{
-				if (response.error)
-				{
-					alert(response.error);
+		Craft.sendActionRequest('POST', 'aws-s3', {data})
+			.then((response) => {
+				onResponse();
+				const {data} = response;
+
+				if (!data.length) {
+					return;
 				}
-				else if (response.length > 0)
+				//
+				var currentBucket = $s3BucketSelect.val(),
+					currentBucketStillExists = false;
+
+				refreshingS3Buckets = true;
+
+				$s3BucketSelect.prop('readonly', false).empty();
+
+				for (var i = 0; i < length; i++)
 				{
-					var currentBucket = $s3BucketSelect.val(),
-						currentBucketStillExists = false;
-
-					refreshingS3Buckets = true;
-
-					$s3BucketSelect.prop('readonly', false).empty();
-
-					for (var i = 0; i < response.length; i++)
+					if (data[i].bucket == currentBucket)
 					{
-						if (response[i].bucket == currentBucket)
-						{
-							currentBucketStillExists = true;
-						}
-
-						$s3BucketSelect.append('<option value="'+response[i].bucket+'" data-url-prefix="'+response[i].urlPrefix+'" data-region="'+response[i].region+'">'+response[i].bucket+'</option>');
+						currentBucketStillExists = true;
 					}
 
-					if (currentBucketStillExists)
-					{
-						$s3BucketSelect.val(currentBucket);
-					}
-
-					refreshingS3Buckets = false;
-
-					if (!currentBucketStillExists)
-					{
-						$s3BucketSelect.trigger('change');
-					}
+					$s3BucketSelect.append('<option value="'+data[i].bucket+'" data-url-prefix="'+data[i].urlPrefix+'" data-region="'+data[i].region+'">'+data[i].bucket+'</option>');
 				}
-			}
-		});
+
+				if (currentBucketStillExists)
+				{
+					$s3BucketSelect.val(currentBucket);
+				}
+
+				refreshingS3Buckets = false;
+
+				if (!currentBucketStillExists)
+				{
+					$s3BucketSelect.trigger('change');
+				}
+			})
+			.catch(({response}) => {
+				onResponse();
+				alert(data.message);
+			});
 	});
 
 	$s3BucketSelect.change(function()

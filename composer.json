@@ -27,12 +27,14 @@
   },
   "minimum-stability": "dev",
   "require": {
-    "craftcms/cms": "^4.0.0-alpha",
+    "php": "^8.0.2",
+    "craftcms/cms": "^4.0.0-alpha.1",
     "craftcms/craft-flysystem": "^1.0.0-alpha.2",
     "league/flysystem-aws-s3-v3": "^2.1.0"
   },
   "require-dev": {
-    "phpstan/phpstan": "^0.12.96"
+    "phpstan/phpstan": "^1.4.6",
+    "craftcms/rector": "dev-main"
   },
   "autoload": {
     "psr-4": {
@@ -46,5 +48,12 @@
     "name": "Amazon S3",
     "handle": "aws-s3",
     "documentationUrl": "https://github.com/craftcms/aws-s3/blob/master/README.md"
-  }
+  },
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  },
+  "prefer-stable": true
 }

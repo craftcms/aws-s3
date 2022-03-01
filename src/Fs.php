@@ -198,7 +198,7 @@ class Fs extends FlysystemFs
     /**
      * @inheritdoc
      */
-    public function getSettingsHtml(): string
+    public function getSettingsHtml(): ?string
     {
         return Craft::$app->getView()->renderTemplate('aws-s3/fsSettings', [
             'fs' => $this,

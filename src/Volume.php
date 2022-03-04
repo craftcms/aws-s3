@@ -257,9 +257,8 @@ class Volume extends FlysystemVolume
     public function getRootUrl()
     {
         if (($rootUrl = parent::getRootUrl()) !== false) {
-            if ($this->addSubfolderToRootUrl) {
-                $rootUrl .= $this->_subfolder();
-            }
+            $rootUrl .= $this->_getRootUrlPath();
+
         }
         return $rootUrl;
     }
@@ -329,6 +328,9 @@ class Volume extends FlysystemVolume
             if (empty($this->pathsToInvalidate)) {
                 Craft::$app->on(Application::EVENT_AFTER_REQUEST, [$this, 'purgeQueuedPaths']);
             }
+
+            // Ensure our paths are prefixed with configured subfolder
+            $path = $this->_getRootUrlPath() . $path;
 
             $this->pathsToInvalidate[$path] = true;
         }
@@ -481,6 +483,19 @@ class Volume extends FlysystemVolume
     {
         if ($this->subfolder && ($subfolder = rtrim(Craft::parseEnv($this->subfolder), '/')) !== '') {
             return $subfolder . '/';
+        }
+        return '';
+    }
+
+    /**
+     * Returns the root path for URLs
+     *
+     * @return string|null
+     */
+    private function _getRootUrlPath(): string
+    {
+        if ($this->addSubfolderToRootUrl) {
+            return $this->_subfolder();
         }
         return '';
     }

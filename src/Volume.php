@@ -490,7 +490,7 @@ class Volume extends FlysystemVolume
     /**
      * Returns the root path for URLs
      *
-     * @return string|null
+     * @return string
      */
     private function _getRootUrlPath(): string
     {

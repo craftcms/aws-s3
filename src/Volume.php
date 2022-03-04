@@ -9,8 +9,8 @@ namespace craft\awss3;
 
 use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
-use Aws\Credentials\Credentials;
 use Aws\Credentials\CredentialProvider;
+use Aws\Credentials\Credentials;
 use Aws\Handler\GuzzleV6\GuzzleHandler;
 use Aws\Rekognition\RekognitionClient;
 use Aws\S3\Exception\S3Exception;
@@ -24,8 +24,8 @@ use craft\helpers\Assets;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\StringHelper;
 use DateTime;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\AdapterInterface;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use yii\base\Application;
 
 /**
@@ -243,7 +243,7 @@ class Volume extends FlysystemVolume
 
             $bucketList[] = [
                 'bucket' => $bucket['Name'],
-                'urlPrefix' => 'https://s3.'.$region.'.amazonaws.com/'.$bucket['Name'].'/',
+                'urlPrefix' => 'https://s3.' . $region . '.amazonaws.com/' . $bucket['Name'] . '/',
                 'region' => $region
             ];
         }
@@ -258,7 +258,6 @@ class Volume extends FlysystemVolume
     {
         if (($rootUrl = parent::getRootUrl()) !== false) {
             $rootUrl .= $this->_getRootUrlPath();
-
         }
         return $rootUrl;
     }
@@ -548,12 +547,14 @@ class Volume extends FlysystemVolume
             'region' => Craft::parseEnv($this->region),
         ];
     }
+
     /**
      * Returns the visibility setting for the Volume.
      *
      * @return string
      */
-    protected function visibility(): string {
+    protected function visibility(): string
+    {
         return $this->makeUploadsPublic ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
     }
 }

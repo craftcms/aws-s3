@@ -5,7 +5,6 @@ namespace craft\awss3\controllers;
 use Craft;
 use craft\awss3\Fs;
 use craft\web\Controller as BaseController;
-use Throwable;
 use yii\web\Response;
 
 /**

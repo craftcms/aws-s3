@@ -95,7 +95,7 @@ A typical IAM policy that grants the user to choose a bucket can look like this:
 
 ### Using automatic focal point detection
 
-This plugin can use the AWS Rekognition service to detect faces in an image and automatically set the focal point accordingly. This requires the image to be either a jpg or a png file. You can enable this feature via **Attempt to set the focal point automatically?** in the filesystem settings.
+This plugin can use the [AWS Rekognition](https://aws.amazon.com/rekognition/) service to detect faces in an image and automatically set the focal point accordingly. This requires the image to be either a jpg or a png file. You can enable this feature via **Attempt to set the focal point automatically?** in the filesystem settings.
 
 > ⚠️ ️Using this will incur extra cost for each upload, and requires the <code>rekognition:DetectFaces</code> action to be allowed.
 

@@ -35,7 +35,7 @@ composer require craftcms/aws-s3
 
 To create a new Amazon S3 filesystem to use with your volumes, visit **Settings** → **Filesystems**, and press **New filesystem**. Select “Amazon S3” for the **Filesystem Type** setting and configure as needed.
 
-> 💡 The Base URL, Access Key ID, Secret Access Key, Bucket, Region, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://docs.craftcms.com/v3/config/environments.html) in the Craft docs to learn more about that.
+> 💡 The Base URL, Access Key ID, Secret Access Key, Bucket, Region, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://craftcms.com/docs/4.x/config/#environmental-configuration) in the Craft docs to learn more about that.
 
 ### AWS IAM Permissions
 

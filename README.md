@@ -33,9 +33,9 @@ composer require craftcms/aws-s3
 
 ## Setup
 
-To create a new asset volume for your Amazon S3 bucket, go to Settings → Assets, create a new volume, and set the Volume Type setting to “Amazon S3”.
+To create a new asset volume for your Amazon S3 bucket, go to **Settings** → **Assets**, create a new volume, and choose “Amazon S3” for the **Volume Type** setting.
 
-> **Tip:** The Base URL, Access Key ID, Secret Access Key, Bucket, Region, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://docs.craftcms.com/v3/config/environments.html) in the Craft docs to learn more about that.
+> 💡 The Base URL, Access Key ID, Secret Access Key, Bucket, Region, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://docs.craftcms.com/v3/config/environments.html) in the Craft docs to learn more about that.
 
 ### AWS IAM Permissions
 
@@ -94,16 +94,14 @@ A typical IAM policy that grants the user to choose a bucket can look like this:
 ```
 ### Using the automatic focal point detection
 
-This plugin can use the AWS Rekognition service to detect faces in an image and automatically set the focal point accordingly. This requires the image to be either a jpg or a png file. To enable this feature, just turn it on the volume settings.
+This plugin can use the [AWS Rekognition](https://aws.amazon.com/rekognition/) service to detect faces in an image and automatically set the focal point accordingly. This requires the image to be either a jpg or a png file. You can enable this feature via **Attempt to set the focal point automatically?** in the filesystem settings.
 
-:warning: ️Using this will incur extra cost for each upload
-
-:warning: ️Using this requires the <code>rekognition:DetectFaces</code> action to be allowed.
+> ⚠️ ️Using this will incur extra cost for each upload, and requires the <code>rekognition:DetectFaces</code> action to be allowed.
 
 ### Assuming Role with OIDC
 
-This plugin also has the ability to assume a role provided to the runtime with the `AWS_WEB_IDENTITY_TOKEN_FILE` and `AWS_ROLE_ARN` environment variables. If you provide no credentials to AWS and these environment variables exist, then the plugin will attempt to create a connection to AWS using the `CredentialProvider::assumeRoleWithWebIdentityCredentialProvider`. This is the ideal way to allow fine-grained access control for hosting CraftCMS in Kubernetes (for example). See [the IAM documentation on AWS for more details](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html).
+This plugin also has the ability to assume a role provided to the runtime with the `AWS_WEB_IDENTITY_TOKEN_FILE` and `AWS_ROLE_ARN` environment variables. If you provide no credentials to AWS and these environment variables exist, then the plugin will attempt to create a connection to AWS using the `CredentialProvider::assumeRoleWithWebIdentityCredentialProvider`. This is the ideal way to allow fine-grained access control for hosting Craft CMS in Kubernetes (for example). See [the IAM documentation on AWS for more details](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html).
 
 ### Tasks running in ECS
 
-This plugin is compatible with IAM roles for ECS tasks and will automatically use the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable, if it's available. See [the IAM Roles for Tasks documentation on AWS for more details](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html).
+This plugin is compatible with IAM roles for ECS tasks and will automatically use the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable, if it’s available. See [the IAM Roles for Tasks documentation on AWS for more details](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html).

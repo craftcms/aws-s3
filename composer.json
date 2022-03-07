@@ -31,7 +31,7 @@
     "php": "^8.0.2",
     "craftcms/cms": "^4.0.0-alpha.1",
     "craftcms/craft-flysystem": "^1.0.0-alpha.2",
-    "league/flysystem-aws-s3-v3": "^2.1.0"
+    "league/flysystem-aws-s3-v3": "^3.0.0"
   },
   "require-dev": {
     "craftcms/phpstan": "dev-main",

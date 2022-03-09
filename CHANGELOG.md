@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## 2.0.0-beta.1 - 2022-03-08
+
+### Added
+- Added Craft 4 compatibility.
+
 ## 1.3.0 - 2021-10-21
 
 ### Changed

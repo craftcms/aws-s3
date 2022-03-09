@@ -244,7 +244,7 @@ class Volume extends FlysystemVolume
             $bucketList[] = [
                 'bucket' => $bucket['Name'],
                 'urlPrefix' => 'https://s3.' . $region . '.amazonaws.com/' . $bucket['Name'] . '/',
-                'region' => $region
+                'region' => $region,
             ];
         }
 
@@ -293,7 +293,7 @@ class Volume extends FlysystemVolume
                     $credentials['keyId'],
                     $credentials['secret'],
                     $credentials['region'],
-                    true
+                    true,
                 ];
                 return call_user_func_array(self::class . '::buildConfigArray', $args);
             };
@@ -356,10 +356,10 @@ class Volume extends FlysystemVolume
                             'Paths' =>
                                 [
                                     'Quantity' => count($items),
-                                    'Items' => $items
+                                    'Items' => $items,
                                 ],
-                            'CallerReference' => 'Craft-' . StringHelper::randomString(24)
-                        ]
+                            'CallerReference' => 'Craft-' . StringHelper::randomString(24),
+                        ],
                     ]
                 );
             } catch (CloudFrontException $exception) {
@@ -424,7 +424,7 @@ class Volume extends FlysystemVolume
     {
         $config = [
             'region' => $region,
-            'version' => 'latest'
+            'version' => 'latest',
         ];
 
         $client = Craft::createGuzzleClient();

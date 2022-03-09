@@ -9,7 +9,6 @@ use craft\events\RegisterComponentTypesEvent;
 use craft\services\Volumes;
 use yii\base\Event;
 
-
 /**
  * Plugin represents the Amazon S3 volume plugin.
  *

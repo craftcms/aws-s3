@@ -32,7 +32,8 @@
     "league/flysystem-aws-s3-v3": "^1.0.28"
   },
   "require-dev": {
-    "craftcms/phpstan": "dev-main"
+    "craftcms/phpstan": "dev-main",
+    "craftcms/ecs": "dev-main"
   },
   "autoload": {
     "psr-4": {
@@ -40,6 +41,8 @@
     }
   },
   "scripts": {
+    "check-cs": "ecs check --ansi",
+    "fix-cs": "ecs check --ansi --fix",
     "phpstan": "phpstan --memory-limit=1G"
   },
   "extra": {

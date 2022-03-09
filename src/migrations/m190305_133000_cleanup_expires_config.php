@@ -43,7 +43,7 @@ class m190305_133000_cleanup_expires_config extends Migration
                     $volume['settings']['expires'] = $matches[1] . ' ' . $matches[2];
 
                     $this->update('{{%volumes}}', [
-                        'settings' => Json::encode($volume['settings'])
+                        'settings' => Json::encode($volume['settings']),
                     ], ['uid' => $uid]);
 
                     // If project config schema up to date, don't update project config

@@ -29,7 +29,7 @@
   "require": {
     "php": "^8.0.2",
     "craftcms/cms": "^4.0.0-alpha.1",
-    "craftcms/craft-flysystem": "^1.0.0-beta.1",
+    "craftcms/flysystem": "^1.0.0-beta.2",
     "league/flysystem-aws-s3-v3": "^3.0.0"
   },
   "require-dev": {

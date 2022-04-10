@@ -4,6 +4,7 @@ namespace craft\awss3\controllers;
 
 use Craft;
 use craft\awss3\Fs;
+use craft\helpers\App;
 use craft\web\Controller as BaseController;
 use yii\web\Response;
 
@@ -13,7 +14,7 @@ use yii\web\Response;
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since 3.0
  */
-class DefaultController extends BaseController
+class BucketsController extends BaseController
 {
     /**
      * @inheritdoc
@@ -35,13 +36,15 @@ class DefaultController extends BaseController
         $this->requireAcceptsJson();
 
         $request = Craft::$app->getRequest();
-        $keyId = Craft::parseEnv($request->getRequiredBodyParam('keyId'));
-        $secret = Craft::parseEnv($request->getRequiredBodyParam('secret'));
+        $keyId = App::parseEnv($request->getRequiredBodyParam('keyId'));
+        $secret = App::parseEnv($request->getRequiredBodyParam('secret'));
 
         try {
-            return $this->asJson(Fs::loadBucketList($keyId, $secret));
+            return $this->asJson([
+                'buckets' => Fs::loadBucketList($keyId, $secret),
+            ]);
         } catch (\Throwable $e) {
-            return $this->asErrorJson($e->getMessage());
+            return $this->asFailure($e->getMessage());
         }
     }
 }

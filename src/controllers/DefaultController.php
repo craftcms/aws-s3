@@ -6,7 +6,6 @@ use Craft;
 use craft\awss3\Fs;
 use craft\helpers\App;
 use craft\web\Controller as BaseController;
-use Throwable;
 use yii\web\Response;
 
 /**

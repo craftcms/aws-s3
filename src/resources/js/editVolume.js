@@ -8,7 +8,7 @@ $(document).ready(function() {
 		$s3Region = $('.s3-region'),
 		$manualBucket = $('.s3-manualBucket'),
 		$manualRegion = $('.s3-manualRegion'),
-		$volumeUrl = $('.volume-url'),
+		$fsUrl = $('.fs-url'),
 		$hasUrls = $('input[name=hasUrls]'),
 		refreshingS3Buckets = false;
 
@@ -85,7 +85,7 @@ $(document).ready(function() {
 
 		var $selectedOption = $s3BucketSelect.children('option:selected');
 
-		$('.volume-url').val($selectedOption.data('url-prefix'));
+		$fsUrl.val($selectedOption.data('url-prefix'));
 		$s3Region.val($selectedOption.data('region'));
 	});
 
@@ -106,7 +106,7 @@ $(document).ready(function() {
 
 	var maybeUpdateUrl = function () {
 		if ($hasUrls.val() && $manualBucket.val().length && $manualRegion.val().length) {
-			$volumeUrl.val('https://s3.' + $manualRegion.val() + '.amazonaws.com/' + $manualBucket.val() + '/');
+			$fsUrl.val('https://s3.' + $manualRegion.val() + '.amazonaws.com/' + $manualBucket.val() + '/');
 		}
 	};
 

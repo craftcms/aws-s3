@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * @link https://craftcms.com/
@@ -198,7 +199,7 @@ class Fs extends FlysystemFs
     /**
      * @inheritdoc
      */
-    public function getSettingsHtml(): string
+    public function getSettingsHtml(): ?string
     {
         return Craft::$app->getView()->renderTemplate('aws-s3/fsSettings', [
             'fs' => $this,
@@ -257,8 +258,8 @@ class Fs extends FlysystemFs
     {
         $rootUrl = parent::getRootUrl();
 
-        if ($rootUrl && $this->addSubfolderToRootUrl) {
-            $rootUrl .= $this->_subfolder();
+        if ($rootUrl) {
+            $rootUrl .= $this->_getRootUrlPath();
         }
 
         return $rootUrl;
@@ -326,6 +327,9 @@ class Fs extends FlysystemFs
             if (empty($this->pathsToInvalidate)) {
                 Craft::$app->on(Application::EVENT_AFTER_REQUEST, [$this, 'purgeQueuedPaths']);
             }
+
+            // Ensure our paths are prefixed with configured subfolder
+            $path = $this->_getRootUrlPath() . $path;
 
             $this->pathsToInvalidate[$path] = true;
         }
@@ -484,6 +488,19 @@ class Fs extends FlysystemFs
             return $subfolder . '/';
         }
 
+        return '';
+    }
+
+    /**
+     * Returns the root path for URLs
+     *
+     * @return string
+     */
+    private function _getRootUrlPath(): string
+    {
+        if ($this->addSubfolderToRootUrl) {
+            return $this->_subfolder();
+        }
         return '';
     }
 

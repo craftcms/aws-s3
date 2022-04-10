@@ -1,7 +1,6 @@
 {
   "name": "craftcms/aws-s3",
   "description": "Amazon S3 integration for Craft CMS",
-  "version": "2.0.0-alpha.1",
   "type": "craft-plugin",
   "keywords": [
     "aws",
@@ -26,13 +25,17 @@
     "rss": "https://github.com/craftcms/aws-s3/commits/master.atom"
   },
   "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
-    "craftcms/cms": "^4.0.0-alpha",
-    "craftcms/craft-flysystem": "^1.0.0-alpha.2",
-    "league/flysystem-aws-s3-v3": "^2.1.0"
+    "php": "^8.0.2",
+    "craftcms/cms": "^4.0.0-alpha.1",
+    "craftcms/flysystem": "^1.0.0-beta.2",
+    "league/flysystem-aws-s3-v3": "^3.0.0"
   },
   "require-dev": {
-    "phpstan/phpstan": "^0.12.96"
+    "craftcms/ecs": "dev-main",
+    "craftcms/phpstan": "dev-main",
+    "craftcms/rector": "dev-main"
   },
   "autoload": {
     "psr-4": {
@@ -40,11 +43,19 @@
     }
   },
   "scripts": {
+    "check-cs": "ecs check --ansi",
+    "fix-cs": "ecs check --ansi --fix",
     "phpstan": "phpstan --memory-limit=1G"
   },
   "extra": {
     "name": "Amazon S3",
     "handle": "aws-s3",
     "documentationUrl": "https://github.com/craftcms/aws-s3/blob/master/README.md"
+  },
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
   }
 }

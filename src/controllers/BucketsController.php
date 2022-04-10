@@ -14,7 +14,7 @@ use yii\web\Response;
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since 3.0
  */
-class DefaultController extends BaseController
+class BucketsController extends BaseController
 {
     /**
      * @inheritdoc
@@ -40,7 +40,9 @@ class DefaultController extends BaseController
         $secret = App::parseEnv($request->getRequiredBodyParam('secret'));
 
         try {
-            return $this->asJson(Fs::loadBucketList($keyId, $secret));
+            return $this->asJson([
+                'buckets' => Fs::loadBucketList($keyId, $secret),
+            ]);
         } catch (\Throwable $e) {
             return $this->asFailure($e->getMessage());
         }

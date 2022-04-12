@@ -53,6 +53,9 @@
     "documentationUrl": "https://github.com/craftcms/aws-s3/blob/master/README.md"
   },
   "config": {
+    "platform": {
+      "php": "7.2.5"
+    },
     "allow-plugins": {
       "yiisoft/yii2-composer": true,
       "craftcms/plugin-installer": true

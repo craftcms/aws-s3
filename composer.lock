@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2bb02a98feedf254d57573dbe9c9dcc8",
+    "content-hash": "f6a2ebacfba19bbc767de23e9e29d756",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.219.0",
+            "version": "3.219.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "e77a9bc31fdd98d3893f398468a36e00b12db3dc"
+                "reference": "3d0d24d9dad824ea4344cfc711b9989d92070aac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/e77a9bc31fdd98d3893f398468a36e00b12db3dc",
-                "reference": "e77a9bc31fdd98d3893f398468a36e00b12db3dc",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3d0d24d9dad824ea4344cfc711b9989d92070aac",
+                "reference": "3d0d24d9dad824ea4344cfc711b9989d92070aac",
                 "shasum": ""
             },
             "require": {
@@ -143,9 +143,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.219.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.219.2"
             },
-            "time": "2022-04-08T18:16:00+00:00"
+            "time": "2022-04-12T19:03:09+00:00"
         },
         {
             "name": "cebe/markdown",
@@ -1925,7 +1925,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v9.7.0",
+            "version": "v9.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -1980,7 +1980,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v9.7.0",
+            "version": "v9.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -2026,7 +2026,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v9.7.0",
+            "version": "v9.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -2074,7 +2074,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v9.7.0",
+            "version": "v9.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -2190,16 +2190,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.0.15",
+            "version": "3.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "3b71cd136dc0331ee87b636b25f4ee339368c718"
+                "reference": "dea729954c596bdb6cdaecba6f73df9f3e2c4255"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/3b71cd136dc0331ee87b636b25f4ee339368c718",
-                "reference": "3b71cd136dc0331ee87b636b25f4ee339368c718",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/dea729954c596bdb6cdaecba6f73df9f3e2c4255",
+                "reference": "dea729954c596bdb6cdaecba6f73df9f3e2c4255",
                 "shasum": ""
             },
             "require": {
@@ -2260,7 +2260,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.0.15"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.0.16"
             },
             "funding": [
                 {
@@ -2276,7 +2276,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-08T18:36:06+00:00"
+            "time": "2022-04-11T13:32:22+00:00"
         },
         {
             "name": "league/flysystem-aws-s3-v3",
@@ -2336,16 +2336,16 @@
         },
         {
             "name": "league/mime-type-detection",
-            "version": "1.9.0",
+            "version": "1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/mime-type-detection.git",
-                "reference": "aa70e813a6ad3d1558fc927863d47309b4c23e69"
+                "reference": "3e4a35d756eedc67096f30240a68a3149120dae7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/aa70e813a6ad3d1558fc927863d47309b4c23e69",
-                "reference": "aa70e813a6ad3d1558fc927863d47309b4c23e69",
+                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/3e4a35d756eedc67096f30240a68a3149120dae7",
+                "reference": "3e4a35d756eedc67096f30240a68a3149120dae7",
                 "shasum": ""
             },
             "require": {
@@ -2376,7 +2376,7 @@
             "description": "Mime-type detection for Flysystem",
             "support": {
                 "issues": "https://github.com/thephpleague/mime-type-detection/issues",
-                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.9.0"
+                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.10.0"
             },
             "funding": [
                 {
@@ -2388,7 +2388,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-21T11:48:40+00:00"
+            "time": "2022-04-11T12:49:04+00:00"
         },
         {
             "name": "league/oauth2-client",
@@ -6969,12 +6969,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/craftcms/ecs.git",
-                "reference": "8547a813e62a7f76019cda04f7761b09e19fa9c2"
+                "reference": "6534ed578927b9e1da0acd44584c9341e0e87fbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/craftcms/ecs/zipball/8547a813e62a7f76019cda04f7761b09e19fa9c2",
-                "reference": "8547a813e62a7f76019cda04f7761b09e19fa9c2",
+                "url": "https://api.github.com/repos/craftcms/ecs/zipball/6534ed578927b9e1da0acd44584c9341e0e87fbe",
+                "reference": "6534ed578927b9e1da0acd44584c9341e0e87fbe",
                 "shasum": ""
             },
             "require": {
@@ -6994,7 +6994,7 @@
                 "issues": "https://github.com/craftcms/ecs/issues",
                 "source": "https://github.com/craftcms/ecs/tree/main"
             },
-            "time": "2022-03-08T16:53:16+00:00"
+            "time": "2022-04-12T20:55:14+00:00"
         },
         {
             "name": "craftcms/phpstan",
@@ -7002,12 +7002,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/craftcms/phpstan.git",
-                "reference": "8bffa2fd3f55d65747573bd6fdf4f2f9bdad520b"
+                "reference": "b61bba102b5ec8599406e6e29a28a20c915a6abc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/craftcms/phpstan/zipball/8bffa2fd3f55d65747573bd6fdf4f2f9bdad520b",
-                "reference": "8bffa2fd3f55d65747573bd6fdf4f2f9bdad520b",
+                "url": "https://api.github.com/repos/craftcms/phpstan/zipball/b61bba102b5ec8599406e6e29a28a20c915a6abc",
+                "reference": "b61bba102b5ec8599406e6e29a28a20c915a6abc",
                 "shasum": ""
             },
             "require": {
@@ -7021,7 +7021,7 @@
                 "issues": "https://github.com/craftcms/phpstan/issues",
                 "source": "https://github.com/craftcms/phpstan/tree/main"
             },
-            "time": "2022-03-04T21:21:54+00:00"
+            "time": "2022-04-12T20:50:18+00:00"
         },
         {
             "name": "craftcms/rector",
@@ -7282,12 +7282,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "d76ed237faad7e4b747d3019c740242632dc13a5"
+                "reference": "b1c203510337d64c63dc6b2dfbec6f0b6bad0d10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/d76ed237faad7e4b747d3019c740242632dc13a5",
-                "reference": "d76ed237faad7e4b747d3019c740242632dc13a5",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/b1c203510337d64c63dc6b2dfbec6f0b6bad0d10",
+                "reference": "b1c203510337d64c63dc6b2dfbec6f0b6bad0d10",
                 "shasum": ""
             },
             "require": {
@@ -7335,7 +7335,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-04-10T18:18:46+00:00"
+            "time": "2022-04-12T15:58:47+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -8209,5 +8209,8 @@
         "php": "^8.0.2"
     },
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "8.0.2"
+    },
     "plugin-api-version": "2.2.0"
 }

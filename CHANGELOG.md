@@ -1,14 +1,12 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## 2.0.0-beta.3 - 2022-04-10
-
-### Changed
-- The `aws-s3` action has been renamed to `aws-s3/buckets/load-bucket-data`.
-
-## 2.0.0-beta.1 - 2022-03-08
+## 2.0.0 - 2022-05-03
 
 ### Added
 - Added Craft 4 compatibility.
+
+### Changed
+- The `aws-s3` action has been renamed to `aws-s3/buckets/load-bucket-data`.
 
 ## 1.3.0 - 2021-10-21
 

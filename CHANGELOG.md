@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+### Fixed
+- Fixed a bug that preventing listing buckets on the settings page. ([#140](https://github.com/craftcms/aws-s3/issues/140))
+
 ## 2.0.0 - 2022-05-03
 
 ### Added

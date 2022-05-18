@@ -37,7 +37,7 @@ $(document).ready(function() {
 
         $s3BucketSelect.prop('readonly', false).empty();
 
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < data.buckets.length; i++) {
           if (data.buckets[i].bucket == currentBucket) {
             currentBucketStillExists = true;
           }

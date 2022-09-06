@@ -459,7 +459,7 @@ class Volume extends FlysystemVolume
                 $result = $stsClient->getSessionToken(['DurationSeconds' => static::CACHE_DURATION_SECONDS]);
                 $credentials = $stsClient->createCredentials($result);
                 $cacheDuration = $credentials->getExpiration() - time();
-                $cacheDuration = $cacheDuration > 0 ?: static::CACHE_DURATION_SECONDS;
+                $cacheDuration = $cacheDuration > 0 ? $cacheDuration : static::CACHE_DURATION_SECONDS;
                 Craft::$app->cache->set($tokenKey, $credentials->serialize(), $cacheDuration);
             }
 

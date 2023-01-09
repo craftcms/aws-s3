@@ -52,6 +52,11 @@ Generally, you'll want an IAM policy that grants the following actions on the [r
 
 If you want to allow the site administrator to list and select the bucket to use, you'll also have to add the `s3:ListAllMyBuckets` permission to the `arn:aws:s3:::` resource and the `s3:GetBucketLocation` permission to the specific bucket resource. Please note, that if a bucket lacks the `s3:GetBucketLocation` permission, it will not appear in the bucket selection list.
 
+If you use Cloudfront and would like Craft to invalidate files on your behalf you'll also need the following permissions:
+* `cloudfront:ListInvalidations`
+* `cloudfront:GetInvalidation`
+* `cloudfront:CreateInvalidation`
+
 A typical IAM policy that grants the user to choose a bucket can look like this:
 ```
 {
@@ -73,10 +78,14 @@ A typical IAM policy that grants the user to choose a bucket can look like this:
             "s3:GetObject",
             "s3:DeleteObject",
             "s3:GetObjectAcl",
-            "s3:PutObjectAcl"
+            "s3:PutObjectAcl",
+            "cloudfront:ListInvalidations",
+            "cloudfront:GetInvalidation",
+            "cloudfront:CreateInvalidation"
         ],
         "Resource": [
-            "arn:aws:s3:::bucketname/*"
+            "arn:aws:s3:::bucketname/*",
+            "arn:aws:cloudfront::accountid:distribution/distributionid"
         ]
     },
     {

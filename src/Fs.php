@@ -241,7 +241,7 @@ class Fs extends FlysystemFs
                 continue;
             }
 
-            if (StringHelper::contains($bucket['Name'], '.')) {
+            if (str_contains($bucket['Name'], '.')) {
                 $urlPrefix = 'https://s3.' . $region . '.amazonaws.com/' . $bucket['Name'] . '/';
             } else {
                 $urlPrefix = 'https://' . $bucket['Name'] . '.s3.amazonaws.com/';

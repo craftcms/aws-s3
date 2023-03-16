@@ -241,7 +241,7 @@ class Volume extends FlysystemVolume
                 continue;
             }
 
-            if (str_contains($bucket['Name'], '.')) {
+            if (StringHelper::contains($bucket['Name'], '.')) {
                 $urlPrefix = 'https://s3.' . $region . '.amazonaws.com/' . $bucket['Name'] . '/';
             } else {
                 $urlPrefix = 'https://' . $bucket['Name'] . '.s3.amazonaws.com/';

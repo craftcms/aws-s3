@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+- Fixed a bug where the cache duration for AWS credentials was being calculated incorrectly. ([#152](https://github.com/craftcms/aws-s3/pull/152))
+
 ## 2.0.2 - 2023-03-16
 
 - Buckets that don’t include a `.` in their name now use the new virtual host URL format by default. ([#128](https://github.com/craftcms/aws-s3/issues/128))
@@ -16,6 +20,10 @@
 
 ### Changed
 - The `aws-s3` action has been renamed to `aws-s3/buckets/load-bucket-data`.
+
+## 1.3.2 - 2023-03-16
+
+- Fixed a bug where the cache duration for AWS credentials was being calculated incorrectly. ([#152](https://github.com/craftcms/aws-s3/pull/152))
 
 ## 1.3.1 - 2023-03-16
 

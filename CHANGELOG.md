@@ -1,6 +1,6 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## Unreleased
+## 2.0.2 - 2023-03-16
 
 - Buckets that don’t include a `.` in their name now use the new virtual host URL format by default. ([#128](https://github.com/craftcms/
 

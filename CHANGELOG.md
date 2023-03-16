@@ -2,7 +2,7 @@
 
 ## 2.0.2 - 2023-03-16
 
-- Buckets that don’t include a `.` in their name now use the new virtual host URL format by default. ([#128](https://github.com/craftcms/
+- Buckets that don’t include a `.` in their name now use the new virtual host URL format by default. ([#128](https://github.com/craftcms/aws-s3/issues/128))
 
 ## 2.0.1 - 2022-05-18
 

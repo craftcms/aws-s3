@@ -50,6 +50,10 @@ class Fs extends FlysystemFs
     public const STORAGE_REDUCED_REDUNDANCY = 'REDUCED_REDUNDANCY';
     public const STORAGE_STANDARD_IA = 'STANDARD_IA';
 
+    protected const SERVER_SIDE_ENCRYPTION = [
+        'S3_MANAGED' => 'AES256',
+    ];
+
     /**
      * Cache key to use for caching purposes
      */
@@ -145,6 +149,11 @@ class Fs extends FlysystemFs
      */
     protected array $pathsToInvalidate = [];
 
+    /**
+     * @var string The server-side encryption header to use for storing the object in S3. ('' or 'S3_MANAGED').
+     */
+    public string $serverSideEncryption = '';
+
     // Public Methods
     // =========================================================================
 
@@ -181,6 +190,7 @@ class Fs extends FlysystemFs
                 'subfolder',
                 'cfDistributionId',
                 'cfPrefix',
+                'serverSideEncryption'
             ],
         ];
         return $behaviors;
@@ -281,7 +291,14 @@ class Fs extends FlysystemFs
     protected function createAdapter(): FilesystemAdapter
     {
         $client = static::client($this->_getConfigArray(), $this->_getCredentials());
-        return new AwsS3V3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder(), new PortableVisibilityConverter($this->visibility()), null, [], false);
+
+        $forwardedOptions = [];
+
+        if (array_key_exists($this->serverSideEncryption, self::SERVER_SIDE_ENCRYPTION)) {
+            $forwardedOptions['ServerSideEncryption'] = self::SERVER_SIDE_ENCRYPTION[$this->serverSideEncryption];
+        }
+
+        return new AwsS3V3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder(), new PortableVisibilityConverter($this->visibility()), null, $forwardedOptions, false);
     }
 
     /**
@@ -363,10 +380,10 @@ class Fs extends FlysystemFs
                         'DistributionId' => Craft::parseEnv($this->cfDistributionId),
                         'InvalidationBatch' => [
                             'Paths' =>
-                                [
-                                    'Quantity' => count($items),
-                                    'Items' => $items,
-                                ],
+                            [
+                                'Quantity' => count($items),
+                                'Items' => $items,
+                            ],
                             'CallerReference' => 'Craft-' . StringHelper::randomString(24),
                         ],
                     ]

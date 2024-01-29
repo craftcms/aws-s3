@@ -176,4 +176,23 @@
     errors: fs.getErrors('cfPrefix')
 }) }}
 
+{% set sseInput %}
+    {{ forms.select({
+        name: 'serverSideEncryption',
+        options: [
+            { label: 'None', value: '' },
+            { label: 'S3 Managed', value: 'S3_MANAGED' }
+        ],
+        value: fs.serverSideEncryption
+    }) }}
+{% endset %}
+
+{{ forms.field({
+    label: "Server-side encryption"|t('aws-s3'),
+    id: 'serverSideEncryption',
+    instructions: "Specifies which type of server-side encryption the object must be stored with in S3.",
+    required: false,
+    errors: fs.getErrors('serverSideEncryption'),
+}, sseInput) }}
+
 {% do view.registerAssetBundle("craft\\awss3\\AwsS3Bundle") %}

@@ -6,7 +6,7 @@ This plugin provides an [Amazon S3](https://aws.amazon.com/s3/) integration for 
 
 ## Requirements
 
-This plugin requires Craft CMS 4.0 or later.
+This plugin requires Craft CMS 4.0.0+ or 5.0.0+.
 
 ## Installation
 

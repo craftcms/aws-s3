@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## 2.1.0 - 2024-03-11
+
+- Added Craft 5 compatibility.
+
 ## 2.0.3 - 2023-03-16
 
 - Fixed a bug where the cache duration for AWS credentials was being calculated incorrectly. ([#152](https://github.com/craftcms/aws-s3/pull/152))

@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## 2.2.0 - 2024-03-13
+
+- Uploads will now include the `x-amz-server-side-encryption=AES256` header for parity with S3 defaults. (Thanks @drieshooghe!) [#172](https://github.com/craftcms/aws-s3/pull/172)
+
 ## 2.1.0 - 2024-03-11
 
 - Added Craft 5 compatibility.

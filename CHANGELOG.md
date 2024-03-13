@@ -2,7 +2,7 @@
 
 ## 2.2.0 - 2024-03-13
 
-- Uploads will now include the `x-amz-server-side-encryption=AES256` header for parity with S3 defaults. (Thanks @drieshooghe!) [#172](https://github.com/craftcms/aws-s3/pull/172)
+- Uploads will now include the `x-amz-server-side-encryption: AES256` header for parity with S3 defaults. ([#172](https://github.com/craftcms/aws-s3/pull/172), [#174](https://github.com/craftcms/aws-s3/pull/174))
 
 ## 2.1.0 - 2024-03-11
 

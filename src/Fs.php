@@ -281,7 +281,23 @@ class Fs extends FlysystemFs
     protected function createAdapter(): FilesystemAdapter
     {
         $client = static::client($this->_getConfigArray(), $this->_getCredentials());
-        return new AwsS3V3Adapter($client, Craft::parseEnv($this->bucket), $this->_subfolder(), new PortableVisibilityConverter($this->visibility()), null, [], false);
+        $options = [
+
+            // This is the S3 default for all objects, but explicitly
+            // sending the header allows for bucket policies that require it.
+            // @see https://github.com/craftcms/aws-s3/pull/172
+            'ServerSideEncryption' => 'AES256',
+        ];
+
+        return new AwsS3V3Adapter(
+            $client,
+            App::parseEnv($this->bucket),
+            $this->_subfolder(),
+            new PortableVisibilityConverter($this->visibility()),
+            null,
+            $options,
+            false,
+        );
     }
 
     /**

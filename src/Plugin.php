@@ -57,8 +57,8 @@ class Plugin extends \craft\base\Plugin
                 return;
             }
 
-            $fullPath = (method_exists($volume, 'getSubpath') ? $volume->getSubpath() : '') .
-                (!empty($filesystem->subfolder) ? rtrim($filesystem->subfolder, '/') . '/' : '') .
+            $fullPath = (!empty($filesystem->subfolder) ? rtrim($filesystem->subfolder, '/') . '/' : '') .
+                (method_exists($volume, 'getSubpath') ? $volume->getSubpath() : '') .
                 $asset->getPath();
 
             $focalPoint = $filesystem->detectFocalPoint($fullPath);

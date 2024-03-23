@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## 2.2.1 - 2024-03-22
+
+- Fixed an error that occurred when auto-detecting images’ focal points in Craft 5, when the volume had a subpath. ([#173](https://github.com/craftcms/aws-s3/issues/173)) 
+
 ## 2.2.0 - 2024-03-13
 
 - Uploads will now include the `x-amz-server-side-encryption: AES256` header for parity with S3 defaults. ([#172](https://github.com/craftcms/aws-s3/pull/172), [#174](https://github.com/craftcms/aws-s3/pull/174))

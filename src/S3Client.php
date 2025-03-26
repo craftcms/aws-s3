@@ -71,6 +71,29 @@ class S3Client extends AwsS3Client
     /**
      * @inheritdoc
      */
+    public function executeAsync(CommandInterface $command)
+    {
+        try {
+            // Just try to execute
+            return $this->_wrappedClient->executeAsync($command);
+        } catch (S3Exception $exception) {
+            // Attempt to get new credentials
+            if ($exception->getAwsErrorCode() == 'ExpiredToken') {
+                $clientConfig = call_user_func($this->_generateNewConfig);
+                $this->_wrappedClient = new parent($clientConfig);
+
+                // Re-create the command to use the new credentials
+                $newCommand = $this->getCommand($command->getName(), $command->toArray());
+                return $this->_wrappedClient->executeAsync($newCommand);
+            }
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getCommand($name, array $args = [])
     {
         // Use the wrapped client which should have the latest credentials.

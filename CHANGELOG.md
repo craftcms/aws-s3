@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+- Fixed a bug where you could get a “token has expired” message for in long-running S3 operations. ([#182](https://github.com/craftcms/aws-s3/issues/182))
+
 ## 2.2.1 - 2024-03-22
 
 - Fixed an error that occurred when auto-detecting images’ focal points in Craft 5, when the volume had a subpath. ([#173](https://github.com/craftcms/aws-s3/issues/173)) 

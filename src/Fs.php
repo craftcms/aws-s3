@@ -343,26 +343,6 @@ class Fs extends FlysystemFs
     /**
      * @inheritdoc
      */
-    public function write(string $path, string $contents, array $config = []): void
-    {
-        parent::write($path, $contents, $config);
-
-        $this->invalidateCdnPath($path);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function writeFileFromStream(string $path, $stream, array $config = []): void
-    {
-        parent::writeFileFromStream($path, $stream, $config);
-
-        $this->invalidateCdnPath($path);
-    }
-
-    /**
-     * @inheritdoc
-     */
     protected function invalidateCdnPath(string $path): bool
     {
         if (!empty($this->cfDistributionId)) {

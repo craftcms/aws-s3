@@ -343,7 +343,7 @@ class Fs extends FlysystemFs
     /**
      * @inheritdoc
      */
-    protected function invalidateCdnPath(string $path): bool
+    public function invalidateCdnPath(string $path): bool
     {
         if (!empty($this->cfDistributionId)) {
             if (empty($this->pathsToInvalidate)) {

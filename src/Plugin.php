@@ -48,7 +48,7 @@ class Plugin extends \craft\base\Plugin
         Event::on(
             Assets::class,
             Assets::EVENT_BEFORE_REPLACE_ASSET,
-            function (ReplaceAssetEvent $event) {
+            function(ReplaceAssetEvent $event) {
                 $asset = $event->asset;
                 $oldFilename = $asset->getFilename();
                 $newFilename = $event->filename;
@@ -56,6 +56,7 @@ class Plugin extends \craft\base\Plugin
                 // when replacing asset with another one with the same filename, invalidate the cdn path for the original file too
                 // see https://github.com/craftcms/aws-s3/issues/184 for details
                 if ($oldFilename === $newFilename) {
+                    /** @var Fs $fs */
                     $fs = $asset->getVolume()->getFs();
                     $fs->invalidateCdnPath($asset->getPath());
                 }

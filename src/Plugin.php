@@ -11,6 +11,8 @@ use craft\base\Element;
 use craft\elements\Asset;
 use craft\events\ModelEvent;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\ReplaceAssetEvent;
+use craft\services\Assets;
 use craft\services\Fs as FsService;
 use yii\base\Event;
 
@@ -42,6 +44,28 @@ class Plugin extends \craft\base\Plugin
         Event::on(FsService::class, FsService::EVENT_REGISTER_FILESYSTEM_TYPES, function(RegisterComponentTypesEvent $event) {
             $event->types[] = Fs::class;
         });
+
+        Event::on(
+            Assets::class,
+            Assets::EVENT_BEFORE_REPLACE_ASSET,
+            function(ReplaceAssetEvent $event) {
+                $asset = $event->asset;
+                $fs = $asset->getVolume()->getFs();
+
+                if (!$fs instanceof Fs) {
+                    return;
+                }
+
+                $oldFilename = $asset->getFilename();
+                $newFilename = $event->filename;
+
+                // when replacing asset with another one with the same filename, invalidate the cdn path for the original file too
+                // see https://github.com/craftcms/aws-s3/issues/184 for details
+                if ($oldFilename === $newFilename) {
+                    $fs->invalidateCdnPath($asset->getPath());
+                }
+            }
+        );
 
         Event::on(Asset::class, Element::EVENT_AFTER_SAVE, function(ModelEvent $event) {
             if (!$event->isNew) {

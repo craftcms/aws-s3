@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## 2.2.3 - 2025-06-16
+
+- Fixed a bug where assets on a Cloudfront distribution would not get invalidted if they were replaced by a file with the exact same name. ([#186](https://github.com/craftcms/aws-s3/pull/186))
+
 ## 2.2.2 - 2025-04-14
 
 - Fixed a bug where you could get a “token has expired” message for in long-running S3 operations. ([#182](https://github.com/craftcms/aws-s3/issues/182))

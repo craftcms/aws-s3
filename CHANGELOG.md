@@ -1,8 +1,12 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+- Fixed a PHP error that could occur in some environments. ([#183](https://github.com/craftcms/aws-s3/issues/183))
+
 ## 2.2.3 - 2025-06-16
 
-- Fixed a bug where assets on a Cloudfront distribution would not get invalidted if they were replaced by a file with the exact same name. ([#186](https://github.com/craftcms/aws-s3/pull/186))
+- Fixed a bug where assets on a Cloudfront distribution would not get invalidated if they were replaced by a file with the exact same name. ([#186](https://github.com/craftcms/aws-s3/pull/186))
 
 ## 2.2.2 - 2025-04-14
 

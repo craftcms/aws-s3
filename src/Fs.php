@@ -473,24 +473,30 @@ class Fs extends FlysystemFs
             }
             // If that didn't happen, assume we're running on EC2 and we have an IAM role assigned so no action required.
         } else {
-            $tokenKey = static::CACHE_KEY_PREFIX . md5($keyId . $secret);
             $credentials = new Credentials($keyId, $secret);
 
-            if (Craft::$app->cache->exists($tokenKey) && !$refreshToken) {
-                $cached = Craft::$app->cache->get($tokenKey);
-                $credentials->unserialize($cached);
-            } else {
+            // Custom S3-compatible endpoints (for example, MinIO) typically do not support AWS STS GetSessionToken.
+            if (!empty(App::env('AWS_ENDPOINT_URL_S3'))) {
                 $config['credentials'] = $credentials;
-                $stsClient = new StsClient($config);
-                $result = $stsClient->getSessionToken(['DurationSeconds' => static::CACHE_DURATION_SECONDS]);
-                $credentials = $stsClient->createCredentials($result);
-                $cacheDuration = $credentials->getExpiration() - time();
-                $cacheDuration = $cacheDuration > 0 ? $cacheDuration : static::CACHE_DURATION_SECONDS;
-                Craft::$app->cache->set($tokenKey, $credentials->serialize(), $cacheDuration);
-            }
+            } else {
+                $tokenKey = static::CACHE_KEY_PREFIX . md5($keyId . $secret);
 
-            // TODO Add support for different credential supply methods
-            $config['credentials'] = $credentials;
+                if (Craft::$app->cache->exists($tokenKey) && !$refreshToken) {
+                    $cached = Craft::$app->cache->get($tokenKey);
+                    $credentials->unserialize($cached);
+                } else {
+                    $config['credentials'] = $credentials;
+                    $stsClient = new StsClient($config);
+                    $result = $stsClient->getSessionToken(['DurationSeconds' => static::CACHE_DURATION_SECONDS]);
+                    $credentials = $stsClient->createCredentials($result);
+                    $cacheDuration = $credentials->getExpiration() - time();
+                    $cacheDuration = $cacheDuration > 0 ? $cacheDuration : static::CACHE_DURATION_SECONDS;
+                    Craft::$app->cache->set($tokenKey, $credentials->serialize(), $cacheDuration);
+                }
+
+                // TODO Add support for different credential supply methods
+                $config['credentials'] = $credentials;
+            }
         }
 
         return $config;

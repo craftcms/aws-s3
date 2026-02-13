@@ -115,3 +115,7 @@ This plugin also has the ability to assume a role provided to the runtime with t
 ### Tasks running in ECS
 
 This plugin is compatible with IAM roles for ECS tasks and will automatically use the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable, if it’s available. See [the IAM Roles for Tasks documentation on AWS for more details](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html).
+
+### S3-Compatible Endpoints
+
+If `AWS_ENDPOINT_URL_S3` is set, the plugin will use the configured Access Key ID and Secret Access Key directly, and will not attempt to call AWS STS `GetSessionToken`. This improves compatibility with S3-compatible services like MinIO.

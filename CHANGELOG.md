@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+- When `AWS_ENDPOINT_URL_S3` is set, AWS S3 filesystems now skip STS `GetSessionToken` and use static credentials directly, improving compatibility with S3-compatible services like MinIO.
+
 ## 2.2.4 - 2026-01-14
 
 - Fixed a PHP error that could occur in some environments. ([#183](https://github.com/craftcms/aws-s3/issues/183))

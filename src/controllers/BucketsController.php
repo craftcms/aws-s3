@@ -25,6 +25,7 @@ class BucketsController extends BaseController
      */
     public function actionLoadBucketData(): Response
     {
+        $this->requireAdmin();
         $this->requirePostRequest();
         $this->requireAcceptsJson();
 

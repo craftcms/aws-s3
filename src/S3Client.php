@@ -22,9 +22,9 @@ use GuzzleHttp\Promise\RejectedPromise;
 class S3Client extends AwsS3Client
 {
     /**
-     * @var callable callback for generating new config, including new credentials.
+     * @var (callable(): array)|null callback for generating new config, including new credentials.
      */
-    private $_generateNewConfig;
+    private $_generateNewConfig = null;
 
     /**
      * @var AwsS3Client the wrapped AWS client to use for all requests
@@ -36,7 +36,7 @@ class S3Client extends AwsS3Client
      */
     public function __construct(array $args)
     {
-        if (!empty($args['generateNewConfig'])) {
+        if (!empty($args['generateNewConfig']) && is_callable($args['generateNewConfig'])) {
             $this->_generateNewConfig = $args['generateNewConfig'];
             unset($args['generateNewConfig']);
         }
@@ -87,7 +87,7 @@ class S3Client extends AwsS3Client
      */
     private function _retryWithFreshCredentials(CommandInterface $command): PromiseInterface
     {
-        if (!isset($this->_generateNewConfig) || !is_callable($this->_generateNewConfig)) {
+        if ($this->_generateNewConfig === null) {
             return new RejectedPromise(new S3Exception(
                 'AWS credentials expired and no credential refresh callback is configured.',
                 $command

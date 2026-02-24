@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+- Really fixed a bug where you could get a “token has expired” message for in long-running S3 operations. ([#182](https://github.com/craftcms/aws-s3/issues/182))
+
 ## 2.2.4 - 2026-01-14
 
 - Fixed a PHP error that could occur in some environments. ([#183](https://github.com/craftcms/aws-s3/issues/183))

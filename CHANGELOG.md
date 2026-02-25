@@ -1,6 +1,6 @@
 # Release Notes for Amazon S3 for Craft CMS
 
-## Unreleased
+## 2.3.0 - 2026-02-24
 
 - The AWS S3 plugin now requires PHP 8.1.0 or later.
 - Really fixed a bug where you could get a “token has expired” message for in long-running S3 operations. ([#182](https://github.com/craftcms/aws-s3/issues/182))

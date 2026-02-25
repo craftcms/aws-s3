@@ -16,7 +16,6 @@ jobs:
     name: ci
     uses: craftcms/.github/.github/workflows/ci.yml@v3
     with:
-      craft_version: '4'
       php_version: '8.1'
       jobs: '["ecs", "phpstan", "prettier"]'
       notify_slack: true

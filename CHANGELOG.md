@@ -3,7 +3,7 @@
 ## 2.3.0 - 2026-02-24
 
 - The AWS S3 plugin now requires PHP 8.1.0 or later.
-- Really fixed a bug where you could get a “token has expired” message for in long-running S3 operations. ([#182](https://github.com/craftcms/aws-s3/issues/182))
+- Really fixed a bug where you could get a “token has expired” message for long-running S3 operations. ([#182](https://github.com/craftcms/aws-s3/issues/182))
 
 ## 2.2.6 - 2026-02-19
 
@@ -11,7 +11,7 @@
 
 ## 2.2.5 - 2026-02-17
 
-- Fixed a [low-severity](https://github.com/craftcms/cms/security/policy#severity--remediation) information disclosure vulnerability. (GHSA-hwj7-4vgc-j3v9)
+- Fixed a [low-severity](https://github.com/craftcms/cms/security/policy#severity--remediation) information disclosure vulnerability. ([GHSA-hwj7-4vgc-j3v9](https://github.com/craftcms/aws-s3/security/advisories/GHSA-hwj7-4vgc-j3v9))
 
 ## 2.2.4 - 2026-01-14
 

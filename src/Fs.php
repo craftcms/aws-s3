@@ -475,8 +475,8 @@ class Fs extends FlysystemFs
         } else {
             $credentials = new Credentials($keyId, $secret);
 
-            // Custom S3-compatible endpoints (for example, MinIO) typically do not support AWS STS GetSessionToken.
-            if (!empty(App::env('AWS_ENDPOINT_URL_S3'))) {
+            // Some S3-compatible providers (for example, MinIO) do not support AWS STS GetSessionToken.
+            if (!static::shouldUseStsSessionToken()) {
                 $config['credentials'] = $credentials;
             } else {
                 $tokenKey = static::CACHE_KEY_PREFIX . md5($keyId . $secret);
@@ -500,6 +500,20 @@ class Fs extends FlysystemFs
         }
 
         return $config;
+    }
+
+    /**
+     * Returns whether the plugin should request temporary credentials from AWS STS.
+     */
+    private static function shouldUseStsSessionToken(): bool
+    {
+        $useSts = App::env('AWS_S3_USE_STS');
+
+        if ($useSts !== null && $useSts !== '') {
+            return filter_var($useSts, FILTER_VALIDATE_BOOL) === true;
+        }
+
+        return empty(App::env('AWS_ENDPOINT_URL_S3'));
     }
 
     // Private Methods

@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- When `AWS_ENDPOINT_URL_S3` is set, AWS S3 filesystems now skip STS `GetSessionToken` and use static credentials directly, improving compatibility with S3-compatible services like MinIO.
+- Added explicit STS control for S3-compatible providers: endpoint mode still defaults to direct credentials (for MinIO compatibility), and you can set `AWS_S3_USE_STS=true` for providers that support STS (for example, Wasabi).
 
 ## 2.2.4 - 2026-01-14
 

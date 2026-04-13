@@ -118,4 +118,8 @@ This plugin is compatible with IAM roles for ECS tasks and will automatically us
 
 ### S3-Compatible Endpoints
 
-If `AWS_ENDPOINT_URL_S3` is set, the plugin will use the configured Access Key ID and Secret Access Key directly, and will not attempt to call AWS STS `GetSessionToken`. This improves compatibility with S3-compatible services like MinIO.
+If `AWS_ENDPOINT_URL_S3` is set, the plugin can be used with S3-compatible services like MinIO and Wasabi.
+
+By default, when `AWS_ENDPOINT_URL_S3` is set, the plugin uses the configured Access Key ID and Secret Access Key directly (without requesting AWS STS `GetSessionToken`) for compatibility with services like MinIO.
+
+If your provider supports STS (for example, Wasabi), set `AWS_S3_USE_STS=true` to request temporary credentials via STS.

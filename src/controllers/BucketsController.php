@@ -16,14 +16,7 @@ use yii\web\Response;
  */
 class BucketsController extends BaseController
 {
-    /**
-     * @inheritdoc
-     */
-    public function init(): void
-    {
-        parent::init();
-        $this->defaultAction = 'load-bucket-data';
-    }
+    public $defaultAction = 'load-bucket-data';
 
     /**
      * Load bucket data for specified credentials.
@@ -32,6 +25,7 @@ class BucketsController extends BaseController
      */
     public function actionLoadBucketData(): Response
     {
+        $this->requireAdmin();
         $this->requirePostRequest();
         $this->requireAcceptsJson();
 

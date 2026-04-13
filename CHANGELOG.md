@@ -4,6 +4,19 @@
 
 - Added explicit STS control for S3-compatible providers: endpoint mode still defaults to direct credentials (for MinIO compatibility), and you can set `AWS_S3_USE_STS=true` for providers that support STS (for example, Wasabi).
 
+## 2.3.0 - 2026-02-24
+
+- The AWS S3 plugin now requires PHP 8.1.0 or later.
+- Really fixed a bug where you could get a “token has expired” message for long-running S3 operations. ([#182](https://github.com/craftcms/aws-s3/issues/182))
+
+## 2.2.6 - 2026-02-19
+
+- Fixed a PHP error that could occur if a Subfolder path was set to a nonexistent environment variable. ([#189](https://github.com/craftcms/aws-s3/issues/189))
+
+## 2.2.5 - 2026-02-17
+
+- Fixed a [low-severity](https://github.com/craftcms/cms/security/policy#severity--remediation) information disclosure vulnerability. ([GHSA-hwj7-4vgc-j3v9](https://github.com/craftcms/aws-s3/security/advisories/GHSA-hwj7-4vgc-j3v9))
+
 ## 2.2.4 - 2026-01-14
 
 - Fixed a PHP error that could occur in some environments. ([#183](https://github.com/craftcms/aws-s3/issues/183))

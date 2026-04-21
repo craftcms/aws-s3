@@ -2,6 +2,7 @@ $(document).ready(function () {
   const $s3AccessKeyIdInput = $('.s3-key-id');
   const $s3SecretAccessKeyInput = $('.s3-secret-key');
   const $s3EndpointInput = $('.s3-endpoint');
+  const $s3UseStsInput = $('input[name=useSts]');
   const $s3BucketSelect = $('.s3-bucket-select > select');
   const $s3RefreshBucketsBtn = $('.s3-refresh-buckets');
   const $s3RefreshBucketsSpinner = $s3RefreshBucketsBtn
@@ -28,6 +29,7 @@ $(document).ready(function () {
       secret: $s3SecretAccessKeyInput.val(),
       region: $s3Region.val(),
       endpoint: $s3EndpointInput.val(),
+      useSts: $s3UseStsInput.prop('checked'),
     };
 
     Craft.sendActionRequest('POST', 'aws-s3/buckets/load-bucket-data', {data})

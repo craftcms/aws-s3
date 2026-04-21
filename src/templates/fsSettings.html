@@ -24,13 +24,20 @@
 
 {{ forms.autosuggestField({
     label: "Endpoint URL"|t('aws-s3'),
-    instructions: 'Provide the S3 API endpoint for your compatible storage service, such as MinIO. Leave this empty for Amazon S3.'|t('aws-s3'),
+    instructions: 'Provide the S3 API endpoint for your compatible storage service. Leave this empty for Amazon S3.'|t('aws-s3'),
     id: 'endpoint',
     name: 'endpoint',
     suggestEnvVars: true,
     value: fs.endpoint,
     errors: fs.getErrors('endpoint'),
     class: 'ltr s3-endpoint'
+}) }}
+
+{{ forms.lightswitchField({
+    label: "Use STS temporary credentials?"|t('aws-s3'),
+    instructions: 'Turn this on to exchange the configured access key and secret for temporary STS credentials. Turn it off to use the configured credentials directly.'|t('aws-s3'),
+    name: 'useSts',
+    on: fs.useSts,
 }) }}
 
 {% set bucketInput %}

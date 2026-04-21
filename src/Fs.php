@@ -111,6 +111,11 @@ class Fs extends FlysystemFs
     public string $endpoint = '';
 
     /**
+     * @var bool Whether STS temporary credentials should be used
+     */
+    public bool $useSts = true;
+
+    /**
      * @var string Cache expiration period.
      */
     public string $expires = '';
@@ -227,9 +232,10 @@ class Fs extends FlysystemFs
         ?string $secret,
         ?string $region = null,
         ?string $endpoint = null,
+        bool $useSts = false,
     ): array {
         // Any region will do.
-        $config = self::buildConfigArray($keyId, $secret, $region ?? 'us-east-1', false, $endpoint);
+        $config = self::buildConfigArray($keyId, $secret, $region ?? 'us-east-1', false, $endpoint, $useSts);
 
         $client = static::client($config);
 
@@ -468,6 +474,7 @@ class Fs extends FlysystemFs
      * @param ?string $region The region to user
      * @param bool $refreshToken If true will always refresh token
      * @param ?string $endpoint The custom S3 endpoint
+     * @param bool $useSts Whether STS temporary credentials should be used
      * @return array
      */
     public static function buildConfigArray(
@@ -476,6 +483,7 @@ class Fs extends FlysystemFs
         ?string $region = null,
         bool $refreshToken = false,
         ?string $endpoint = null,
+        bool $useSts = false,
     ): array {
         $config = [
             'region' => $region,
@@ -489,7 +497,9 @@ class Fs extends FlysystemFs
 
         if ($endpoint) {
             $config['endpoint'] = $endpoint;
+        }
 
+        if (!$useSts) {
             if (!empty($keyId) && !empty($secret)) {
                 $config['credentials'] = new Credentials($keyId, $secret);
             }
@@ -608,6 +618,7 @@ class Fs extends FlysystemFs
             $credentials['region'],
             false,
             Craft::parseEnv($this->endpoint),
+            $this->useSts,
         );
     }
 
@@ -624,6 +635,9 @@ class Fs extends FlysystemFs
             $credentials['keyId'],
             $credentials['secret'],
             $credentials['region'],
+            false,
+            null,
+            $this->useSts,
         );
     }
 

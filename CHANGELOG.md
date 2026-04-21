@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Added a per-filesystem connection type and endpoint override for MinIO and other S3-compatible storage services, without changing the default Amazon S3 behavior.
+- Added a per-filesystem endpoint override for S3-compatible storage services, without changing the default Amazon S3 behavior.
+- Added a per-filesystem option to control whether configured access keys should be exchanged for STS temporary credentials.
 
 ## 2.3.0 - 2026-02-24
 

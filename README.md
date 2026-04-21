@@ -104,9 +104,9 @@ A typical IAM policy that grants the user to choose a bucket can look like this:
 
 ### S3-compatible storage
 
-If you need to connect to a MinIO or other S3-compatible service, set **Connection Type** to **S3-compatible storage** and provide the service’s **Endpoint URL**.
+If you need to connect to a MinIO or other S3-compatible service, provide the service’s **Endpoint URL**.
 
-In that mode, the plugin will connect directly to the configured endpoint using the provided access key and secret, without requesting temporary credentials from AWS STS. Leave the connection type set to **Amazon S3** to preserve the plugin’s standard AWS behavior.
+When an endpoint URL is configured, the plugin will connect directly to that endpoint using the provided access key and secret, without requesting temporary credentials from AWS STS. Leave the endpoint URL empty to preserve the plugin’s standard AWS behavior.
 
 ### Using automatic focal point detection
 

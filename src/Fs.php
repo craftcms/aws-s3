@@ -106,11 +106,6 @@ class Fs extends FlysystemFs
     public string $region = '';
 
     /**
-     * @var string Auth mode to use for this filesystem
-     */
-    public string $authMode = 'aws';
-
-    /**
      * @var string Custom S3 endpoint to use for compatible services
      */
     public string $endpoint = '';
@@ -231,11 +226,10 @@ class Fs extends FlysystemFs
         ?string $keyId,
         ?string $secret,
         ?string $region = null,
-        string $authMode = 'aws',
         ?string $endpoint = null,
     ): array {
         // Any region will do.
-        $config = self::buildConfigArray($keyId, $secret, $region ?? 'us-east-1', false, $authMode, $endpoint);
+        $config = self::buildConfigArray($keyId, $secret, $region ?? 'us-east-1', false, $endpoint);
 
         $client = static::client($config);
 
@@ -251,7 +245,7 @@ class Fs extends FlysystemFs
         foreach ($buckets as $bucket) {
             $urlPrefix = '';
 
-            if ($authMode === 'compatible') {
+            if ($endpoint) {
                 $region = $region ?? 'us-east-1';
                 $urlPrefix = rtrim((string)$endpoint, '/') . '/' . $bucket['Name'] . '/';
             } else {
@@ -265,9 +259,9 @@ class Fs extends FlysystemFs
                 }
             }
 
-            if ($authMode !== 'compatible' && str_contains($bucket['Name'], '.')) {
+            if (!$endpoint && str_contains($bucket['Name'], '.')) {
                 $urlPrefix = 'https://s3.' . $region . '.amazonaws.com/' . $bucket['Name'] . '/';
-            } elseif ($authMode !== 'compatible') {
+            } elseif (!$endpoint) {
                 $urlPrefix = 'https://' . $bucket['Name'] . '.s3.amazonaws.com/';
             }
 
@@ -473,7 +467,6 @@ class Fs extends FlysystemFs
      * @param ?string $secret The key secret
      * @param ?string $region The region to user
      * @param bool $refreshToken If true will always refresh token
-     * @param string $authMode The auth mode
      * @param ?string $endpoint The custom S3 endpoint
      * @return array
      */
@@ -482,7 +475,6 @@ class Fs extends FlysystemFs
         ?string $secret = null,
         ?string $region = null,
         bool $refreshToken = false,
-        string $authMode = 'aws',
         ?string $endpoint = null,
     ): array {
         $config = [
@@ -495,10 +487,8 @@ class Fs extends FlysystemFs
 
         $endpoint = $endpoint ? rtrim($endpoint, '/') : null;
 
-        if ($authMode === 'compatible') {
-            if ($endpoint) {
-                $config['endpoint'] = $endpoint;
-            }
+        if ($endpoint) {
+            $config['endpoint'] = $endpoint;
 
             if (!empty($keyId) && !empty($secret)) {
                 $config['credentials'] = new Credentials($keyId, $secret);
@@ -617,7 +607,6 @@ class Fs extends FlysystemFs
             $credentials['secret'],
             $credentials['region'],
             false,
-            $this->authMode,
             Craft::parseEnv($this->endpoint),
         );
     }

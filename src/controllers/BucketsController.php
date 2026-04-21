@@ -33,12 +33,11 @@ class BucketsController extends BaseController
         $keyId = App::parseEnv($request->getBodyParam('keyId'));
         $secret = App::parseEnv($request->getBodyParam('secret'));
         $region = App::parseEnv($request->getBodyParam('region'));
-        $authMode = $request->getBodyParam('authMode', 'aws');
         $endpoint = App::parseEnv($request->getBodyParam('endpoint'));
 
         try {
             return $this->asJson([
-                'buckets' => Fs::loadBucketList($keyId, $secret, $region, $authMode, $endpoint),
+                'buckets' => Fs::loadBucketList($keyId, $secret, $region, $endpoint),
             ]);
         } catch (\Throwable $e) {
             return $this->asFailure($e->getMessage());

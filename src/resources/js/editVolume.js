@@ -1,7 +1,6 @@
 $(document).ready(function () {
     const $s3AccessKeyIdInput = $('.s3-key-id');
     const $s3SecretAccessKeyInput = $('.s3-secret-key');
-    const $s3AuthModeInput = $('#authMode');
     const $s3EndpointInput = $('.s3-endpoint');
     const $s3BucketSelect = $('.s3-bucket-select > select');
     const $s3RefreshBucketsBtn = $('.s3-refresh-buckets');
@@ -25,7 +24,6 @@ $(document).ready(function () {
             keyId: $s3AccessKeyIdInput.val(),
             secret: $s3SecretAccessKeyInput.val(),
             region: $s3Region.val(),
-            authMode: $s3AuthModeInput.val(),
             endpoint: $s3EndpointInput.val(),
         };
 
@@ -104,7 +102,7 @@ $(document).ready(function () {
     $('.s3-expires-period select').change(s3ChangeExpiryValue);
 
     function maybeUpdateUrl() {
-        if ($s3AuthModeInput.val() === 'compatible') {
+        if ($s3EndpointInput.val().length) {
             return;
         }
 
@@ -115,5 +113,5 @@ $(document).ready(function () {
 
     $manualRegion.keyup(maybeUpdateUrl);
     $manualBucket.keyup(maybeUpdateUrl);
-    $s3AuthModeInput.change(maybeUpdateUrl);
+    $s3EndpointInput.keyup(maybeUpdateUrl).change(maybeUpdateUrl);
 });

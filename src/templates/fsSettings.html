@@ -33,11 +33,13 @@
     class: 'ltr s3-endpoint'
 }) }}
 
-{{ forms.lightswitchField({
+{{ forms.booleanMenuField({
     label: "Use STS temporary credentials?"|t('aws-s3'),
     instructions: 'Turn this on to exchange the configured access key and secret for temporary STS credentials. Turn it off to use the configured credentials directly.'|t('aws-s3'),
+    id: 'useSts',
     name: 'useSts',
-    on: fs.useSts,
+    includeEnvVars: true,
+    value: fs.useSts,
 }) }}
 
 {% set bucketInput %}

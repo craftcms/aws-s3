@@ -113,7 +113,7 @@ class Fs extends FlysystemFs
     /**
      * @var bool Whether STS temporary credentials should be used
      */
-    public bool $useSts = true;
+    public bool|string $useSts = true;
 
     /**
      * @var string Cache expiration period.
@@ -618,7 +618,7 @@ class Fs extends FlysystemFs
             $credentials['region'],
             false,
             Craft::parseEnv($this->endpoint),
-            $this->useSts,
+            App::parseBooleanEnv($this->useSts) ?? true,
         );
     }
 
@@ -637,7 +637,7 @@ class Fs extends FlysystemFs
             $credentials['region'],
             false,
             null,
-            $this->useSts,
+            App::parseBooleanEnv($this->useSts) ?? true,
         );
     }
 

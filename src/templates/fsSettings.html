@@ -22,6 +22,33 @@
     instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.'|t('aws-s3')
 }) }}
 
+{{ forms.selectField({
+    label: "Connection Type"|t('aws-s3'),
+    instructions: 'Use Amazon S3 to preserve the plugin’s standard AWS behavior. Use S3-compatible storage to connect directly to services like MinIO using a custom endpoint.'|t('aws-s3'),
+    id: 'authMode',
+    name: 'authMode',
+    options: [
+        { label: 'Amazon S3'|t('aws-s3'), value: 'aws' },
+        { label: 'S3-compatible storage'|t('aws-s3'), value: 'compatible' },
+    ],
+    value: fs.authMode,
+    toggle: true,
+    targetPrefix: '.auth-mode-'
+}) }}
+
+<div class="auth-mode-compatible{% if fs.authMode != 'compatible' %} hidden{% endif %}">
+    {{ forms.autosuggestField({
+        label: "Endpoint URL"|t('aws-s3'),
+        instructions: 'Provide the S3 API endpoint for your compatible storage service, such as MinIO. Leave this empty for Amazon S3.'|t('aws-s3'),
+        id: 'endpoint',
+        name: 'endpoint',
+        suggestEnvVars: true,
+        value: fs.endpoint,
+        errors: fs.getErrors('endpoint'),
+        class: 'ltr s3-endpoint'
+    }) }}
+</div>
+
 {% set bucketInput %}
     <div class="flex fullwidth">
         {{ forms.select({

@@ -35,7 +35,7 @@ composer require craftcms/aws-s3
 
 To create a new Amazon S3 filesystem to use with your volumes, visit **Settings** → **Filesystems**, and press **New filesystem**. Select “Amazon S3” for the **Filesystem Type** setting and configure as needed.
 
-> 💡 The Base URL, Access Key ID, Secret Access Key, Bucket, Region, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://craftcms.com/docs/4.x/config/#environmental-configuration) in the Craft docs to learn more about that.
+> 💡 The Base URL, Access Key ID, Secret Access Key, Bucket, Region, Endpoint URL, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://craftcms.com/docs/4.x/config/#environmental-configuration) in the Craft docs to learn more about that.
 
 ### AWS IAM Permissions
 
@@ -101,6 +101,12 @@ A typical IAM policy that grants the user to choose a bucket can look like this:
 ]
 }
 ```
+
+### S3-compatible storage
+
+If you need to connect to a MinIO or other S3-compatible service, set **Connection Type** to **S3-compatible storage** and provide the service’s **Endpoint URL**.
+
+In that mode, the plugin will connect directly to the configured endpoint using the provided access key and secret, without requesting temporary credentials from AWS STS. Leave the connection type set to **Amazon S3** to preserve the plugin’s standard AWS behavior.
 
 ### Using automatic focal point detection
 

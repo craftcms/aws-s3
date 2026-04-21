@@ -16,6 +16,7 @@ use Aws\Credentials\Credentials;
 use Aws\Handler\Guzzle\GuzzleHandler;
 use Aws\Rekognition\RekognitionClient;
 use Aws\S3\Exception\S3Exception;
+use Aws\S3\S3Client as AwsS3Client;
 use Aws\Sts\StsClient;
 use Craft;
 use craft\behaviors\EnvAttributeParserBehavior;
@@ -105,6 +106,16 @@ class Fs extends FlysystemFs
     public string $region = '';
 
     /**
+     * @var string Auth mode to use for this filesystem
+     */
+    public string $authMode = 'aws';
+
+    /**
+     * @var string Custom S3 endpoint to use for compatible services
+     */
+    public string $endpoint = '';
+
+    /**
      * @var string Cache expiration period.
      */
     public string $expires = '';
@@ -178,6 +189,7 @@ class Fs extends FlysystemFs
                 'secret',
                 'bucket',
                 'region',
+                'endpoint',
                 'subfolder',
                 'cfDistributionId',
                 'cfPrefix',
@@ -215,10 +227,15 @@ class Fs extends FlysystemFs
      * @return array
      * @throws InvalidArgumentException
      */
-    public static function loadBucketList(?string $keyId, ?string $secret): array
-    {
+    public static function loadBucketList(
+        ?string $keyId,
+        ?string $secret,
+        ?string $region = null,
+        string $authMode = 'aws',
+        ?string $endpoint = null,
+    ): array {
         // Any region will do.
-        $config = self::buildConfigArray($keyId, $secret, 'us-east-1');
+        $config = self::buildConfigArray($keyId, $secret, $region ?? 'us-east-1', false, $authMode, $endpoint);
 
         $client = static::client($config);
 
@@ -232,18 +249,25 @@ class Fs extends FlysystemFs
         $bucketList = [];
 
         foreach ($buckets as $bucket) {
-            try {
-                $region = $client->determineBucketRegion($bucket['Name']);
-            } catch (S3Exception $exception) {
+            $urlPrefix = '';
 
-                // If a bucket cannot be accessed by the current policy, move along:
-                // https://github.com/craftcms/aws-s3/pull/29#issuecomment-468193410
-                continue;
+            if ($authMode === 'compatible') {
+                $region = $region ?? 'us-east-1';
+                $urlPrefix = rtrim((string)$endpoint, '/') . '/' . $bucket['Name'] . '/';
+            } else {
+                try {
+                    $region = $client->determineBucketRegion($bucket['Name']);
+                } catch (S3Exception $exception) {
+
+                    // If a bucket cannot be accessed by the current policy, move along:
+                    // https://github.com/craftcms/aws-s3/pull/29#issuecomment-468193410
+                    continue;
+                }
             }
 
-            if (str_contains($bucket['Name'], '.')) {
+            if ($authMode !== 'compatible' && str_contains($bucket['Name'], '.')) {
                 $urlPrefix = 'https://s3.' . $region . '.amazonaws.com/' . $bucket['Name'] . '/';
-            } else {
+            } elseif ($authMode !== 'compatible') {
                 $urlPrefix = 'https://' . $bucket['Name'] . '.s3.amazonaws.com/';
             }
 
@@ -280,7 +304,7 @@ class Fs extends FlysystemFs
      */
     protected function createAdapter(): FilesystemAdapter
     {
-        $client = static::client($this->_getConfigArray(), $this->_getCredentials());
+        $client = static::client($this->_getS3ConfigArray(), $this->_getCredentials());
         $options = [
 
             // This is the S3 default for all objects, but explicitly
@@ -307,9 +331,13 @@ class Fs extends FlysystemFs
      * @param array $credentials credentials to use when generating a new token
      * @return S3Client
      */
-    protected static function client(array $config = [], array $credentials = []): S3Client
+    protected static function client(array $config = [], array $credentials = []): AwsS3Client
     {
-        if (!empty($config['credentials']) && $config['credentials'] instanceof Credentials) {
+        if (
+            !empty($config['refreshableCredentials']) &&
+            !empty($config['credentials']) &&
+            $config['credentials'] instanceof Credentials
+        ) {
             $config['generateNewConfig'] = static function() use ($credentials) {
                 $args = [
                     $credentials['keyId'],
@@ -320,6 +348,8 @@ class Fs extends FlysystemFs
                 return call_user_func_array(self::class . '::buildConfigArray', $args);
             };
         }
+
+        unset($config['refreshableCredentials']);
 
         return new S3Client($config);
     }
@@ -410,7 +440,7 @@ class Fs extends FlysystemFs
         }
 
 
-        $client = new RekognitionClient($this->_getConfigArray());
+        $client = new RekognitionClient($this->_getAwsConfigArray());
         $params = [
             'Image' => [
                 'S3Object' => [
@@ -443,10 +473,18 @@ class Fs extends FlysystemFs
      * @param ?string $secret The key secret
      * @param ?string $region The region to user
      * @param bool $refreshToken If true will always refresh token
+     * @param string $authMode The auth mode
+     * @param ?string $endpoint The custom S3 endpoint
      * @return array
      */
-    public static function buildConfigArray(?string $keyId = null, ?string $secret = null, ?string $region = null, bool $refreshToken = false): array
-    {
+    public static function buildConfigArray(
+        ?string $keyId = null,
+        ?string $secret = null,
+        ?string $region = null,
+        bool $refreshToken = false,
+        string $authMode = 'aws',
+        ?string $endpoint = null,
+    ): array {
         $config = [
             'region' => $region,
             'version' => 'latest',
@@ -454,6 +492,20 @@ class Fs extends FlysystemFs
 
         $client = Craft::createGuzzleClient();
         $config['http_handler'] = new GuzzleHandler($client);
+
+        $endpoint = $endpoint ? rtrim($endpoint, '/') : null;
+
+        if ($authMode === 'compatible') {
+            if ($endpoint) {
+                $config['endpoint'] = $endpoint;
+            }
+
+            if (!empty($keyId) && !empty($secret)) {
+                $config['credentials'] = new Credentials($keyId, $secret);
+            }
+
+            return $config;
+        }
 
         /** @noinspection MissingOrEmptyGroupStatementInspection */
         if (empty($keyId) || empty($secret)) {
@@ -491,6 +543,7 @@ class Fs extends FlysystemFs
 
             // TODO Add support for different credential supply methods
             $config['credentials'] = $credentials;
+            $config['refreshableCredentials'] = true;
         }
 
         return $config;
@@ -547,19 +600,42 @@ class Fs extends FlysystemFs
      */
     private function _getCloudFrontClient(): CloudFrontClient
     {
-        return new CloudFrontClient($this->_getConfigArray());
+        return new CloudFrontClient($this->_getAwsConfigArray());
     }
 
     /**
-     * Get the config array for AWS Clients.
+     * Get the config array for S3 clients.
      *
      * @return array
      */
-    private function _getConfigArray(): array
+    private function _getS3ConfigArray(): array
     {
         $credentials = $this->_getCredentials();
 
-        return self::buildConfigArray($credentials['keyId'], $credentials['secret'], $credentials['region']);
+        return self::buildConfigArray(
+            $credentials['keyId'],
+            $credentials['secret'],
+            $credentials['region'],
+            false,
+            $this->authMode,
+            Craft::parseEnv($this->endpoint),
+        );
+    }
+
+    /**
+     * Get the config array for AWS clients.
+     *
+     * @return array
+     */
+    private function _getAwsConfigArray(): array
+    {
+        $credentials = $this->_getCredentials();
+
+        return self::buildConfigArray(
+            $credentials['keyId'],
+            $credentials['secret'],
+            $credentials['region'],
+        );
     }
 
     /**

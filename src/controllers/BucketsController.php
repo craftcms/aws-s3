@@ -30,12 +30,15 @@ class BucketsController extends BaseController
         $this->requireAcceptsJson();
 
         $request = Craft::$app->getRequest();
-        $keyId = App::parseEnv($request->getRequiredBodyParam('keyId'));
-        $secret = App::parseEnv($request->getRequiredBodyParam('secret'));
+        $keyId = App::parseEnv($request->getBodyParam('keyId'));
+        $secret = App::parseEnv($request->getBodyParam('secret'));
+        $region = App::parseEnv($request->getBodyParam('region'));
+        $authMode = $request->getBodyParam('authMode', 'aws');
+        $endpoint = App::parseEnv($request->getBodyParam('endpoint'));
 
         try {
             return $this->asJson([
-                'buckets' => Fs::loadBucketList($keyId, $secret),
+                'buckets' => Fs::loadBucketList($keyId, $secret, $region, $authMode, $endpoint),
             ]);
         } catch (\Throwable $e) {
             return $this->asFailure($e->getMessage());

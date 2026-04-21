@@ -1,6 +1,8 @@
 $(document).ready(function () {
   const $s3AccessKeyIdInput = $('.s3-key-id');
   const $s3SecretAccessKeyInput = $('.s3-secret-key');
+  const $s3EndpointInput = $('.s3-endpoint');
+  const $s3UseStsInput = $('.s3-use-sts');
   const $s3BucketSelect = $('.s3-bucket-select > select');
   const $s3RefreshBucketsBtn = $('.s3-refresh-buckets');
   const $s3RefreshBucketsSpinner = $s3RefreshBucketsBtn
@@ -25,6 +27,9 @@ $(document).ready(function () {
     const data = {
       keyId: $s3AccessKeyIdInput.val(),
       secret: $s3SecretAccessKeyInput.val(),
+      region: $s3Region.val(),
+      endpoint: $s3EndpointInput.val(),
+      useSts: $s3UseStsInput.prop('checked'),
     };
 
     Craft.sendActionRequest('POST', 'aws-s3/buckets/load-bucket-data', {data})
@@ -32,7 +37,7 @@ $(document).ready(function () {
         if (!data.buckets.length) {
           return;
         }
-        //
+
         const currentBucket = $s3BucketSelect.val();
         let currentBucketStillExists = false;
 
@@ -41,7 +46,7 @@ $(document).ready(function () {
         $s3BucketSelect.prop('readonly', false).empty();
 
         for (let i = 0; i < data.buckets.length; i++) {
-          if (data.buckets[i].bucket == currentBucket) {
+          if (data.buckets[i].bucket === currentBucket) {
             currentBucketStillExists = true;
           }
 
@@ -107,6 +112,10 @@ $(document).ready(function () {
   $('.s3-expires-period select').change(s3ChangeExpiryValue);
 
   const maybeUpdateUrl = function () {
+    if ($s3EndpointInput.val().length) {
+      return;
+    }
+
     if (
       $hasUrls.val() &&
       $manualBucket.val().length &&
@@ -124,4 +133,5 @@ $(document).ready(function () {
 
   $manualRegion.keyup(maybeUpdateUrl);
   $manualBucket.keyup(maybeUpdateUrl);
+  $s3EndpointInput.keyup(maybeUpdateUrl).change(maybeUpdateUrl);
 });

@@ -22,6 +22,27 @@
     instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.'|t('aws-s3')
 }) }}
 
+{{ forms.autosuggestField({
+    label: "Endpoint URL"|t('aws-s3'),
+    instructions: 'Provide the S3 API endpoint for your compatible storage service. Leave this empty for Amazon S3.'|t('aws-s3'),
+    id: 'endpoint',
+    name: 'endpoint',
+    suggestEnvVars: true,
+    value: fs.endpoint,
+    errors: fs.getErrors('endpoint'),
+    class: 'ltr s3-endpoint'
+}) }}
+
+{{ forms.booleanMenuField({
+    label: "Use STS temporary credentials?"|t('aws-s3'),
+    instructions: 'Turn this on to exchange the configured access key and secret for temporary STS credentials. Turn it off to use the configured credentials directly.'|t('aws-s3'),
+    id: 'useSts',
+    name: 'useSts',
+    includeEnvVars: true,
+    value: fs.useSts,
+    class: 'ltr s3-use-sts',
+}) }}
+
 {% set bucketInput %}
     <div class="flex fullwidth">
         {{ forms.select({

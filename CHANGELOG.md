@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+- Added a per-filesystem endpoint override for S3-compatible storage services, without changing the default Amazon S3 behavior.
+- Added a per-filesystem option to control whether configured access keys should be exchanged for STS temporary credentials.
+
 ## 2.3.0 - 2026-02-24
 
 - The AWS S3 plugin now requires PHP 8.1.0 or later.

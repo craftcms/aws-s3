@@ -1,0 +1,179 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.autosuggestField({
+    label: 'Access Key ID'|t('aws-s3'),
+    id: 'keyId',
+    name: 'keyId',
+    suggestEnvVars: true,
+    value: fs.keyId,
+    errors: fs.errors().get('keyId'),
+    class: 's3-key-id',
+    instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.'|t('aws-s3'),
+}) }}
+
+{{ forms.autosuggestField({
+    label: 'Secret Access Key'|t('aws-s3'),
+    id: 'secret',
+    name: 'secret',
+    suggestEnvVars: true,
+    value: fs.secret,
+    errors: fs.errors().get('secret'),
+    class: 's3-secret-key',
+    instructions: 'You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.'|t('aws-s3'),
+}) }}
+
+{% set bucketInput %}
+    <div class="flex fullwidth">
+        {{ forms.select({
+            name: 'bucketSelectionMode',
+            options: bucketSelectionModes,
+            value: fs.bucketSelectionMode.value,
+            toggle: true,
+            targetPrefix: '.bsm-',
+        }) }}
+
+        <div class="bsm-choose {{ fs.bucketSelectionMode.value == 'choose' ? null : 'hidden' }}">
+            {{ forms.select({
+                id: 'bucket',
+                name: 'bucket',
+                options: { (fs.bucket): fs.bucket },
+                value: fs.bucketSelectionMode.value == 'manual' ? fs.bucket,
+                readonly: true,
+                class: 's3-bucket-select',
+            }) }}
+        </div>
+
+        <div class="bsm-choose {{ fs.bucketSelectionMode.value == 'choose' ? null : 'hidden' }}">
+            <button type="button" class="btn s3-refresh-buckets">
+                {{ 'Refresh'|t('aws-s3') }}
+                <div class="spinner small ml-2"></div>
+            </button>
+        </div>
+
+        <div class="bsm-manual flex-grow {{ fs.bucketSelectionMode.value == 'manual' ? null : 'hidden' }}">
+            {{ forms.autosuggest({
+                label: 'Bucket'|t('aws-s3'),
+                class: 'ltr s3-manualBucket',
+                name: 'manualBucket',
+                suggestEnvVars: true,
+                value: fs.bucket,
+                placeholder: 'Bucket'|t('aws-s3'),
+            }) }}
+        </div>
+
+        <div class="bsm-manual flex-grow {{ fs.bucketSelectionMode.value == 'manual' ? null : 'hidden' }}">
+            {{ forms.autosuggest({
+                label: 'Region'|t('aws-s3'),
+                class: 'ltr s3-manualRegion',
+                name: 'manualRegion',
+                suggestEnvVars: true,
+                value: fs.region,
+                placeholder: 'Region'|t('aws-s3'),
+            }) }}
+        </div>
+    </div>
+
+    {{ hiddenInput('region', fs.region, { class: 's3-region' }) }}
+{% endset %}
+
+
+{{ forms.field({
+    label: 'Bucket'|t('aws-s3'),
+    instructions: 'Provide your bucket name and region, or choose from a list of buckets accessible with the credentials above.'|t('aws-s3'),
+    id: 'bucket',
+    required: true,
+    errors: fs.errors().get('bucket'),
+    tip: 'The bucket and region can be set to environment variables when using the **Manual** selection mode.'|t('aws-s3'),
+}, bucketInput) }}
+
+{{ forms.autosuggestField({
+    label: 'Subfolder'|t('aws-s3'),
+    instructions: 'Your filesystem will be mounted at the root of the selected bucket, unless you provide a subpath. If you intend to use a single bucket for multiple filesystems, this is required to prevent overlap.'|t('aws-s3'),
+    id: 'subfolder',
+    class: 'ltr',
+    name: 'subfolder',
+    suggestEnvVars: true,
+    value: fs.subfolder,
+    errors: fs.errors().get('subfolder'),
+    placeholder: 'path/to/subfolder'|t('aws-s3'),
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Add the subfolder to the Base URL?'|t('aws-s3'),
+    instructions: 'Turn this on if you want to add the specified subfolder to the Base URL.'|t('aws-s3'),
+    name: 'addSubfolderToRootUrl',
+    on: fs.addSubfolderToRootUrl,
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Make Uploads Public'|t('aws-s3'),
+    instructions: 'Sets the ACL for uploaded objects. This should generally be kept synchronized with the **Files in this filesystem have public URLs** setting.'|t('aws-s3'),
+    id: 'makeUploadsPublic',
+    name: 'makeUploadsPublic',
+    on: fs.makeUploadsPublic,
+}) }}
+
+<hr/>
+
+{{ forms.lightswitchField({
+    label: 'Attempt to set the focal point automatically?'|t('aws-s3'),
+    instructions: 'Turn this on if you want to use the [AWS Rekognition]({url}) to try setting the focal point to a detected face. You can always set focal points manually.'|t('aws-s3', { url: 'https://aws.amazon.com/rekognition/' }),
+    name: 'autoFocalPoint',
+    on: fs.autoFocalPoint,
+    warning: 'This feature requires the `rekognition:DetectFaces` permission and may incur extra costs for each upload.'|t('aws-s3'),
+}) }}
+
+<hr />
+{% set cacheInput %}
+    {% set expires = (fs.expires|length > 0 ? fs.expires|split(' ') : ['', ''])%}
+
+    <div class="flex">
+        <div>
+            {{ forms.text({
+                id: 'expiresAmount',
+                value: expires[0],
+                size: 2,
+                class: 's3-expires-amount',
+            }) }}
+        </div>
+        {{ forms.select({
+            id: 'expiresPeriod',
+            options: periods,
+            value: expires[1],
+            class: 's3-expires-period',
+        }) }}
+    </div>
+    {{ forms.hidden({
+        name: 'expires',
+        value: fs.expires,
+        class: 'expires-combined',
+    }) }}
+{% endset %}
+
+{{ forms.field({
+    label: 'Cache Duration'|t,
+    instructions: 'Set the `CacheControl` option for each created asset. (S3 sends this as the `Cache-Control` HTTP header when serving an asset.)'|t('aws-s3'),
+    id: 'cacheDuration',
+}, cacheInput) }}
+
+{{ forms.autosuggestField({
+    label: 'CloudFront Distribution ID'|t('aws-s3'),
+    instructions: 'If you’re using CloudFront as CDN for the connected bucket, enter its distribution ID so the plugin can purge assets when they’re modified.'|t('aws-s3'),
+    id: 'cfDistributionId',
+    class: 'ltr',
+    name: 'cfDistributionId',
+    suggestEnvVars: true,
+    value: fs.cfDistributionId,
+    errors: fs.errors().get('cfDistributionId'),
+}) }}
+
+{{ forms.autosuggestField({
+    label: 'CloudFront Path Prefix'|t('aws-s3'),
+    instructions: 'If you’re using CloudFront as CDN for the connected bucket and have configured subfolders or custom behaviors, enter the path prefix the plugin should use when invalidating files.'|t('aws-s3'),
+    id: 'cfPrefix',
+    class: 'ltr',
+    name: 'cfPrefix',
+    suggestEnvVars: true,
+    value: fs.cfPrefix,
+    errors: fs.errors().get('cfPrefix'),
+}) }}

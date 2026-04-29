@@ -4,7 +4,7 @@
 
 This plugin exposes [Amazon S3](https://aws.amazon.com/s3/) as a configurable filesystem type, in [Craft CMS](https://craftcms.com/).
 
-> [!DANGER]
+> [!WARNING]
 > You are viewing an unreleased version of this plugin, compatible only with Craft 6.x.
 
 ## Requirements

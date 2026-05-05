@@ -12,8 +12,8 @@ enum BucketSelectionMode: string
     public function label(): string
     {
         return match ($this) {
-            BucketSelectionMode::Choose => t('Choose'),
-            BucketSelectionMode::Manual => t('Manual'),
+            BucketSelectionMode::Choose => t('Choose', category: 'aws-s3'),
+            BucketSelectionMode::Manual => t('Manual', category: 'aws-s3'),
         };
     }
 }

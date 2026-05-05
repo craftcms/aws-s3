@@ -47,9 +47,9 @@ class ListBucketsController
             }
 
             if (str_contains($bucket['Name'], '.')) {
-                $urlPrefix = 'https://s3.' . $region . '.amazonaws.com/' . $bucket['Name'] . '/';
+                $urlPrefix = 'https://s3.'.$region.'.amazonaws.com/'.$bucket['Name'].'/';
             } else {
-                $urlPrefix = 'https://' . $bucket['Name'] . '.s3.amazonaws.com/';
+                $urlPrefix = 'https://'.$bucket['Name'].'.s3.amazonaws.com/';
             }
 
             $buckets[] = [

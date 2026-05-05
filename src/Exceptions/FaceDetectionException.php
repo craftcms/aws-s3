@@ -4,5 +4,4 @@ namespace CraftCms\AwsS3\Exceptions;
 
 use Exception;
 
-class FaceDetectionException extends Exception
-{}
+class FaceDetectionException extends Exception {}

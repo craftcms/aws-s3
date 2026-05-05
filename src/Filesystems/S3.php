@@ -6,12 +6,11 @@ use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\Exception\CloudFrontException;
 use Aws\Credentials\CredentialProvider;
 use Aws\Credentials\Credentials;
-use Aws\Handler\Guzzle\GuzzleHandler;
 use Aws\Rekognition\RekognitionClient;
 use Aws\Sts\StsClient;
 use CraftCms\AwsS3\Assets\AwsS3Bundle;
 use CraftCms\AwsS3\Enums\BucketSelectionMode;
-use CraftCms\AwsS3\Events\InvalidatePaths;
+use CraftCms\AwsS3\Events\InvalidatingPaths;
 use CraftCms\AwsS3\Exceptions\FaceDetectionException;
 use CraftCms\Cms\Asset\Elements\Asset;
 use CraftCms\Cms\Filesystem\Filesystems\Filesystem;
@@ -283,7 +282,7 @@ class S3 extends Filesystem
             $items[] = sprintf('/%s%s', $cfPrefix, ltrim($path, '/'));
         }
 
-        event($invalidationEvent = new InvalidatePaths($items));
+        event($invalidationEvent = new InvalidatingPaths($items));
 
         try {
             $cfClient->createInvalidation([

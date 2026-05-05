@@ -2,7 +2,7 @@
 
 namespace CraftCms\AwsS3\Events;
 
-class InvalidatePaths
+class InvalidatingPaths
 {
     public function __construct(
         public array $paths,

@@ -3,11 +3,11 @@
 namespace CraftCms\AwsS3\Listeners;
 
 use CraftCms\AwsS3\Filesystems\S3;
-use CraftCms\Cms\Asset\Events\BeforeReplaceAsset;
+use CraftCms\Cms\Asset\Events\AssetReplacing;
 
 class PurgeAfterReplaceListener
 {
-    public function handle(BeforeReplaceAsset $event): void
+    public function handle(AssetReplacing $event): void
     {
         $asset = $event->asset;
         $filesystem = $asset->getVolume()->getFs();

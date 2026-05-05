@@ -6,12 +6,12 @@ use CraftCms\AwsS3\Exceptions\FaceDetectionException;
 use CraftCms\AwsS3\Filesystems\S3;
 use CraftCms\Cms\Asset\Elements\Asset;
 use CraftCms\Cms\Asset\Models\Asset as AssetModel;
-use CraftCms\Cms\Element\Events\AfterSaveElement;
+use CraftCms\Cms\Element\Events\ElementSaved;
 use Illuminate\Support\Facades\Log;
 
 class DetectFocalPointListener
 {
-    public function handle(AfterSaveElement $event): void
+    public function handle(ElementSaved $event): void
     {
         // Ignore non-asset element saves:
         if (! $event->element instanceof Asset) {

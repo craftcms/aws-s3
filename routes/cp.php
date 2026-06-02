@@ -6,6 +6,6 @@ use CraftCms\Cms\Http\Middleware\RequireAdmin;
 Route::middleware([
     'auth:craft',
     RequireAdmin::class,
-])->group(function() {
+])->group(function () {
     Route::post('aws-s3/list-buckets', ListBucketsController::class);
 });

@@ -59,10 +59,10 @@ class Plugin extends \craft\base\Plugin
                 $oldFilename = $asset->getFilename();
                 $newFilename = $event->filename;
 
-                // when replacing asset with another one with the same filename, invalidate the cdn path for the original file too
-                // see https://github.com/craftcms/aws-s3/issues/184 for details
+                // when replacing an asset with another one with the same filename, invalidate the CDN path for the original file too
+                // see https://github.com/craftcms/aws-s3/issues/184 and https://github.com/craftcms/aws-s3/issues/195 for details
                 if ($oldFilename === $newFilename) {
-                    $folderPath = trim($asset->getFolder()->path, '/');
+                    $folderPath = trim($asset->getFolder()?->path, '/');
                     $oldPath = $folderPath !== ''
                         ? $folderPath . '/' . $oldFilename
                         : $oldFilename;

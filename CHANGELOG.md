@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## 2.3.1 - 2026-06-09
+
+- Fixed a bug where CloudFront caches would not get invalidated when uploading an asset with an existing filename to a subfolder. ([#195](https://github.com/craftcms/aws-s3/issues/195))
+
 ## 2.3.0 - 2026-02-24
 
 - The AWS S3 plugin now requires PHP 8.1.0 or later.

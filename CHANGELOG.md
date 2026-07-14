@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+- Fixed a PHP error that could occur if the CloudFront Path Prefix was set to an environment variable that resolves to an empty string. ([#199](https://github.com/craftcms/aws-s3/issues/199))
+
 ## 2.3.1 - 2026-06-09
 
 - Fixed a bug where CloudFront caches would not get invalidated when uploading an asset with an existing filename to a subfolder. ([#195](https://github.com/craftcms/aws-s3/issues/195))

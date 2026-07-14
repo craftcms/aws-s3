@@ -533,7 +533,7 @@ class Fs extends FlysystemFs
      */
     private function _cfPrefix(): string
     {
-        if ($this->cfPrefix && ($cfPrefix = rtrim(Craft::parseEnv($this->cfPrefix), '/')) !== '') {
+        if ($this->cfPrefix && ($cfPrefix = rtrim((string)App::parseEnv($this->cfPrefix), '/')) !== '') {
             return $cfPrefix . '/';
         }
 

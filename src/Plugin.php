@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Event;
 
 class Plugin extends BasePlugin
 {
+    protected array $scripts = [
+        __DIR__.'/../resources/js/edit-fs.js' => 'js/edit-fs.js',
+    ];
+
     public array $events = [
         // We listen to the “before” event to capture the new + old paths for comparison:
         AssetReplacing::class => Listeners\PurgeAfterReplaceListener::class,

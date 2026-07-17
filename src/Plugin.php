@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Event;
 
 class Plugin extends BasePlugin
 {
-    protected array $scripts = [
+    protected array $publishables = [
         __DIR__.'/../resources/js/edit-fs.js' => 'js/edit-fs.js',
     ];
 

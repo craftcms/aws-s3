@@ -17,7 +17,7 @@ class Plugin extends BasePlugin
         ElementSaved::class => Listeners\DetectFocalPointListener::class,
     ];
 
-    public function bootPlugin(): void
+    public function boot(): void
     {
         Event::listen(fn (FilesystemTypesResolving $event) => $event->types->push(S3::class));
     }

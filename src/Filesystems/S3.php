@@ -106,7 +106,7 @@ class S3 extends Filesystem
 
         return $this->getClientConfig() + [
             'driver' => 's3',
-            'bucket' => $this->bucket,
+            'bucket' => Env::parse($this->bucket),
             'url' => $this->getRootUrl(),
             'root' => Env::parse($this->subfolder),
             'visibility' => $this->makeUploadsPublic ? Visibility::PUBLIC : Visibility::PRIVATE,

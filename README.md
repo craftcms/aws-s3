@@ -35,11 +35,12 @@ ddev artisan craft:plugin:install aws-s3
 
 To create a new Amazon S3 filesystem to use with your volumes, visit **Settings** → **Filesystems**, and press **New filesystem**. Select “Amazon S3” for the **Filesystem Type** setting and configure as needed.
 
-> 💡 The Base URL, Access Key ID, Secret Access Key, Bucket, Region, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://craftcms.com/docs/5.x/configure.html#control-panel-settings) in the Craft docs to learn more about that.
+> [!TIP]
+> The Base URL, Access Key ID, Secret Access Key, Bucket, Region, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://craftcms.com/docs/5.x/configure.html#control-panel-settings) in the Craft docs to learn more about that.
 
 ### AWS IAM Permissions
 
-Setting up IAM permissions for use with this plugin differs from what options you want to be available.
+Setting up IAM permissions for use with this plugin differs based on what features you want to use.
 
 Generally, you'll want an IAM policy that grants the following actions on the [resource(s)](https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html) that you'll use:
 * `s3:GetBucketLocation`
@@ -50,7 +51,15 @@ Generally, you'll want an IAM policy that grants the following actions on the [r
 * `s3:GetObjectAcl`
 * `s3:PutObjectAcl`
 
-If you want to allow the site administrator to list and select the bucket to use, you'll also have to add the `s3:ListAllMyBuckets` permission to the `arn:aws:s3:::` resource and the `s3:GetBucketLocation` permission to the specific bucket resource. Please note, that if a bucket lacks the `s3:GetBucketLocation` permission, it will not appear in the bucket selection list. You can still use that bucket by switching to the **Manual** selection mode and providing its name.
+The AWS SDK automatically discovers environment variables named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` (as well as some [special OIDC signals](#assuming-role-with-oidc)), so you may not need to provide or store credentials in your filesystems’ settings at all.
+
+The plugin will attempt to use the available credentials to populate the **Bucket** combo-box input with options.
+If there is a problem with your credentials, a warning will be shown; it can be ignored if you intend to manually specify a bucket.
+A specific error message is sent to the logs.
+
+> [!NOTE]
+> This only works when the `s3:ListAllMyBuckets` permission is added to the `arn:aws:s3:::` resource.
+> You can always type in a specific bucket’s name to the combo-box, or use an environment variable.
 
 If you use [CloudFront](https://aws.amazon.com/cloudfront/) and would like Craft to automatically invalidate asset paths whenever they’re modified, you'll also need the following permissions:
 * `cloudfront:ListInvalidations`
@@ -73,7 +82,6 @@ An IAM policy that grants all the capabilities this filesystem provides would lo
     {
         "Effect": "Allow",
         "Action": [
-            "s3:GetBucketLocation",
             "s3:ListBucket",
             "s3:PutObject",
             "s3:GetObject",
@@ -92,7 +100,6 @@ An IAM policy that grants all the capabilities this filesystem provides would lo
     {
         "Effect": "Allow",
         "Action": [
-            "s3:GetBucketLocation",
             "s3:ListBucket"
         ],
         "Resource": [

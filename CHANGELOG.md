@@ -1,5 +1,10 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+- Completely rebuilt for Craft 6.x!
+- New filesystems’ `region` and `url` settings are no longer pre-filled based on the selected bucket. Values for existing filesystems will be preserved. Read the AWS S3 documentation on [bucket access URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html) to choose a URL scheme.
+
 ## 2.3.0 - 2026-02-24
 
 - The AWS S3 plugin now requires PHP 8.1.0 or later.

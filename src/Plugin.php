@@ -5,9 +5,7 @@ namespace CraftCms\AwsS3;
 use CraftCms\AwsS3\Filesystems\S3;
 use CraftCms\Cms\Asset\Events\AssetReplacing;
 use CraftCms\Cms\Element\Events\ElementSaved;
-use CraftCms\Cms\Filesystem\Events\FilesystemTypesResolving;
 use CraftCms\Cms\Plugin\Plugin as BasePlugin;
-use Illuminate\Support\Facades\Event;
 
 class Plugin extends BasePlugin
 {
@@ -17,8 +15,7 @@ class Plugin extends BasePlugin
         ElementSaved::class => Listeners\DetectFocalPointListener::class,
     ];
 
-    public function boot(): void
-    {
-        Event::listen(fn (FilesystemTypesResolving $event) => $event->types->push(S3::class));
-    }
+    protected array $filesystemTypes = [
+        S3::class,
+    ];
 }

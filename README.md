@@ -5,7 +5,7 @@
 This plugin exposes [Amazon S3](https://aws.amazon.com/s3/) as a configurable filesystem type, in [Craft CMS](https://craftcms.com/).
 
 > [!WARNING]
-> You are viewing an unreleased version of this plugin, compatible only with Craft 6.x.
+> This plugin will _not_ be publicly released for Craft 6.x, as [filesystems have been removed in favor of Laravel disks](https://craftcms.com/docs/6.x/extend/disks.html).
 
 ## Requirements
 

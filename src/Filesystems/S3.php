@@ -153,22 +153,26 @@ class S3 extends Filesystem
             ->instructions(t('The base URL to the files in this filesystem. See the AWS documentation on [website endpoints]({url}) for more information. Leave blank if you don’t want Craft to generate URLs for assets on this filesystem.', ['url' => 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/WebsiteEndpoints.html'], 'aws-s3'))
             ->control(Text::make('url')
                 ->textExpanderTriggers(SelectOptions::getEnvTextExpanderTriggers(true, fn ($value): bool => Str::isUrl($value)))
-                ->placeholder('https://s3.your-region.amazonaws.com/your-bucket-name/'))
+                ->placeholder('https://s3.your-region.amazonaws.com/your-bucket-name/')
+                ->reactive())
             ->tip(t('Type `$` to choose an environment variable, or `@` to choose an alias.')));
 
         $settingsForm->add(Separator::make('credentials-separator'));
 
         $settingsForm->add(
             Field::make(t('Access Key ID', category: 'aws-s3'), Text::make('keyId')
-                ->textExpanderTriggers($expansions))
+                ->textExpanderTriggers($expansions)
+                ->reactive())
                 ->instructions(t('You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.', category: 'aws-s3'))
                 ->tip($environmentTip),
             Field::make(t('Secret Access Key', category: 'aws-s3'), Text::make('secret')
-                ->textExpanderTriggers($expansions))
+                ->textExpanderTriggers($expansions)
+                ->reactive())
                 ->instructions(t('You can leave this field empty if you are using an EC2 instance with an applicable IAM role assignment.', category: 'aws-s3'))
                 ->tip($environmentTip),
             Field::make(t('Region', category: 'aws-s3'), Text::make('region')
-                ->textExpanderTriggers($expansions))
+                ->textExpanderTriggers($expansions)
+                ->reactive())
             ->instructions(t('Select the region your desired bucket lives in.', category: 'aws-s3')),
         );
 
@@ -216,7 +220,7 @@ class S3 extends Filesystem
         );
 
         $settingsForm->add(
-            Field::make(t('Make Uploads Public?', category: 'aws-s3'), Lightswitch::make('makeUploadsPublic'))
+            Field::make(t('Make Uploads Public?', category: 'aws-s3'), Lightswitch::make('makeUploadsPublic')->reactive())
                 ->instructions(t('Sets the ACL for uploaded objects. This should generally be _on_ if you want assets to be accessible by URL.', category: 'aws-s3'))
                 ->warning(t('This also applies to thumbnails that are stored on this filesystem!', category: 'aws-s3'))
         );
@@ -243,7 +247,8 @@ class S3 extends Filesystem
 
         $settingsForm->add(
             Field::make(t('Cloudfront Distribution ID', category: 'aws-s3'), Text::make('cfDistributionId')
-                ->textExpanderTriggers($expansions))
+                ->textExpanderTriggers($expansions)
+                ->reactive())
                 ->instructions(t('If you’re using CloudFront as a CDN for the connected bucket, enter its distribution ID so the plugin can purge assets when they’re modified.', category: 'aws-s3'))
         );
 

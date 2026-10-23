@@ -94,9 +94,9 @@ $(document).ready(function () {
     const period = parent.find('.s3-expires-period select').val();
 
     const combinedValue =
-      parseInt(amount, 10) === 0 || period.length === 0
+      amount.trim() === '' || parseInt(amount, 10) === 0 || period.length === 0
         ? ''
-        : amount + ' ' + period;
+        : amount.trim() + ' ' + period;
 
     parent.find('[type=hidden]').val(combinedValue);
   };

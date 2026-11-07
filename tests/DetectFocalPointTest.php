@@ -5,56 +5,23 @@ declare(strict_types=1);
 use Aws\CommandInterface;
 use Aws\Rekognition\RekognitionClient;
 use Aws\Result;
-use Aws\S3\Exception\S3Exception;
 use CraftCms\AwsS3\Plugin;
 use CraftCms\Cms\Asset\Data\Volume;
-use CraftCms\Cms\Asset\Elements\Asset;
-use CraftCms\Cms\Asset\Folders;
-use CraftCms\Cms\Asset\Validation\AssetRules;
-use CraftCms\Cms\Element\Elements;
 use CraftCms\Cms\Support\Facades\Volumes;
 use GuzzleHttp\Promise\Create;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Facades\File;
 
 beforeEach(function() {
-    // An in-memory bucket, shared by the S3 disks, that keeps what's written to it
     $this->objects = [];
-    $bucket = function(CommandInterface $command) {
-        $id = $command['Bucket'] . '/' . $command['Key'];
-        $missing = fn() => Create::rejectionFor(new S3Exception('Not found', $command, ['code' => 'NotFound', 'response' => new Response(404)]));
-
-        if ($command->getName() === 'PutObject') {
-            $this->objects[$id] = (string) Utils::streamFor($command['Body']);
-        }
-
-        return match ($command->getName()) {
-            'HeadObject' => isset($this->objects[$id]) ? Create::promiseFor(new Result(['ContentLength' => strlen($this->objects[$id])])) : $missing(),
-            'GetObject' => isset($this->objects[$id]) ? Create::promiseFor(new Result(['Body' => Utils::streamFor($this->objects[$id])])) : $missing(),
-            default => Create::promiseFor(new Result([])),
-        };
-    };
-
-    config()->set('filesystems.disks.photos-s3', [
-        'driver' => 's3',
-        'key' => 'key',
-        'secret' => 'secret',
-        'region' => 'eu-west-1',
-        'bucket' => 'photo-bucket',
-        'root' => 'site',
-        'handler' => $bucket,
-    ]);
-    config()->set('filesystems.disks.photos-compatible', [
-        'driver' => 's3',
+    fakeS3Disk('photos-s3', ['bucket' => 'photo-bucket', 'root' => 'site'], $this->objects);
+    fakeS3Disk('photos-compatible', [
         'key' => 'minio-key',
         'secret' => 'minio-secret',
         'region' => 'auto',
         'bucket' => 'minio-bucket',
         'endpoint' => 'https://minio.example.test',
         'use_path_style_endpoint' => true,
-        'handler' => $bucket,
-    ]);
+    ], $this->objects);
     config()->set('filesystems.disks.photos-local', [
         'driver' => 'local',
         'root' => $this->localRoot = sys_get_temp_dir() . '/' . uniqid('aws-s3-test-'),
@@ -90,31 +57,6 @@ beforeEach(function() {
 afterEach(function() {
     File::deleteDirectory($this->localRoot);
 });
-
-function uploadImage(string $volumeHandle, string $filename, ?string $focalPoint = null): Asset
-{
-    $volume = Volumes::getVolumeByHandle($volumeHandle);
-    $image = imagecreatetruecolor(40, 30);
-    $path = sys_get_temp_dir() . '/' . uniqid('upload-') . '-' . $filename;
-
-    match (pathinfo($filename, PATHINFO_EXTENSION)) {
-        'gif' => imagegif($image, $path),
-        'png' => imagepng($image, $path),
-        default => imagejpeg($image, $path),
-    };
-
-    $asset = new Asset();
-    $asset->tempFilePath = $path;
-    $asset->setFilename($filename);
-    $asset->newFolderId = app(Folders::class)->getRootFolderByVolumeId($volume->id)->id;
-    $asset->setVolumeId($volume->id);
-    $asset->setFocalPoint($focalPoint);
-    $asset->ruleset->useScenario(AssetRules::SCENARIO_CREATE);
-
-    expect(app(Elements::class)->saveElement($asset))->toBeTrue();
-
-    return Asset::find()->id($asset->id)->one();
-}
 
 it('sets a new image’s focal point to the center of the first confident face', function(string $filename) {
     $asset = uploadImage('photos', $filename);

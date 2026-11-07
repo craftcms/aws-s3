@@ -2,9 +2,10 @@
 
 ## Unreleased
 
-- Rebuilt for Craft 6 as a focal point detection plugin. Craft 6 replaces filesystems with Laravel disks, so configure Amazon S3 storage as a disk that uses Laravel’s `s3` driver.
+- Rebuilt for Craft 6, which replaces filesystems with Laravel disks. Configure Amazon S3 storage as a disk that uses Laravel’s `s3` driver.
 - New JPEG and PNG images in the volumes selected in the plugin’s settings now get their focal point set to the first face that Amazon Rekognition finds in them. Detection runs in a queue job, with the disk’s credentials by default, or with credentials and a region set in the plugin’s settings, which disks on S3-compatible services need.
-- Removed the Amazon S3 filesystem type and CloudFront invalidation.
+- CloudFront invalidation is now configured with a disk’s `cloudfront_distribution_id` and `cloudfront_path_prefix` config keys. Assets’ old paths are invalidated when their files are replaced, moved, renamed, or deleted.
+- Removed the Amazon S3 filesystem type.
 
 ## 2.3.0 - 2026-02-24
 

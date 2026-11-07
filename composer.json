@@ -1,6 +1,6 @@
 {
   "name": "craftcms/aws-s3",
-  "description": "Amazon Rekognition focal point detection for Craft CMS assets on Amazon S3 disks",
+  "description": "Amazon Rekognition focal points and CloudFront invalidation for Craft CMS assets on Amazon S3 disks",
   "type": "craft-plugin",
   "keywords": [
     "aws",
@@ -8,7 +8,8 @@
     "craftcms",
     "s3",
     "rekognition",
-    "focal point"
+    "focal point",
+    "cloudfront"
   ],
   "license": "MIT",
   "authors": [

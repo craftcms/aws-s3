@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace CraftCms\AwsS3;
 
+use CraftCms\AwsS3\Listeners\QueueCloudFrontInvalidation;
 use CraftCms\AwsS3\Listeners\QueueFocalPointDetection;
 use CraftCms\Cms\Asset\Data\Volume;
+use CraftCms\Cms\Asset\Events\AssetFileHandling;
 use CraftCms\Cms\Cp\SelectOptions;
+use CraftCms\Cms\Element\Events\ElementDeleting;
 use CraftCms\Cms\Element\Events\ElementSaved;
 use CraftCms\Cms\Plugin\Plugin as BasePlugin;
 use CraftCms\Cms\Support\Facades\Volumes;
@@ -26,6 +29,8 @@ class Plugin extends BasePlugin
 
     protected array $events = [
         ElementSaved::class => QueueFocalPointDetection::class,
+        AssetFileHandling::class => QueueCloudFrontInvalidation::class,
+        ElementDeleting::class => QueueCloudFrontInvalidation::class,
     ];
 
     #[Override]
@@ -56,16 +61,16 @@ class Plugin extends BasePlugin
                     ->multiple()
                     ->options($volumeOptions)
                     ->allOption()),
-            Heading::make('rekognition-heading', t('Amazon Rekognition', category: 'aws-s3'))
-                ->description(t('Leave these blank to use each disk’s own region and credentials, which need the `rekognition:DetectFaces` permission. Disks on S3-compatible services, such as Cloudflare R2 or MinIO, need a region, and use the credentials below or the AWS SDK’s default credentials, such as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.', category: 'aws-s3')),
+            Heading::make('credentials-heading', t('AWS Credentials', category: 'aws-s3'))
+                ->description(t('Amazon Rekognition and CloudFront are called with these. Leave them blank to use each disk’s own credentials, which need the `rekognition:DetectFaces` and `cloudfront:CreateInvalidation` permissions. Disks on S3-compatible services, such as Cloudflare R2 or MinIO, use these or the AWS SDK’s default credentials, such as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.', category: 'aws-s3')),
             Field::make(t('Access Key ID', category: 'aws-s3'))
                 ->control(Text::make('keyId')->textExpanderTriggers($envTriggers))
                 ->tip($envTip),
             Field::make(t('Secret Access Key', category: 'aws-s3'))
                 ->control(Text::make('secret')->textExpanderTriggers($envTriggers))
                 ->tip($envTip),
-            Field::make(t('Region', category: 'aws-s3'))
-                ->instructions(t('Rekognition can read images straight from buckets in its own region. Images elsewhere are sent to it, up to 5 MB.', category: 'aws-s3'))
+            Field::make(t('Rekognition Region', category: 'aws-s3'))
+                ->instructions(t('Leave this blank to use each disk’s region. Disks on S3-compatible services need one. Rekognition can read images straight from buckets in its own region; images elsewhere are sent to it, up to 5 MB.', category: 'aws-s3'))
                 ->control(Text::make('region')->textExpanderTriggers($envTriggers)->placeholder('us-east-1'))
                 ->tip($envTip),
         ]);

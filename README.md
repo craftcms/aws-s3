@@ -8,6 +8,12 @@ This plugin provides an [Amazon S3](https://aws.amazon.com/s3/) integration for 
 
 This plugin requires Craft CMS 4.0.0+ or 5.0.0+ or 6.0.0-alpha.1+ with the `craftcms/yii2-adapter` package.
 
+### Craft 6
+
+Craft 6 replaces filesystems with [Laravel disks](https://laravel.com/docs/filesystem). When you upgrade, Craft asks you to define a disk in `config/filesystems.php` for each filesystem your volumes use, and then removes the filesystem definitions from your project config. Use Laravel’s `s3` driver for those disks.
+
+With the `craftcms/yii2-adapter` package installed, Amazon S3 filesystems that are still defined in your project config keep working, including CloudFront invalidation and automatic focal point detection. Volumes that you’ve moved to native `s3` disks don’t use this plugin.
+
 ## Installation
 
 You can install this plugin from the Plugin Store or with Composer.

@@ -1,5 +1,9 @@
 # Release Notes for Amazon S3 for Craft CMS
 
+## Unreleased
+
+- Added support for Craft 6 with the `craftcms/yii2-adapter` package.
+
 ## 2.3.2 - 2026-08-14
 
 - Fixed a PHP error that could occur if a CloudFront Path Prefix setting was set to a nonexistent environment variable. ([#199](https://github.com/craftcms/aws-s3/issues/199))

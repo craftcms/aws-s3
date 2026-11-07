@@ -3,8 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
-      - develop
+      - 3.x
   pull_request:
 permissions:
   contents: read
@@ -13,14 +12,20 @@ concurrency:
   cancel-in-progress: true
 jobs:
   ci:
-    name: ci
-    uses: craftcms/.github/.github/workflows/ci.yml@v3
-    with:
-      craft_version: '5'
-      php_version: '8.1'
-      jobs: '["ecs", "phpstan", "prettier"]'
-      notify_slack: true
-      slack_subteam: <!subteam^SGFL9NKNZ>
-    secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
-      slack_webhook_url: ${{ secrets.SLACK_PLUGIN_WEBHOOK_URL }}
+    name: ${{ matrix.check }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        check: [check-cs, phpstan, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: bcmath, curl, dom, gd, intl, mbstring, pdo_sqlite, zip
+          tools: composer:v2
+          coverage: none
+      - uses: ramsey/composer-install@v3
+      - run: composer run ${{ matrix.check }}

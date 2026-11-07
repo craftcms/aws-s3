@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- Completely rebuilt for Craft 6.x!
-- New filesystems’ `region` and `url` settings are no longer pre-filled based on the selected bucket. Values for existing filesystems will be preserved. Read the AWS S3 documentation on [bucket access URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html) to choose a URL scheme.
+- Rebuilt for Craft 6 as a focal point detection plugin. Craft 6 replaces filesystems with Laravel disks, so configure Amazon S3 storage as a disk that uses Laravel’s `s3` driver.
+- New JPEG and PNG images in the volumes selected in the plugin’s settings now get their focal point set to the first face that Amazon Rekognition finds in them. Detection runs in a queue job with the volume’s disk credentials.
+- Removed the Amazon S3 filesystem type and CloudFront invalidation.
 
 ## 2.3.0 - 2026-02-24
 

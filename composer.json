@@ -1,13 +1,14 @@
 {
   "name": "craftcms/aws-s3",
-  "description": "Amazon S3 integration for Craft CMS",
+  "description": "Amazon Rekognition focal point detection for Craft CMS assets on Amazon S3 disks",
   "type": "craft-plugin",
   "keywords": [
     "aws",
     "cms",
     "craftcms",
-    "flysystem",
-    "s3"
+    "s3",
+    "rekognition",
+    "focal point"
   ],
   "license": "MIT",
   "authors": [
@@ -26,13 +27,16 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "craftcms/cms": "^6.0.0",
+    "php": "^8.5",
+    "craftcms/cms": "^6.0.0-alpha.21 || 6.x-dev",
+    "aws/aws-sdk-php": "^3.300",
     "league/flysystem-aws-s3-v3": "^3.32.0"
   },
   "require-dev": {
     "craftcms/ecs": "dev-main",
-    "craftcms/phpstan": "dev-main",
-    "craftcms/rector": "dev-main"
+    "orchestra/testbench": "^11.0",
+    "pestphp/pest": "^5.0",
+    "larastan/larastan": "^3.13"
   },
   "autoload": {
     "psr-4": {
@@ -42,17 +46,26 @@
   "scripts": {
     "check-cs": "ecs check --ansi",
     "fix-cs": "ecs check --ansi --fix",
+    "test": "pest",
     "phpstan": "phpstan --memory-limit=1G"
   },
   "extra": {
     "name": "Amazon S3",
     "handle": "aws-s3",
-    "documentationUrl": "https://github.com/craftcms/aws-s3/blob/3.x/README.md"
+    "documentationUrl": "https://github.com/craftcms/aws-s3/blob/3.x/README.md",
+    "class": "CraftCms\\AwsS3\\Plugin"
   },
   "config": {
     "allow-plugins": {
       "yiisoft/yii2-composer": true,
-      "craftcms/plugin-installer": true
+      "craftcms/plugin-installer": true,
+      "pestphp/pest-plugin": true,
+      "php-http/discovery": true
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CraftCms\\AwsS3\\Tests\\": "tests/"
     }
   }
 }

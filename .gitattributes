@@ -11,10 +11,12 @@
 /CHANGELOG.md export-ignore
 /README.md export-ignore
 /SECURITY.md export-ignore
-/codeception.yml export-ignore
+/UPGRADE.md export-ignore
+
 /composer.lock export-ignore
-/ecs.php export-ignore
+/pint.json export-ignore
 /phpstan.neon export-ignore
+/phpunit.xml export-ignore
 /.prettierrc.json export-ignore
 /.prettierignore export-ignore
 /gruntfile.js export-ignore
@@ -27,7 +29,7 @@
 /stubs/ export-ignore
 /tests/ export-ignore
 /packages/ export-ignore
-/.ddev/ export-ignore
+
 /.github/ export-ignore
 /.husky/ export-ignore
 

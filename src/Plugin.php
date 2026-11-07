@@ -23,8 +23,14 @@ use Override;
 
 use function CraftCms\Cms\t;
 
+/**
+ * @method Settings getSettings()
+ */
 class Plugin extends BasePlugin
 {
+    /** Higher than 2.x’s, so project config from 2.x installs isn’t mistaken for a newer schema. */
+    public string $schemaVersion = '3.0.0';
+
     public bool $hasCpSettings = true;
 
     protected array $events = [
@@ -33,17 +39,22 @@ class Plugin extends BasePlugin
         ElementDeleting::class => QueueCloudFrontInvalidation::class,
     ];
 
-    #[Override]
-    protected static function createSettings(): Settings
+    public function boot(): void
     {
-        return new Settings();
+        $this->app->singleton(Settings::class, fn () => $this->getSettings());
     }
 
     #[Override]
-    public function settingsUi(UiContext $context = new UiContext()): Ui
+    protected static function createSettings(): Settings
+    {
+        return new Settings;
+    }
+
+    #[Override]
+    public function settingsUi(UiContext $context = new UiContext): Ui
     {
         $volumeOptions = Volumes::getAllVolumes()
-            ->map(fn(Volume $volume): array => [
+            ->map(fn (Volume $volume): array => [
                 'label' => (string) $volume->name,
                 'value' => (string) $volume->handle,
             ])

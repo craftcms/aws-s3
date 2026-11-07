@@ -4,12 +4,12 @@
   "type": "craft-plugin",
   "keywords": [
     "aws",
+    "cloudfront",
     "cms",
     "craftcms",
-    "s3",
+    "laravel",
     "rekognition",
-    "focal point",
-    "cloudfront"
+    "s3"
   ],
   "license": "MIT",
   "authors": [
@@ -29,15 +29,17 @@
   "prefer-stable": true,
   "require": {
     "php": "^8.5",
-    "craftcms/cms": "^6.0.0-alpha.21 || 6.x-dev",
+    "craftcms/cms": "^6.0.0-alpha.21",
     "aws/aws-sdk-php": "^3.300",
     "league/flysystem-aws-s3-v3": "^3.32.0"
   },
   "require-dev": {
-    "craftcms/ecs": "dev-main",
+    "larastan/larastan": "^3.13",
+    "laravel/pint": "^1.22",
     "orchestra/testbench": "^11.0",
     "pestphp/pest": "^5.0",
-    "larastan/larastan": "^3.13"
+    "pestphp/pest-plugin-laravel": "^5.0",
+    "phpstan/phpstan": "^2.1"
   },
   "autoload": {
     "psr-4": {
@@ -45,20 +47,23 @@
     }
   },
   "scripts": {
-    "check-cs": "ecs check --ansi",
-    "fix-cs": "ecs check --ansi --fix",
-    "test": "pest",
-    "phpstan": "phpstan --memory-limit=1G"
+    "check-cs": "pint --test",
+    "fix-cs": "pint",
+    "phpstan": "phpstan --memory-limit=1G",
+    "test": "pest"
   },
   "extra": {
+    "class": "CraftCms\\AwsS3\\Plugin",
     "name": "Amazon S3",
     "handle": "aws-s3",
-    "documentationUrl": "https://github.com/craftcms/aws-s3/blob/3.x/README.md",
-    "class": "CraftCms\\AwsS3\\Plugin"
+    "description": "Amazon Rekognition focal points and CloudFront invalidation for assets on Amazon S3",
+    "documentationUrl": "https://github.com/craftcms/aws-s3/blob/3.x/README.md"
   },
   "config": {
+    "platform": {
+      "php": "8.5"
+    },
     "allow-plugins": {
-      "yiisoft/yii2-composer": true,
       "craftcms/plugin-installer": true,
       "pestphp/pest-plugin": true,
       "php-http/discovery": true

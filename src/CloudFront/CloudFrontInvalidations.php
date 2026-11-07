@@ -7,7 +7,6 @@ namespace CraftCms\AwsS3\CloudFront;
 use Aws\CloudFront\CloudFrontClient;
 use Aws\Exception\AwsException;
 use Aws\Exception\CredentialsException;
-use CraftCms\AwsS3\Plugin;
 use CraftCms\AwsS3\Settings;
 use CraftCms\Cms\Support\Str;
 use Illuminate\Container\Attributes\Singleton;
@@ -32,27 +31,29 @@ class CloudFrontInvalidations
 
     private bool $flushing = false;
 
+    public function __construct(
+        private readonly Settings $settings,
+    ) {}
+
     public function add(AwsS3V3Adapter $disk, string $path): void
     {
         $diskConfig = $disk->getConfig();
         $distributionId = $diskConfig['cloudfront_distribution_id'] ?? null;
 
-        if (!is_string($distributionId) || $distributionId === '') {
+        if (! is_string($distributionId) || $distributionId === '') {
             return;
         }
 
-        if (!$this->flushing) {
+        if (! $this->flushing) {
             app()->terminating($this->flush(...));
             Event::listen([JobProcessed::class, JobFailed::class], $this->flush(...));
             $this->flushing = true;
         }
 
         $prefix = trim((string) ($diskConfig['cloudfront_path_prefix'] ?? ''), '/');
-        $path = '/' . ltrim(($prefix !== '' ? "$prefix/" : '') . $disk->path($path), '/');
+        $path = '/'.ltrim(($prefix !== '' ? "$prefix/" : '').$disk->path($path), '/');
 
-        /** @var Settings $settings */
-        $settings = Plugin::getInstance()->getSettings();
-        $this->pending[$distributionId]['config'] ??= $settings->cloudFrontConfig($disk);
+        $this->pending[$distributionId]['config'] ??= $this->settings->cloudFrontConfig($disk);
         $this->pending[$distributionId]['paths'][$path] = true;
     }
 
@@ -72,7 +73,7 @@ class CloudFrontInvalidations
                             'Quantity' => count($paths),
                             'Items' => array_keys($paths),
                         ],
-                        'CallerReference' => 'Craft-' . Str::random(24),
+                        'CallerReference' => 'Craft-'.Str::random(24),
                     ],
                 ]);
             } catch (AwsException|CredentialsException $exception) {

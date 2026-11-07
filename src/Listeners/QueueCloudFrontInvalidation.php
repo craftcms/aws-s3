@@ -17,14 +17,13 @@ class QueueCloudFrontInvalidation
 {
     public function __construct(
         private readonly CloudFrontInvalidations $invalidations,
-    ) {
-    }
+    ) {}
 
     public function handle(AssetFileHandling|ElementDeleting $event): void
     {
         $asset = $event instanceof AssetFileHandling ? $event->asset : $event->element;
 
-        if (!$asset instanceof Asset) {
+        if (! $asset instanceof Asset) {
             return;
         }
 

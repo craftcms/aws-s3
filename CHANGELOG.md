@@ -6,6 +6,8 @@
 - New JPEG and PNG images in the volumes selected in the plugin’s settings now get their focal point set to the first face that Amazon Rekognition finds in them. Detection runs in a queue job, with the disk’s credentials by default, or with credentials and a region set in the plugin’s settings, which disks on S3-compatible services need.
 - CloudFront invalidation is now configured with a disk’s `cloudfront_distribution_id` and `cloudfront_path_prefix` config keys. Assets’ old paths are invalidated when their files are replaced, moved, renamed, or deleted.
 - Removed the Amazon S3 filesystem type.
+- The plugin’s namespace is now `CraftCms\AwsS3`.
+- Amazon S3 now requires Craft CMS 6.0.0-alpha.21 or later and PHP 8.5 or later. See [UPGRADE.md](UPGRADE.md) for how to move each filesystem’s settings to a disk.
 
 ## 2.3.0 - 2026-02-24
 

@@ -11,7 +11,7 @@ use CraftCms\Cms\Support\Facades\Volumes;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Facades\File;
 
-beforeEach(function() {
+beforeEach(function () {
     $this->objects = [];
     fakeS3Disk('photos-s3', ['bucket' => 'photo-bucket', 'root' => 'site'], $this->objects);
     fakeS3Disk('photos-compatible', [
@@ -24,7 +24,7 @@ beforeEach(function() {
     ], $this->objects);
     config()->set('filesystems.disks.photos-local', [
         'driver' => 'local',
-        'root' => $this->localRoot = sys_get_temp_dir() . '/' . uniqid('aws-s3-test-'),
+        'root' => $this->localRoot = sys_get_temp_dir().'/'.uniqid('aws-s3-test-'),
     ]);
 
     foreach ([['photos', 'photos-s3', 'library'], ['archive', 'photos-s3', 'archive'], ['local', 'photos-local', 'library'], ['compatible', 'photos-compatible', 'library']] as [$handle, $disk, $subpath]) {
@@ -40,12 +40,12 @@ beforeEach(function() {
         ['Confidence' => 95.0, 'BoundingBox' => ['Left' => 0.6, 'Top' => 0.2, 'Width' => 0.2, 'Height' => 0.2]],
     ];
 
-    app()->bind(RekognitionClient::class, function($app, array $parameters) {
+    app()->bind(RekognitionClient::class, function ($app, array $parameters) {
         $this->rekognitionConfigs[] = $parameters['args'];
 
         return new RekognitionClient([
             ...$parameters['args'],
-            'handler' => function(CommandInterface $command) {
+            'handler' => function (CommandInterface $command) {
                 $this->rekognitionRequests[] = [$command->getName(), $command->toArray()];
 
                 return Create::promiseFor(new Result(['FaceDetails' => $this->faces]));
@@ -54,11 +54,11 @@ beforeEach(function() {
     });
 });
 
-afterEach(function() {
+afterEach(function () {
     File::deleteDirectory($this->localRoot);
 });
 
-it('sets a new image’s focal point to the center of the first confident face', function(string $filename) {
+it('sets a new image’s focal point to the center of the first confident face', function (string $filename) {
     $asset = uploadImage('photos', $filename);
 
     expect($asset->getHasFocalPoint())->toBeTrue()
@@ -72,7 +72,7 @@ it('sets a new image’s focal point to the center of the first confident face',
         ]);
 })->with(['portrait.jpg', 'portrait.PNG']);
 
-it('leaves the focal point unset when no face is confident enough', function() {
+it('leaves the focal point unset when no face is confident enough', function () {
     $this->faces = [
         ['Confidence' => 79.9, 'BoundingBox' => ['Left' => 0.6, 'Top' => 0.2, 'Width' => 0.2, 'Height' => 0.2]],
     ];
@@ -83,7 +83,7 @@ it('leaves the focal point unset when no face is confident enough', function() {
         ->and($asset->getHasFocalPoint())->toBeFalse();
 });
 
-it('doesn’t ask Rekognition about images it can’t or shouldn’t analyze', function(string $volume, string $filename, ?string $focalPoint) {
+it('doesn’t ask Rekognition about images it can’t or shouldn’t analyze', function (string $volume, string $filename, ?string $focalPoint) {
     $asset = uploadImage($volume, $filename, $focalPoint);
 
     expect($this->rekognitionRequests)->toBe([])
@@ -95,7 +95,7 @@ it('doesn’t ask Rekognition about images it can’t or shouldn’t analyze', f
     'an image with a focal point' => ['photos', 'portrait.jpg', '0.2;0.4'],
 ]);
 
-it('analyzes images in every volume when all volumes are selected', function(string|array $volumes) {
+it('analyzes images in every volume when all volumes are selected', function (string|array $volumes) {
     Plugin::getInstance()->setSettings(['volumes' => $volumes]);
 
     expect(uploadImage('archive', 'portrait.jpg')->getHasFocalPoint())->toBeTrue();
@@ -104,7 +104,7 @@ it('analyzes images in every volume when all volumes are selected', function(str
     'in the control panel' => [['*']],
 ]);
 
-it('sends images on S3-compatible services to Rekognition in the region from the settings', function() {
+it('sends images on S3-compatible services to Rekognition in the region from the settings', function () {
     Plugin::getInstance()->setSettings(['region' => 'us-east-1']);
     putenv('AWS_ACCESS_KEY_ID=env-key');
     putenv('AWS_SECRET_ACCESS_KEY=env-secret');
@@ -123,14 +123,14 @@ it('sends images on S3-compatible services to Rekognition in the region from the
         ->and($this->rekognitionRequests[0][1]['Image'])->toBe(['Bytes' => $this->objects['minio-bucket/library/portrait.jpg']]);
 });
 
-it('skips images on S3-compatible services when no region is set', function() {
+it('skips images on S3-compatible services when no region is set', function () {
     $asset = uploadImage('compatible', 'portrait.jpg');
 
     expect($this->rekognitionRequests)->toBe([])
         ->and($asset->getHasFocalPoint())->toBeFalse();
 });
 
-it('sends images to Rekognition when it can’t read them from the bucket', function(array $settings, string $region, mixed $credentials) {
+it('sends images to Rekognition when it can’t read them from the bucket', function (array $settings, string $region, mixed $credentials) {
     Plugin::getInstance()->setSettings($settings);
 
     uploadImage('photos', 'portrait.jpg');

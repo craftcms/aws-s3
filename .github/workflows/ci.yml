@@ -12,20 +12,29 @@ concurrency:
   cancel-in-progress: true
 jobs:
   ci:
-    name: ${{ matrix.check }}
+    name: ci
+    uses: craftcms/.github/.github/workflows/ci.yml@v3
+    with:
+      craft_version: '6'
+      jobs: '["phpstan", "prettier"]'
+      notify_slack: true
+      slack_subteam: <!subteam^SGFL9NKNZ>
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      slack_webhook_url: ${{ secrets.SLACK_PLUGIN_WEBHOOK_URL }}
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        check: [check-cs, phpstan, test]
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
-          extensions: bcmath, curl, dom, gd, intl, mbstring, pdo_sqlite, zip
-          tools: composer:v2
+          extensions: bcmath, gd, intl, pdo_sqlite, zip
           coverage: none
-      - uses: ramsey/composer-install@v3
-      - run: composer run ${{ matrix.check }}
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+      - name: Check code style
+        run: composer check-cs
+      - name: Run tests
+        run: composer test

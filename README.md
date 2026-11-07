@@ -11,7 +11,7 @@ Craft 6 stores files on [Laravel disks](https://laravel.com/docs/filesystem), so
 
 ## Requirements
 
-This plugin requires Craft CMS 6.0.0 or later.
+This plugin requires Craft CMS 6.0.0-alpha.21 or later and PHP 8.5 or later.
 
 ## Installation
 
@@ -57,11 +57,13 @@ The plugin installs the `league/flysystem-aws-s3-v3` package the driver needs. S
 
 ### Choose volumes for face detection
 
-Go to **Settings** → **Plugins** → **Amazon S3** and select the volumes whose new images should get focal points from detected faces. To set this in code, create `config/craft/aws-s3.php`:
+Go to **Settings** → **Plugins** → **Amazon S3** and select the volumes whose new images should get focal points from detected faces. To set this in code, publish the plugin’s config file and edit `config/craft/aws-s3.php`:
+
+```bash
+php artisan vendor:publish --tag=aws-s3
+```
 
 ```php
-<?php
-
 return [
     // Volume handles, or '*' for all volumes
     'volumes' => ['images'],
@@ -102,7 +104,4 @@ Disks on S3-compatible services, such as Cloudflare R2 or MinIO (any disk with a
 
 ## Upgrading from Craft 5
 
-Craft’s upgrade asks you to replace each filesystem with a disk in `config/filesystems.php`. Amazon S3 filesystems’ settings aren’t carried over:
-
-- Select the volumes that used **Attempt to set the focal point automatically?** in the plugin’s settings.
-- Move **CloudFront Distribution ID** and **CloudFront Path Prefix** to the disk’s `cloudfront_distribution_id` and `cloudfront_path_prefix` config keys. The prefix is now followed by the disk’s `root`, as it was followed by the filesystem’s **Subfolder**.
+See [UPGRADE.md](UPGRADE.md) for how each Amazon S3 filesystem setting maps to a disk, and what else changed in 3.0.

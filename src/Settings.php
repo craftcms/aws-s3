@@ -16,14 +16,14 @@ class Settings extends PluginSettings
 {
     /**
      * @var string|list<string> Handles of the volumes whose new images get focal points from detected faces. `*`, or a
-     * list containing it, means all volumes, including ones added later.
+     *                          list containing it, means all volumes, including ones added later.
      */
     public string|array $volumes = [];
 
     /**
      * @var string|null The AWS access key ID to call Rekognition and CloudFront with, or an environment variable that
-     * holds it. When it’s empty, the disk’s credentials are used for disks on Amazon S3, and the AWS SDK’s default
-     * credentials (such as `AWS_ACCESS_KEY_ID` or an IAM role) for disks on S3-compatible services.
+     *                  holds it. When it’s empty, the disk’s credentials are used for disks on Amazon S3, and the AWS SDK’s default
+     *                  credentials (such as `AWS_ACCESS_KEY_ID` or an IAM role) for disks on S3-compatible services.
      */
     public ?string $keyId = null;
 
@@ -34,7 +34,7 @@ class Settings extends PluginSettings
 
     /**
      * @var string|null The AWS region to call Rekognition in, or an environment variable that holds it. When it’s
-     * empty, the disk’s region is used for disks on Amazon S3. Disks on S3-compatible services need one.
+     *                  empty, the disk’s region is used for disks on Amazon S3. Disks on S3-compatible services need one.
      */
     public ?string $region = null;
 
@@ -98,7 +98,7 @@ class Settings extends PluginSettings
      */
     public function readsFromBucket(AwsS3V3Adapter $disk): bool
     {
-        if (!$this->isOnAws($disk) || $this->hasCredentials()) {
+        if (! $this->isOnAws($disk) || $this->hasCredentials()) {
             return false;
         }
 
@@ -123,7 +123,7 @@ class Settings extends PluginSettings
         if ($this->isOnAws($disk)) {
             $s3 = $disk->getClient();
 
-            return fn() => $s3->getCredentials();
+            return fn () => $s3->getCredentials();
         }
 
         return null;

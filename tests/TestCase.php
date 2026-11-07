@@ -6,6 +6,4 @@ namespace CraftCms\AwsS3\Tests;
 
 use CraftCms\Cms\Plugin\Testing\PluginTestCase;
 
-abstract class TestCase extends PluginTestCase
-{
-}
+abstract class TestCase extends PluginTestCase {}

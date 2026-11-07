@@ -70,14 +70,16 @@ When a JPEG or PNG image without a focal point is uploaded to one of those volum
 > [!WARNING]
 > Amazon charges for each image Rekognition analyzes.
 
-### AWS IAM permissions
+### AWS credentials
 
-Rekognition uses the disk’s credentials, so they need these permissions on top of the S3 permissions the disk itself needs:
+By default, Rekognition is called with the disk’s own credentials, in the bucket’s region, and reads images straight from the bucket. Those credentials need these permissions on top of the S3 permissions the disk itself needs:
 
 - `rekognition:DetectFaces`
 - `s3:GetObject` on the volume’s objects, so Rekognition can read them
 
-Rekognition must be available in the bucket’s region.
+To call Rekognition with other credentials or in another region, set **Access Key ID**, **Secret Access Key**, and **Region** in the plugin’s settings, or `keyId`, `secret`, and `region` in `config/craft/aws-s3.php`. Each can be an environment variable. The image is then sent to Rekognition instead, up to 5 MB.
+
+Disks on S3-compatible services, such as Cloudflare R2 or MinIO (any disk with an `endpoint`), need a **Region**. Their images are always sent to Rekognition, which is called with the credentials from the plugin’s settings or, when those are blank, the AWS SDK’s default credentials, such as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
 ## Upgrading from Craft 5
 

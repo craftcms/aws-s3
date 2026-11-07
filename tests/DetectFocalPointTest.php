@@ -15,9 +15,27 @@ use CraftCms\Cms\Element\Elements;
 use CraftCms\Cms\Support\Facades\Volumes;
 use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Facades\File;
 
 beforeEach(function() {
+    // An in-memory bucket, shared by the S3 disks, that keeps what's written to it
+    $this->objects = [];
+    $bucket = function(CommandInterface $command) {
+        $id = $command['Bucket'] . '/' . $command['Key'];
+        $missing = fn() => Create::rejectionFor(new S3Exception('Not found', $command, ['code' => 'NotFound', 'response' => new Response(404)]));
+
+        if ($command->getName() === 'PutObject') {
+            $this->objects[$id] = (string) Utils::streamFor($command['Body']);
+        }
+
+        return match ($command->getName()) {
+            'HeadObject' => isset($this->objects[$id]) ? Create::promiseFor(new Result(['ContentLength' => strlen($this->objects[$id])])) : $missing(),
+            'GetObject' => isset($this->objects[$id]) ? Create::promiseFor(new Result(['Body' => Utils::streamFor($this->objects[$id])])) : $missing(),
+            default => Create::promiseFor(new Result([])),
+        };
+    };
+
     config()->set('filesystems.disks.photos-s3', [
         'driver' => 's3',
         'key' => 'key',
@@ -25,36 +43,48 @@ beforeEach(function() {
         'region' => 'eu-west-1',
         'bucket' => 'photo-bucket',
         'root' => 'site',
-        // Accept every write, and report every object as missing so new files don't conflict with anything
-        'handler' => fn(CommandInterface $command) => $command->getName() === 'HeadObject'
-            ? Create::rejectionFor(new S3Exception('Not found', $command, ['code' => 'NotFound', 'response' => new Response(404)]))
-            : Create::promiseFor(new Result([])),
+        'handler' => $bucket,
+    ]);
+    config()->set('filesystems.disks.photos-compatible', [
+        'driver' => 's3',
+        'key' => 'minio-key',
+        'secret' => 'minio-secret',
+        'region' => 'auto',
+        'bucket' => 'minio-bucket',
+        'endpoint' => 'https://minio.example.test',
+        'use_path_style_endpoint' => true,
+        'handler' => $bucket,
     ]);
     config()->set('filesystems.disks.photos-local', [
         'driver' => 'local',
         'root' => $this->localRoot = sys_get_temp_dir() . '/' . uniqid('aws-s3-test-'),
     ]);
 
-    foreach ([['photos', 'photos-s3', 'library'], ['archive', 'photos-s3', 'archive'], ['local', 'photos-local', 'library']] as [$handle, $disk, $subpath]) {
+    foreach ([['photos', 'photos-s3', 'library'], ['archive', 'photos-s3', 'archive'], ['local', 'photos-local', 'library'], ['compatible', 'photos-compatible', 'library']] as [$handle, $disk, $subpath]) {
         expect(Volumes::saveVolume(new Volume(['name' => ucfirst($handle), 'handle' => $handle, 'fs' => $disk, 'subpath' => $subpath])))->toBeTrue();
     }
 
-    Plugin::getInstance()->setSettings(['volumes' => ['photos', 'local']]);
+    Plugin::getInstance()->setSettings(['volumes' => ['photos', 'local', 'compatible']]);
 
     $this->rekognitionRequests = [];
+    $this->rekognitionConfigs = [];
     $this->faces = [
         ['Confidence' => 60.0, 'BoundingBox' => ['Left' => 0.0, 'Top' => 0.0, 'Width' => 0.1, 'Height' => 0.1]],
         ['Confidence' => 95.0, 'BoundingBox' => ['Left' => 0.6, 'Top' => 0.2, 'Width' => 0.2, 'Height' => 0.2]],
     ];
 
-    app()->bind(RekognitionClient::class, fn($app, array $parameters) => new RekognitionClient([
-        ...$parameters['args'],
-        'handler' => function(CommandInterface $command) {
-            $this->rekognitionRequests[] = [$command->getName(), $command->toArray()];
+    app()->bind(RekognitionClient::class, function($app, array $parameters) {
+        $this->rekognitionConfigs[] = $parameters['args'];
 
-            return Create::promiseFor(new Result(['FaceDetails' => $this->faces]));
-        },
-    ]));
+        return new RekognitionClient([
+            ...$parameters['args'],
+            'handler' => function(CommandInterface $command) {
+                $this->rekognitionRequests[] = [$command->getName(), $command->toArray()];
+
+                return Create::promiseFor(new Result(['FaceDetails' => $this->faces]));
+            },
+        ]);
+    });
 });
 
 afterEach(function() {
@@ -93,6 +123,7 @@ it('sets a new image’s focal point to the center of the first confident face',
         ->and($asset->getFocalPoint())->toEqualWithDelta(['x' => 0.7, 'y' => 0.3], 0.0001)
         ->and($this->rekognitionRequests)->toHaveCount(1)
         ->and($this->rekognitionRequests[0][0])->toBe('DetectFaces')
+        ->and($this->rekognitionConfigs[0]['region'])->toBe('eu-west-1')
         ->and($this->rekognitionRequests[0][1]['Image']['S3Object'])->toBe([
             'Bucket' => 'photo-bucket',
             'Name' => "site/library/$filename",
@@ -129,4 +160,45 @@ it('analyzes images in every volume when all volumes are selected', function(str
 })->with([
     'in a config file' => '*',
     'in the control panel' => [['*']],
+]);
+
+it('sends images on S3-compatible services to Rekognition in the region from the settings', function() {
+    Plugin::getInstance()->setSettings(['region' => 'us-east-1']);
+    putenv('AWS_ACCESS_KEY_ID=env-key');
+    putenv('AWS_SECRET_ACCESS_KEY=env-secret');
+
+    try {
+        $asset = uploadImage('compatible', 'portrait.jpg');
+    } finally {
+        putenv('AWS_ACCESS_KEY_ID');
+        putenv('AWS_SECRET_ACCESS_KEY');
+    }
+
+    expect($asset->getFocalPoint())->toEqualWithDelta(['x' => 0.7, 'y' => 0.3], 0.0001)
+        ->and($this->rekognitionConfigs[0]['region'])->toBe('us-east-1')
+        // The disk's credentials belong to the other service, so the SDK's default credentials are used
+        ->and($this->rekognitionConfigs[0])->not->toHaveKey('credentials')
+        ->and($this->rekognitionRequests[0][1]['Image'])->toBe(['Bytes' => $this->objects['minio-bucket/library/portrait.jpg']]);
+});
+
+it('skips images on S3-compatible services when no region is set', function() {
+    $asset = uploadImage('compatible', 'portrait.jpg');
+
+    expect($this->rekognitionRequests)->toBe([])
+        ->and($asset->getHasFocalPoint())->toBeFalse();
+});
+
+it('sends images to Rekognition when it can’t read them from the bucket', function(array $settings, string $region, mixed $credentials) {
+    Plugin::getInstance()->setSettings($settings);
+
+    uploadImage('photos', 'portrait.jpg');
+
+    $config = $this->rekognitionConfigs[0];
+
+    expect($config['region'])->toBe($region)
+        ->and($config['credentials'] instanceof Closure ? 'disk' : $config['credentials'])->toBe($credentials)
+        ->and($this->rekognitionRequests[0][1]['Image'])->toBe(['Bytes' => $this->objects['photo-bucket/site/library/portrait.jpg']]);
+})->with([
+    'with other credentials' => [['keyId' => 'rekognition-key', 'secret' => 'rekognition-secret'], 'eu-west-1', ['key' => 'rekognition-key', 'secret' => 'rekognition-secret']],
+    'in another region' => [['region' => 'us-east-1'], 'us-east-1', 'disk'],
 ]);

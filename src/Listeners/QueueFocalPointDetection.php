@@ -12,6 +12,7 @@ use CraftCms\Cms\Cms;
 use CraftCms\Cms\Element\Events\ElementSaved;
 use CraftCms\Cms\Support\Str;
 use Illuminate\Filesystem\AwsS3V3Adapter;
+use Illuminate\Support\Facades\Log;
 
 class QueueFocalPointDetection
 {
@@ -36,11 +37,19 @@ class QueueFocalPointDetection
         /** @var Settings $settings */
         $settings = Plugin::getInstance()->getSettings();
 
-        if (
-            $volume->isTemporary() ||
-            !$settings->detectsFacesIn($volume) ||
-            !$volume->sourceDisk() instanceof AwsS3V3Adapter
-        ) {
+        if ($volume->isTemporary() || !$settings->detectsFacesIn($volume)) {
+            return;
+        }
+
+        $disk = $volume->sourceDisk();
+
+        if (!$disk instanceof AwsS3V3Adapter) {
+            return;
+        }
+
+        if ($settings->rekognitionConfig($disk) === null) {
+            Log::warning(sprintf('Skipped detecting faces in asset %d, because volume “%s” is on an S3-compatible service. Set a region for Amazon Rekognition in the Amazon S3 plugin’s settings.', $asset->id, $volume->handle));
+
             return;
         }
 

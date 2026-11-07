@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace CraftCms\AwsS3\Jobs;
 
 use Aws\Rekognition\RekognitionClient;
+use CraftCms\AwsS3\Plugin;
+use CraftCms\AwsS3\Settings;
 use CraftCms\Cms\Asset\AssetTransformers;
 use CraftCms\Cms\Asset\Elements\Asset;
 use CraftCms\Cms\Element\Elements;
@@ -12,16 +14,19 @@ use CraftCms\Cms\Queue\Job;
 use CraftCms\Cms\Support\Facades\I18N;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Filesystem\AwsS3V3Adapter;
+use Illuminate\Support\Facades\Log;
 use Override;
 
 /**
- * Sets an image’s focal point to the first face Amazon Rekognition finds in it, reading the image straight from its
- * S3 bucket with the disk’s credentials.
+ * Sets an image’s focal point to the first face Amazon Rekognition finds in it.
  */
 class DetectFocalPoint extends Job implements ShouldBeUnique
 {
     /** Faces that Rekognition is less confident about than this percentage are ignored. */
     public const int MIN_CONFIDENCE = 80;
+
+    /** The largest image Rekognition accepts in a request, rather than reading it from S3. */
+    public const int MAX_BYTES = 5 * 1024 * 1024;
 
     /** A failed request, such as one denied for a missing permission, would fail the same way again. */
     public int $tries = 1;
@@ -48,23 +53,32 @@ class DetectFocalPoint extends Job implements ShouldBeUnique
             return;
         }
 
-        $s3 = $disk->getClient();
+        /** @var Settings $settings */
+        $settings = Plugin::getInstance()->getSettings();
+        $config = $settings->rekognitionConfig($disk);
+
+        if ($config === null) {
+            return;
+        }
+
+        $path = $asset->getPath();
+
+        if ($settings->readsFromBucket($disk)) {
+            $image = ['S3Object' => [
+                'Bucket' => $disk->getConfig()['bucket'],
+                'Name' => $disk->path($path),
+            ]];
+        } elseif ($disk->size($path) <= self::MAX_BYTES) {
+            $image = ['Bytes' => $disk->get($path)];
+        } else {
+            Log::info(sprintf('Skipped detecting faces in asset %d, which is too large to send to Amazon Rekognition.', $asset->id));
+
+            return;
+        }
 
         /** @var RekognitionClient $rekognition */
-        $rekognition = app(RekognitionClient::class, ['args' => [
-            'version' => 'latest',
-            'region' => $s3->getRegion(),
-            'credentials' => fn() => $s3->getCredentials(),
-        ]]);
-
-        $result = $rekognition->detectFaces([
-            'Image' => [
-                'S3Object' => [
-                    'Bucket' => $disk->getConfig()['bucket'],
-                    'Name' => $disk->path($asset->getPath()),
-                ],
-            ],
-        ]);
+        $rekognition = app(RekognitionClient::class, ['args' => $config]);
+        $result = $rekognition->detectFaces(['Image' => $image]);
 
         $face = collect($result['FaceDetails'] ?? [])
             ->first(fn(array $face): bool => $face['Confidence'] >= self::MIN_CONFIDENCE);

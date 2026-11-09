@@ -4,7 +4,7 @@ Craft 6 replaces filesystems with [Laravel disks](https://laravel.com/docs/files
 
 ## Requirements
 
-- Craft CMS 6.0.0-alpha.21 or later
+- Craft CMS 6.0.0-beta.1 or later
 - PHP 8.5 or later
 - `craftcms/yii2-adapter` is no longer needed
 

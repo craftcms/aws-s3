@@ -29,7 +29,7 @@
   "prefer-stable": true,
   "require": {
     "php": "^8.5",
-    "craftcms/cms": "^6.0.0-alpha.21",
+    "craftcms/cms": "^6.0.0-beta.1",
     "aws/aws-sdk-php": "^3.300",
     "league/flysystem-aws-s3-v3": "^3.32.0"
   },

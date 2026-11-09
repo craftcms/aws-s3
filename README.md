@@ -11,7 +11,7 @@ Craft 6 stores files on [Laravel disks](https://laravel.com/docs/filesystem), so
 
 ## Requirements
 
-This plugin requires Craft CMS 6.0.0-alpha.21 or later and PHP 8.5 or later.
+This plugin requires Craft CMS 6.0.0-beta.1 or later and PHP 8.5 or later.
 
 ## Installation
 

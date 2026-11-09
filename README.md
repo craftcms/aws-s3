@@ -9,6 +9,8 @@ This plugin adds two Amazon services to assets stored on [Amazon S3](https://aws
 
 Craft 6 stores files on [Laravel disks](https://laravel.com/docs/filesystem), so you don’t need this plugin to store assets on S3. Earlier versions of the plugin provided an Amazon S3 filesystem type for Craft 4 and 5.
 
+Craft 6 also has a built-in **Detect focal points** AI task, which sets images’ focal points on any filesystem using your AI provider. It picks each image’s main subject rather than only faces. Use this plugin when you’d rather have Amazon Rekognition’s face detection set them.
+
 ## Requirements
 
 This plugin requires Craft CMS 6.0.0-beta.1 or later and PHP 8.5 or later.

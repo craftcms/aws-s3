@@ -9,6 +9,14 @@
 - The plugin’s namespace is now `CraftCms\AwsS3`.
 - Amazon S3 now requires Craft CMS 6.0.0-beta.1 or later and PHP 8.5 or later. See [UPGRADE.md](UPGRADE.md) for how to move each filesystem’s settings to a disk.
 
+## 2.3.2 - 2026-08-14
+
+- Fixed a PHP error that could occur if a CloudFront Path Prefix setting was set to a nonexistent environment variable. ([#199](https://github.com/craftcms/aws-s3/issues/199))
+
+## 2.3.1 - 2026-06-09
+
+- Fixed a bug where CloudFront caches would not get invalidated when uploading an asset with an existing filename to a subfolder. ([#195](https://github.com/craftcms/aws-s3/issues/195))
+
 ## 2.3.0 - 2026-02-24
 
 - The AWS S3 plugin now requires PHP 8.1.0 or later.

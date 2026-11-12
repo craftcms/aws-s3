@@ -17,6 +17,7 @@ use CraftCms\Cms\Ui\Controls\Choice;
 use CraftCms\Cms\Ui\Controls\Text;
 use CraftCms\Cms\Ui\Nodes\Field;
 use CraftCms\Cms\Ui\Nodes\Heading;
+use CraftCms\Cms\Ui\Nodes\MarkdownContent;
 use CraftCms\Cms\Ui\Ui;
 use CraftCms\Cms\Ui\UiContext;
 use Override;
@@ -72,8 +73,8 @@ class Plugin extends BasePlugin
                     ->multiple()
                     ->options($volumeOptions)
                     ->allOption()),
-            Heading::make('credentials-heading', t('AWS Credentials', category: 'aws-s3'))
-                ->description(t('Amazon Rekognition and CloudFront are called with these. Leave them blank to use each disk’s own credentials, which need the `rekognition:DetectFaces` and `cloudfront:CreateInvalidation` permissions. Disks on S3-compatible services, such as Cloudflare R2 or MinIO, use these or the AWS SDK’s default credentials, such as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.', category: 'aws-s3')),
+            Heading::make('credentials-heading', t('AWS Credentials', category: 'aws-s3')),
+            MarkdownContent::make('credentials-instructions', t('Amazon Rekognition and CloudFront are called with these. Leave them blank to use each disk’s own credentials, which need the `rekognition:DetectFaces` and `cloudfront:CreateInvalidation` permissions. Disks on S3-compatible services, such as Cloudflare R2 or MinIO, use these or the AWS SDK’s default credentials, such as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.', category: 'aws-s3')),
             Field::make(t('Access Key ID', category: 'aws-s3'))
                 ->control(Text::make('keyId')->textExpanderTriggers($envTriggers))
                 ->tip($envTip),

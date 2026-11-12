@@ -12,6 +12,8 @@ use CraftCms\Cms\Ui\Controls\Choice;
 use Illuminate\Filesystem\AwsS3V3Adapter;
 use Override;
 
+use function CraftCms\Cms\t;
+
 class Settings extends PluginSettings
 {
     /**
@@ -45,6 +47,16 @@ class Settings extends PluginSettings
             'keyId' => ['nullable', 'string', 'required_with:secret'],
             'secret' => ['nullable', 'string', 'required_with:keyId'],
             'region' => ['nullable', 'string'],
+        ];
+    }
+
+    #[Override]
+    public function attributeLabels(): array
+    {
+        return [
+            'keyId' => t('Access Key ID', category: 'aws-s3'),
+            'secret' => t('Secret Access Key', category: 'aws-s3'),
+            'region' => t('Rekognition Region', category: 'aws-s3'),
         ];
     }
 

@@ -2,15 +2,18 @@
 
 <h1 align="center">Amazon S3 for Craft CMS</h1>
 
-This plugin exposes [Amazon S3](https://aws.amazon.com/s3/) as a configurable filesystem type, in [Craft CMS](https://craftcms.com/).
+This plugin adds two Amazon services to assets stored on [Amazon S3](https://aws.amazon.com/s3/) in [Craft CMS](https://craftcms.com/):
 
-> [!WARNING]
-> This plugin will _not_ be publicly released for Craft 6.x, as [filesystems have been removed in favor of Laravel disks](https://craftcms.com/docs/6.x/extend/disks.html).
+- It sets images’ focal points to faces that [Amazon Rekognition](https://aws.amazon.com/rekognition/) finds in them.
+- It invalidates files in [Amazon CloudFront](https://aws.amazon.com/cloudfront/) when they’re replaced, moved, renamed, or deleted.
+
+Craft 6 stores files on [Laravel disks](https://laravel.com/docs/filesystem), so you don’t need this plugin to store assets on S3. Earlier versions of the plugin provided an Amazon S3 filesystem type for Craft 4 and 5.
+
+Craft 6 also has a built-in **Detect focal points** AI task, which sets images’ focal points on any filesystem using your AI provider. It picks each image’s main subject rather than only faces. Use this plugin when you’d rather have Amazon Rekognition’s face detection set them.
 
 ## Requirements
 
-This plugin requires Craft CMS 6.0.0 or later.
-Earlier versions of the plugin support Craft 4.x and 5.x.
+This plugin requires Craft CMS 6.0.0-beta.1 or later and PHP 8.5 or later.
 
 ## Installation
 
@@ -18,7 +21,7 @@ You can install this plugin from the Plugin Store or with Composer.
 
 #### From the Plugin Store
 
-Go to the Plugin Store in your project’s Control Panel and search for “Amazon S3.” Press **Install** on the plugin’s detail page.
+Go to the Plugin Store in your project’s control panel and search for “Amazon S3.” Press **Install** on the plugin’s detail page.
 
 #### With Composer
 
@@ -27,100 +30,80 @@ Open your terminal and run the following commands:
 ```bash
 cd /path/to/my-project.test
 
-ddev composer require craftcms/aws-s3
-ddev artisan craft:plugin:install aws-s3
+composer require craftcms/aws-s3
+php artisan craft:plugin:install aws-s3
 ```
 
 ## Setup
 
-To create a new Amazon S3 filesystem to use with your volumes, visit **Settings** → **Filesystems**, and press **New filesystem**. Select “Amazon S3” for the **Filesystem Type** setting and configure as needed.
+### Store your volumes on S3
 
-> [!TIP]
-> The Base URL, Access Key ID, Secret Access Key, Bucket, Region, Subfolder, CloudFront Distribution ID, and CloudFront Path Prefix settings can be set to environment variables. See [Environmental Configuration](https://craftcms.com/docs/5.x/configure.html#control-panel-settings) in the Craft docs to learn more about that.
+Define a disk that uses Laravel’s `s3` driver in `config/filesystems.php`, and choose it for your volume in **Settings** → **Assets**:
 
-### AWS IAM Permissions
-
-Setting up IAM permissions for use with this plugin differs based on what features you want to use.
-
-Generally, you'll want an IAM policy that grants the following actions on the [resource(s)](https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html) that you'll use:
-* `s3:GetBucketLocation`
-* `s3:ListBucket`
-* `s3:PutObject`
-* `s3:GetObject`
-* `s3:DeleteObject`
-* `s3:GetObjectAcl`
-* `s3:PutObjectAcl`
-
-The AWS SDK automatically discovers environment variables named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` (as well as some [special OIDC signals](#assuming-role-with-oidc)), so you may not need to provide or store credentials in your filesystems’ settings at all.
-
-The plugin will attempt to use the available credentials to populate the **Bucket** combo-box input with options.
-If there is a problem with your credentials, a warning will be shown; it can be ignored if you intend to manually specify a bucket.
-A specific error message is sent to the logs.
-
-> [!NOTE]
-> This only works when the `s3:ListAllMyBuckets` permission is added to the `arn:aws:s3:::` resource.
-> You can always type in a specific bucket’s name to the combo-box, or use an environment variable.
-
-If you use [CloudFront](https://aws.amazon.com/cloudfront/) and would like Craft to automatically invalidate asset paths whenever they’re modified, you'll also need the following permissions:
-* `cloudfront:ListInvalidations`
-* `cloudfront:GetInvalidation`
-* `cloudfront:CreateInvalidation`
-
-An IAM policy that grants all the capabilities this filesystem provides would look something like this:
-
-```
-{
-"Version": "2012-10-17",
-"Statement": [
-    {
-        "Effect": "Allow",
-        "Action": [
-            "s3:ListAllMyBuckets"
-        ],
-        "Resource": "*"
-    },
-    {
-        "Effect": "Allow",
-        "Action": [
-            "s3:ListBucket",
-            "s3:PutObject",
-            "s3:GetObject",
-            "s3:DeleteObject",
-            "s3:GetObjectAcl",
-            "s3:PutObjectAcl",
-            "cloudfront:ListInvalidations",
-            "cloudfront:GetInvalidation",
-            "cloudfront:CreateInvalidation"
-        ],
-        "Resource": [
-            "arn:aws:s3:::bucketname/*",
-            "arn:aws:cloudfront::accountid:distribution/distributionid"
-        ]
-    },
-    {
-        "Effect": "Allow",
-        "Action": [
-            "s3:ListBucket"
-        ],
-        "Resource": [
-            "arn:aws:s3:::bucketname"
-        ]
-    }
-]
-}
+```php
+'disks' => [
+    'images' => [
+        'driver' => 's3',
+        'key' => env('AWS_ACCESS_KEY_ID'),
+        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+        'region' => env('AWS_DEFAULT_REGION'),
+        'bucket' => env('AWS_BUCKET'),
+        'url' => env('AWS_URL'),
+        'root' => 'images',
+        'visibility' => 'public',
+    ],
+],
 ```
 
-### Using automatic focal point detection
+The plugin installs the `league/flysystem-aws-s3-v3` package the driver needs. See [Amazon S3 Compatible Filesystems](https://laravel.com/docs/filesystem#amazon-s3-compatible-filesystems) in the Laravel docs for every option.
 
-This plugin can use the [AWS Rekognition](https://aws.amazon.com/rekognition/) service to detect faces in an image and automatically set the focal point accordingly. This requires the image to be either a jpg or a png file. You can enable this feature via **Attempt to set the focal point automatically?** in the filesystem settings.
+### Choose volumes for face detection
+
+Go to **Settings** → **Plugins** → **Amazon S3** and select the volumes whose new images should get focal points from detected faces. To set this in code, publish the plugin’s config file and edit `config/craft/aws-s3.php`:
+
+```bash
+php artisan vendor:publish --tag=aws-s3
+```
+
+```php
+return [
+    // Volume handles, or '*' for all volumes
+    'volumes' => ['images'],
+];
+```
+
+When a JPEG or PNG image without a focal point is uploaded to one of those volumes, a queue job asks Rekognition to find faces in it, reading the image straight from its bucket. The image’s focal point is set to the center of the first face Rekognition is at least 80% confident about. Images on disks that don’t use the `s3` driver are skipped.
 
 > [!WARNING]
-> Enabling face detection may incur additional costs for each upload. Your IAM policy must include the `rekognition:DetectFaces` action.
+> Amazon charges for each image Rekognition analyzes.
 
-### Assuming Role with OIDC
+### Invalidate files in CloudFront
 
-If you provide no credentials when setting up the filesystem, the plugin will look for standard `AWS_WEB_IDENTITY_TOKEN_FILE` and `AWS_ROLE_ARN` environment variables and attempt to connect using the [web identity provider](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/assume-role-with-web-identity-provider.html). This is the ideal way to allow fine-grained access control for hosting Craft CMS in Kubernetes or other automatically-provisioned infrastructure. See the [IAM documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html) for more details.
+If a CloudFront distribution serves a disk’s files, add its ID to the disk’s config, along with the path the distribution serves the bucket under, if any:
 
-### Tasks running in ECS
+```php
+'images' => [
+    'driver' => 's3',
+    // ...
+    'cloudfront_distribution_id' => env('CLOUDFRONT_DISTRIBUTION_ID'),
+    'cloudfront_path_prefix' => 'assets',
+],
+```
 
-The filesystem will also automatically detect IAM roles for ECS tasks in the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` environment variable, when available. See the [IAM Roles for Tasks](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html) documentation for more details.
+When an asset’s file is replaced, moved, renamed, or deleted, its old path is invalidated: the prefix, followed by the file’s full key in the bucket, including the disk’s `root`. Paths are invalidated together at the end of each request or queue job.
+
+### AWS credentials
+
+By default, Rekognition and CloudFront are called with the disk’s own credentials. Rekognition is called in the bucket’s region, and reads images straight from the bucket. Those credentials need these permissions on top of the S3 permissions the disk itself needs:
+
+- `rekognition:DetectFaces`
+- `s3:GetObject` on the volume’s objects, so Rekognition can read them
+- `cloudfront:CreateInvalidation` on the distribution
+
+To use other credentials, set **Access Key ID** and **Secret Access Key** in the plugin’s settings, or `keyId` and `secret` in `config/craft/aws-s3.php`. To call Rekognition in another region, set **Rekognition Region**, or `region`. Each can be an environment variable. With either, images are sent to Rekognition instead of read from the bucket, up to 5 MB.
+
+Disks on S3-compatible services, such as Cloudflare R2 or MinIO (any disk with an `endpoint`), use the credentials from the plugin’s settings or, when those are blank, the AWS SDK’s default credentials, such as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. Face detection on them needs a **Rekognition Region**, and their images are always sent to Rekognition.
+
+## Upgrading from Craft 5
+
+See [UPGRADE.md](UPGRADE.md) for how each Amazon S3 filesystem setting maps to a disk, and what else changed in 3.0.
